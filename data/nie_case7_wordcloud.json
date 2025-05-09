@@ -1,0 +1,402 @@
+[
+  {
+    "text": "students",
+    "value": 9
+  },
+  {
+    "text": "impact",
+    "value": 4
+  },
+  {
+    "text": "outputs",
+    "value": 4
+  },
+  {
+    "text": "design",
+    "value": 4
+  },
+  {
+    "text": "subject",
+    "value": 3
+  },
+  {
+    "text": "science",
+    "value": 3
+  },
+  {
+    "text": "environmental",
+    "value": 3
+  },
+  {
+    "text": "chatgpt",
+    "value": 3
+  },
+  {
+    "text": "critical",
+    "value": 3
+  },
+  {
+    "text": "engineering",
+    "value": 3
+  },
+  {
+    "text": "research",
+    "value": 3
+  },
+  {
+    "text": "urban",
+    "value": 2
+  },
+  {
+    "text": "aigenerated",
+    "value": 2
+  },
+  {
+    "text": "identifying",
+    "value": 2
+  },
+  {
+    "text": "cad",
+    "value": 2
+  },
+  {
+    "text": "generate",
+    "value": 2
+  },
+  {
+    "text": "aisupported",
+    "value": 2
+  },
+  {
+    "text": "ethics",
+    "value": 2
+  },
+  {
+    "text": "arguments",
+    "value": 2
+  },
+  {
+    "text": "ethical",
+    "value": 2
+  },
+  {
+    "text": "eg",
+    "value": 2
+  },
+  {
+    "text": "argumentation",
+    "value": 2
+  },
+  {
+    "text": "human",
+    "value": 2
+  },
+  {
+    "text": "disciplines",
+    "value": 2
+  },
+  {
+    "text": "gaps",
+    "value": 2
+  },
+  {
+    "text": "study",
+    "value": 1
+  },
+  {
+    "text": "universitylevel",
+    "value": 1
+  },
+  {
+    "text": "lim",
+    "value": 1
+  },
+  {
+    "text": "university",
+    "value": 1
+  },
+  {
+    "text": "lecturer",
+    "value": 1
+  },
+  {
+    "text": "introduces",
+    "value": 1
+  },
+  {
+    "text": "unit",
+    "value": 1
+  },
+  {
+    "text": "sustainability",
+    "value": 1
+  },
+  {
+    "text": "asked",
+    "value": 1
+  },
+  {
+    "text": "input",
+    "value": 1
+  },
+  {
+    "text": "different",
+    "value": 1
+  },
+  {
+    "text": "planning",
+    "value": 1
+  },
+  {
+    "text": "policies",
+    "value": 1
+  },
+  {
+    "text": "simulate",
+    "value": 1
+  },
+  {
+    "text": "assessments",
+    "value": 1
+  },
+  {
+    "text": "comparisons",
+    "value": 1
+  },
+  {
+    "text": "validate",
+    "value": 1
+  },
+  {
+    "text": "realworld",
+    "value": 1
+  },
+  {
+    "text": "data",
+    "value": 1
+  },
+  {
+    "text": "sets",
+    "value": 1
+  },
+  {
+    "text": "singapores",
+    "value": 1
+  },
+  {
+    "text": "ura",
+    "value": 1
+  },
+  {
+    "text": "nea",
+    "value": 1
+  },
+  {
+    "text": "databases",
+    "value": 1
+  },
+  {
+    "text": "become",
+    "value": 1
+  },
+  {
+    "text": "evaluating",
+    "value": 1
+  },
+  {
+    "text": "hallucinations",
+    "value": 1
+  },
+  {
+    "text": "refining",
+    "value": 1
+  },
+  {
+    "text": "prompts",
+    "value": 1
+  },
+  {
+    "text": "produce",
+    "value": 1
+  },
+  {
+    "text": "reliable",
+    "value": 1
+  },
+  {
+    "text": "policy",
+    "value": 1
+  },
+  {
+    "text": "scenarios",
+    "value": 1
+  },
+  {
+    "text": "mechanical",
+    "value": 1
+  },
+  {
+    "text": "tan",
+    "value": 1
+  },
+  {
+    "text": "implements",
+    "value": 1
+  },
+  {
+    "text": "support",
+    "value": 1
+  },
+  {
+    "text": "project",
+    "value": 1
+  },
+  {
+    "text": "automated",
+    "value": 1
+  },
+  {
+    "text": "gear",
+    "value": 1
+  },
+  {
+    "text": "system",
+    "value": 1
+  },
+  {
+    "text": "initial",
+    "value": 1
+  },
+  {
+    "text": "rationales",
+    "value": 1
+  },
+  {
+    "text": "material",
+    "value": 1
+  },
+  {
+    "text": "recommendations",
+    "value": 1
+  },
+  {
+    "text": "basic",
+    "value": 1
+  },
+  {
+    "text": "stress",
+    "value": 1
+  },
+  {
+    "text": "parameters",
+    "value": 1
+  },
+  {
+    "text": "serve",
+    "value": 1
+  },
+  {
+    "text": "drafts",
+    "value": 1
+  },
+  {
+    "text": "tested",
+    "value": 1
+  },
+  {
+    "text": "improved",
+    "value": 1
+  },
+  {
+    "text": "real",
+    "value": 1
+  },
+  {
+    "text": "simulations",
+    "value": 1
+  },
+  {
+    "text": "solidworks",
+    "value": 1
+  },
+  {
+    "text": "accelerate",
+    "value": 1
+  },
+  {
+    "text": "earlystage",
+    "value": 1
+  },
+  {
+    "text": "conceptualization",
+    "value": 1
+  },
+  {
+    "text": "verify",
+    "value": 1
+  },
+  {
+    "text": "iterate",
+    "value": 1
+  },
+  {
+    "text": "designs",
+    "value": 1
+  },
+  {
+    "text": "software",
+    "value": 1
+  },
+  {
+    "text": "humanities",
+    "value": 1
+  },
+  {
+    "text": "philosophy",
+    "value": 1
+  },
+  {
+    "text": "chongs",
+    "value": 1
+  },
+  {
+    "text": "seminar",
+    "value": 1
+  },
+  {
+    "text": "includes",
+    "value": 1
+  },
+  {
+    "text": "activity",
+    "value": 1
+  },
+  {
+    "text": "opposing",
+    "value": 1
+  },
+  {
+    "text": "controversial",
+    "value": 1
+  },
+  {
+    "text": "topics",
+    "value": 1
+  },
+  {
+    "text": "like",
+    "value": 1
+  },
+  {
+    "text": "euthanasia",
+    "value": 1
+  },
+  {
+    "text": "rights",
+    "value": 1
+  },
+  {
+    "text": "critique",
+    "value": 1
+  }
+]

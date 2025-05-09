@@ -1,0 +1,402 @@
+[
+  {
+    "text": "students",
+    "value": 12
+  },
+  {
+    "text": "feedback",
+    "value": 4
+  },
+  {
+    "text": "eg",
+    "value": 4
+  },
+  {
+    "text": "prompt",
+    "value": 4
+  },
+  {
+    "text": "yeo",
+    "value": 3
+  },
+  {
+    "text": "challenge",
+    "value": 3
+  },
+  {
+    "text": "engineering",
+    "value": 3
+  },
+  {
+    "text": "thinking",
+    "value": 3
+  },
+  {
+    "text": "critical",
+    "value": 3
+  },
+  {
+    "text": "research",
+    "value": 3
+  },
+  {
+    "text": "studies",
+    "value": 3
+  },
+  {
+    "text": "reflective",
+    "value": 3
+  },
+  {
+    "text": "integration",
+    "value": 2
+  },
+  {
+    "text": "biology",
+    "value": 2
+  },
+  {
+    "text": "lab",
+    "value": 2
+  },
+  {
+    "text": "reports",
+    "value": 2
+  },
+  {
+    "text": "teaches",
+    "value": 2
+  },
+  {
+    "text": "assistant",
+    "value": 2
+  },
+  {
+    "text": "provide",
+    "value": 2
+  },
+  {
+    "text": "interpretations",
+    "value": 2
+  },
+  {
+    "text": "begin",
+    "value": 2
+  },
+  {
+    "text": "rely",
+    "value": 2
+  },
+  {
+    "text": "must",
+    "value": 2
+  },
+  {
+    "text": "input",
+    "value": 2
+  },
+  {
+    "text": "design",
+    "value": 2
+  },
+  {
+    "text": "lim",
+    "value": 2
+  },
+  {
+    "text": "teaching",
+    "value": 2
+  },
+  {
+    "text": "introduces",
+    "value": 2
+  },
+  {
+    "text": "work",
+    "value": 2
+  },
+  {
+    "text": "overly",
+    "value": 2
+  },
+  {
+    "text": "project",
+    "value": 2
+  },
+  {
+    "text": "humanities",
+    "value": 2
+  },
+  {
+    "text": "tan",
+    "value": 2
+  },
+  {
+    "text": "methods",
+    "value": 2
+  },
+  {
+    "text": "genai",
+    "value": 2
+  },
+  {
+    "text": "tools",
+    "value": 2
+  },
+  {
+    "text": "questions",
+    "value": 2
+  },
+  {
+    "text": "across",
+    "value": 2
+  },
+  {
+    "text": "disciplines",
+    "value": 2
+  },
+  {
+    "text": "studentai",
+    "value": 2
+  },
+  {
+    "text": "logs",
+    "value": 2
+  },
+  {
+    "text": "study",
+    "value": 1
+  },
+  {
+    "text": "university",
+    "value": 1
+  },
+  {
+    "text": "classroom",
+    "value": 1
+  },
+  {
+    "text": "science",
+    "value": 1
+  },
+  {
+    "text": "automation",
+    "value": 1
+  },
+  {
+    "text": "undergraduate",
+    "value": 1
+  },
+  {
+    "text": "struggling",
+    "value": 1
+  },
+  {
+    "text": "keep",
+    "value": 1
+  },
+  {
+    "text": "marking",
+    "value": 1
+  },
+  {
+    "text": "load",
+    "value": 1
+  },
+  {
+    "text": "starts",
+    "value": 1
+  },
+  {
+    "text": "writing",
+    "value": 1
+  },
+  {
+    "text": "chatgpt",
+    "value": 1
+  },
+  {
+    "text": "scinote",
+    "value": 1
+  },
+  {
+    "text": "initial",
+    "value": 1
+  },
+  {
+    "text": "formative",
+    "value": 1
+  },
+  {
+    "text": "weekly",
+    "value": 1
+  },
+  {
+    "text": "tool",
+    "value": 1
+  },
+  {
+    "text": "highlights",
+    "value": 1
+  },
+  {
+    "text": "structural",
+    "value": 1
+  },
+  {
+    "text": "issues",
+    "value": 1
+  },
+  {
+    "text": "suggests",
+    "value": 1
+  },
+  {
+    "text": "rephrasing",
+    "value": 1
+  },
+  {
+    "text": "checks",
+    "value": 1
+  },
+  {
+    "text": "clarity",
+    "value": 1
+  },
+  {
+    "text": "hypothesis",
+    "value": 1
+  },
+  {
+    "text": "statements",
+    "value": 1
+  },
+  {
+    "text": "result",
+    "value": 1
+  },
+  {
+    "text": "heavily",
+    "value": 1
+  },
+  {
+    "text": "suggestions",
+    "value": 1
+  },
+  {
+    "text": "modifies",
+    "value": 1
+  },
+  {
+    "text": "workflow",
+    "value": 1
+  },
+  {
+    "text": "submit",
+    "value": 1
+  },
+  {
+    "text": "log",
+    "value": 1
+  },
+  {
+    "text": "document",
+    "value": 1
+  },
+  {
+    "text": "suggested",
+    "value": 1
+  },
+  {
+    "text": "accepted",
+    "value": 1
+  },
+  {
+    "text": "reported",
+    "value": 1
+  },
+  {
+    "text": "critically",
+    "value": 1
+  },
+  {
+    "text": "evaluate",
+    "value": 1
+  },
+  {
+    "text": "able",
+    "value": 1
+  },
+  {
+    "text": "targeted",
+    "value": 1
+  },
+  {
+    "text": "human",
+    "value": 1
+  },
+  {
+    "text": "reducing",
+    "value": 1
+  },
+  {
+    "text": "repetitive",
+    "value": 1
+  },
+  {
+    "text": "commenting",
+    "value": 1
+  },
+  {
+    "text": "peer",
+    "value": 1
+  },
+  {
+    "text": "reviews",
+    "value": 1
+  },
+  {
+    "text": "improved",
+    "value": 1
+  },
+  {
+    "text": "mimicked",
+    "value": 1
+  },
+  {
+    "text": "ais",
+    "value": 1
+  },
+  {
+    "text": "language",
+    "value": 1
+  },
+  {
+    "text": "module",
+    "value": 1
+  },
+  {
+    "text": "elective",
+    "value": 1
+  },
+  {
+    "text": "teams",
+    "value": 1
+  },
+  {
+    "text": "building",
+    "value": 1
+  },
+  {
+    "text": "prototype",
+    "value": 1
+  },
+  {
+    "text": "chatgptbased",
+    "value": 1
+  },
+  {
+    "text": "simulate",
+    "value": 1
+  }
+]
