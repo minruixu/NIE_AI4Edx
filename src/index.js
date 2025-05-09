@@ -313,7 +313,7 @@ const Header = () => {
       borderBottom: '1px solid #e0e0e0'
     }}>
       <img 
-        src="https://www.nie.edu.sg/images/default-source/default-album/nie-logo.png"
+        src="https://www.ntu.edu.sg/ResourcePackages/NTU/assets/images/NTU_Logo.png"
         alt="NIE_AI4Edx Logo" 
         style={styles.logo} 
       />
