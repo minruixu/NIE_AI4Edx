@@ -314,7 +314,7 @@ const Header = () => {
     }}>
       <img 
         src={`${process.env.PUBLIC_URL}/images/NTU_Logo.webp`}
-        alt="NIE_AI4Edx Logo" 
+        alt="Logo" 
         style={styles.logo} 
       />
       <nav style={{
@@ -778,7 +778,7 @@ reshaping educational practices.
             <h3 id="research-questions">Research Questions</h3>
             <ul>
               <li>What are the instructors' and students' perceptions of their readiness to use GPT in teaching and learning?</li>
-              <li>What are the instructors' and students' ethical concerns for adopting GPT in NIE_AI4Edx?</li>
+              <li>What are the instructors' and students' ethical concerns for adopting GPT in NTU and NIE?</li>
               <li>What are the instructors' and students' reported cases of using GPT that pose as (a) threats? (b) benefits to their teaching and learning?</li>
             </ul>
           </div>
@@ -884,7 +884,7 @@ reshaping educational practices.
                 <li><strong>Average Scores:</strong> Cognition (M=3.46), Ability (M=3.06), Vision (M=3.69), Ethics (M=3.72), Perceived Threats (M=2.96), AI-Enhanced Innovation (M=3.46).</li>
                 <li><strong>Correlations:</strong> Strong positive links between Cognition, Ability, and Vision. Perceived Threats generally correlated negatively with other readiness dimensions.</li>
                 <li><strong>Factor Analysis:</strong> Suggested a two-factor structure for readiness: general AI readiness and threat perception.</li>
-                <li><strong>Institutional Comparison (Ethics):</strong> All NIE_AI4Edx lecturers showed high ethical awareness (M=3.72).</li>
+                <li><strong>Institutional Comparison (Ethics):</strong> All NTU and NIE lecturers showed high ethical awareness (M=3.72).</li>
               </ul>
             </div>
             
@@ -894,7 +894,7 @@ reshaping educational practices.
                 <li><strong>Average Scores:</strong> Cognition (M=3.48), Ability (M=3.47), Vision (M=3.58), Ethics (M=3.70), Perceived Threats (M=3.28), AI-Enhanced Innovation (M=3.69).</li>
                 <li><strong>Correlations:</strong> Generally stronger correlations between dimensions compared to instructors. Perceived Threats also showed negative correlations.</li>
                 <li><strong>Factor Analysis:</strong> Indicated a more complex, potentially 7-dimension structure, with a strong general AI readiness factor.</li>
-                <li><strong>Institutional Comparison (Ethics):</strong> All NIE_AI4Edx students showed high ethical awareness (M=3.70).</li>
+                <li><strong>Institutional Comparison (Ethics):</strong> All NTU and NIE students showed high ethical awareness (M=3.70).</li>
               </ul>
             </div>
 
