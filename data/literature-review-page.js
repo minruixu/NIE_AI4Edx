@@ -799,7 +799,7 @@ const LiteratureReviewPage = () => {
       }}>
         <a href="index.html">
           <img 
-            src="https://www.ntu.edu.sg/ResourcePackages/NTU/assets/images/NTU_Logo.png" 
+            src="./images/NTU_Logo.webp" 
             alt="NTU Logo" 
             style={{ height: '45px' }}
           />
