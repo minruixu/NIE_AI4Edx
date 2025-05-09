@@ -640,7 +640,7 @@ const MainContent = () => {
 
   return (
     <main style={styles.main}>
-      <h1 style={styles.pageTitle}>NIE_AI4Edx: Investigating GPT for Enhancing Teaching and Learning</h1>
+      <h1 style={styles.pageTitle}>Investigating GPT for Enhancing Teaching and Learning: User Readiness and Strategies</h1>
       {/* Image Slideshow Section (replacing video) */}
       <div style={styles.videoContainer}>
         {images.map((image, index) => (
@@ -719,7 +719,23 @@ const MainContent = () => {
         {isWhoWeAreOpen && (
           <div style={styles.collapsibleContent}>
             <p>
-              We are a research team from the NIE_AI4Edx Research Initiative, exploring the transformative potential of Generative Pre-trained Transformer (GPT) in higher education. Led by Associate Professor Quek Choon Lang Gwendoline with the collaboration of Associate Professor Wang Qiyun, our project "Investigating GPT for enhancing teaching and learning: User Readiness and Strategies" examines how AI technologies are reshaping educational practices.
+            We are a research team from the National Institute of
+
+Education at Nanyang Technological University, exploring
+
+the transformative potential of Generative Pre-trained
+
+Transformer (GPT) in higher education. Led by Associate
+
+Professor Quek Choon Lang Gwendoline with the
+
+collaboration of Associate Professor Wang Qiyun, our project
+
+"Investigating GPT for enhancing teaching and learning: User
+
+Readiness and Strategies" examines how AI technologies are
+
+reshaping educational practices.
               <br></br>
               <br></br>
               Our research focuses on understanding instructor and student perceptions of GPT as a pedagogical tool in university teaching and learning. We survey their readiness, ethical concerns, and experiences across diverse disciplines including Humanities, Science, Mathematics, Engineering, Art and Music. By identifying current knowledge application gaps and ethical considerations, we aim to develop practical use cases that support faculty professional development and enhance curriculum resources in the evolving AI landscape.
