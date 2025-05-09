@@ -313,7 +313,7 @@ const Header = () => {
       borderBottom: '1px solid #e0e0e0'
     }}>
       <img 
-        src="%PUBLIC_URL%/images/NTU_Logo.webp"
+        src={`${process.env.PUBLIC_URL}/images/NTU_Logo.webp`}
         alt="NIE_AI4Edx Logo" 
         style={styles.logo} 
       />
