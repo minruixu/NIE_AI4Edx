@@ -1,0 +1,402 @@
+[
+  {
+    "text": "students",
+    "value": 16
+  },
+  {
+    "text": "chatgpt",
+    "value": 11
+  },
+  {
+    "text": "ais",
+    "value": 5
+  },
+  {
+    "text": "writing",
+    "value": 5
+  },
+  {
+    "text": "design",
+    "value": 4
+  },
+  {
+    "text": "feedback",
+    "value": 4
+  },
+  {
+    "text": "university",
+    "value": 4
+  },
+  {
+    "text": "education",
+    "value": 4
+  },
+  {
+    "text": "compare",
+    "value": 4
+  },
+  {
+    "text": "especially",
+    "value": 4
+  },
+  {
+    "text": "humanities",
+    "value": 4
+  },
+  {
+    "text": "inquiry",
+    "value": 4
+  },
+  {
+    "text": "generative",
+    "value": 4
+  },
+  {
+    "text": "questions",
+    "value": 4
+  },
+  {
+    "text": "historical",
+    "value": 4
+  },
+  {
+    "text": "critical",
+    "value": 4
+  },
+  {
+    "text": "engineering",
+    "value": 3
+  },
+  {
+    "text": "prompting",
+    "value": 3
+  },
+  {
+    "text": "french",
+    "value": 3
+  },
+  {
+    "text": "draft",
+    "value": 3
+  },
+  {
+    "text": "aigenerated",
+    "value": 3
+  },
+  {
+    "text": "report",
+    "value": 3
+  },
+  {
+    "text": "lab",
+    "value": 3
+  },
+  {
+    "text": "sources",
+    "value": 3
+  },
+  {
+    "text": "academic",
+    "value": 3
+  },
+  {
+    "text": "literature",
+    "value": 3
+  },
+  {
+    "text": "accuracy",
+    "value": 3
+  },
+  {
+    "text": "research",
+    "value": 3
+  },
+  {
+    "text": "cad",
+    "value": 2
+  },
+  {
+    "text": "course",
+    "value": 2
+  },
+  {
+    "text": "undergraduate",
+    "value": 2
+  },
+  {
+    "text": "singaporean",
+    "value": 2
+  },
+  {
+    "text": "tan",
+    "value": 2
+  },
+  {
+    "text": "summaries",
+    "value": 2
+  },
+  {
+    "text": "outcomes",
+    "value": 2
+  },
+  {
+    "text": "peer",
+    "value": 2
+  },
+  {
+    "text": "thinking",
+    "value": 2
+  },
+  {
+    "text": "however",
+    "value": 2
+  },
+  {
+    "text": "fluency",
+    "value": 2
+  },
+  {
+    "text": "madame",
+    "value": 2
+  },
+  {
+    "text": "liu",
+    "value": 2
+  },
+  {
+    "text": "essays",
+    "value": 2
+  },
+  {
+    "text": "input",
+    "value": 2
+  },
+  {
+    "text": "generate",
+    "value": 2
+  },
+  {
+    "text": "arguments",
+    "value": 2
+  },
+  {
+    "text": "identify",
+    "value": 2
+  },
+  {
+    "text": "need",
+    "value": 2
+  },
+  {
+    "text": "biology",
+    "value": 2
+  },
+  {
+    "text": "soh",
+    "value": 2
+  },
+  {
+    "text": "help",
+    "value": 2
+  },
+  {
+    "text": "data",
+    "value": 2
+  },
+  {
+    "text": "integrates",
+    "value": 2
+  },
+  {
+    "text": "interpretations",
+    "value": 2
+  },
+  {
+    "text": "based",
+    "value": 2
+  },
+  {
+    "text": "scientific",
+    "value": 2
+  },
+  {
+    "text": "must",
+    "value": 2
+  },
+  {
+    "text": "classroom",
+    "value": 2
+  },
+  {
+    "text": "lee",
+    "value": 2
+  },
+  {
+    "text": "history",
+    "value": 2
+  },
+  {
+    "text": "like",
+    "value": 2
+  },
+  {
+    "text": "ways",
+    "value": 2
+  },
+  {
+    "text": "gptgenerated",
+    "value": 2
+  },
+  {
+    "text": "responses",
+    "value": 2
+  },
+  {
+    "text": "bias",
+    "value": 2
+  },
+  {
+    "text": "responsible",
+    "value": 2
+  },
+  {
+    "text": "educators",
+    "value": 2
+  },
+  {
+    "text": "scholarly",
+    "value": 2
+  },
+  {
+    "text": "content",
+    "value": 2
+  },
+  {
+    "text": "insights",
+    "value": 2
+  },
+  {
+    "text": "automating",
+    "value": 1
+  },
+  {
+    "text": "mechanical",
+    "value": 1
+  },
+  {
+    "text": "uses",
+    "value": 1
+  },
+  {
+    "text": "copilot",
+    "value": 1
+  },
+  {
+    "text": "assist",
+    "value": 1
+  },
+  {
+    "text": "iterative",
+    "value": 1
+  },
+  {
+    "text": "tasks",
+    "value": 1
+  },
+  {
+    "text": "involving",
+    "value": 1
+  },
+  {
+    "text": "software",
+    "value": 1
+  },
+  {
+    "text": "upload",
+    "value": 1
+  },
+  {
+    "text": "provides",
+    "value": 1
+  },
+  {
+    "text": "preliminary",
+    "value": 1
+  },
+  {
+    "text": "structural",
+    "value": 1
+  },
+  {
+    "text": "assumptions",
+    "value": 1
+  },
+  {
+    "text": "materials",
+    "value": 1
+  },
+  {
+    "text": "choice",
+    "value": 1
+  },
+  {
+    "text": "compliance",
+    "value": 1
+  },
+  {
+    "text": "constraints",
+    "value": 1
+  },
+  {
+    "text": "crossreferenced",
+    "value": 1
+  },
+  {
+    "text": "actual",
+    "value": 1
+  },
+  {
+    "text": "testing",
+    "value": 1
+  },
+  {
+    "text": "reviews",
+    "value": 1
+  },
+  {
+    "text": "reduces",
+    "value": 1
+  },
+  {
+    "text": "repetitive",
+    "value": 1
+  },
+  {
+    "text": "instructor",
+    "value": 1
+  },
+  {
+    "text": "workload",
+    "value": 1
+  },
+  {
+    "text": "helps",
+    "value": 1
+  },
+  {
+    "text": "refine",
+    "value": 1
+  },
+  {
+    "text": "notices",
+    "value": 1
+  },
+  {
+    "text": "overly",
+    "value": 1
+  },
+  {
+    "text": "trust",
+    "value": 1
+  }
+]
