@@ -305,6 +305,26 @@ const Header = () => {
   const [isCaseStudiesDropdownOpen, setIsCaseStudiesDropdownOpen] = useState(false);
   const [isAboutUsDropdownOpen, setIsAboutUsDropdownOpen] = useState(false);
 
+  // Function to handle navigation
+  const handleNavigation = (e, targetId) => {
+    // Only prevent default for internal links
+    e.preventDefault();
+    
+    const targetElement = document.getElementById(targetId);
+    if (targetElement) {
+      // Scroll to the target element
+      targetElement.scrollIntoView({ behavior: 'smooth' });
+      
+      // Update the URL hash without causing page refresh
+      window.history.pushState(null, '', `#${targetId}`);
+      
+      // Dispatch a custom event to handle section opening logic
+      window.dispatchEvent(new CustomEvent('pageNavigated', { 
+        detail: { section: `#${targetId}` } 
+      }));
+    }
+  };
+
   return (
     <header style={{
       ...styles.header,
@@ -327,15 +347,21 @@ const Header = () => {
           onMouseEnter={() => setIsAboutUsDropdownOpen(true)}
           onMouseLeave={() => setIsAboutUsDropdownOpen(false)}
         >
-          <a href="#who-we-are" style={{
-            ...styles.navLink,
-            fontWeight: '600',
-            fontSize: '1.05em',
-            color: '#003d7c',
-            padding: '10px 0',
-            borderBottom: isAboutUsDropdownOpen ? '2px solid #003d7c' : '2px solid transparent',
-            transition: 'all 0.3s ease',
-          }}>About Us</a>
+          <a 
+            href="#who-we-are" 
+            onClick={(e) => handleNavigation(e, 'who-we-are')}
+            style={{
+              ...styles.navLink,
+              fontWeight: '600',
+              fontSize: '1.05em',
+              color: '#003d7c',
+              padding: '10px 0',
+              borderBottom: isAboutUsDropdownOpen ? '2px solid #003d7c' : '2px solid transparent',
+              transition: 'all 0.3s ease',
+            }}
+          >
+            About Us
+          </a>
           {isAboutUsDropdownOpen && (
             <div style={{
               ...styles.dropdownContent,
@@ -344,8 +370,8 @@ const Header = () => {
               borderRadius: '8px',
               marginTop: '5px',
             }}>
-              <a href="#who-we-are" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Research Team</a>
-              <a href="#research-focus" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Research Direction</a>
+              <a href="#who-we-are" onClick={(e) => handleNavigation(e, 'who-we-are')} style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Research Team</a>
+              <a href="#research-focus" onClick={(e) => handleNavigation(e, 'research-focus')} style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Research Direction</a>
             </div>
           )}
         </div>
@@ -356,13 +382,19 @@ const Header = () => {
           onMouseEnter={() => setIsResearchFocusDropdownOpen(true)}
           onMouseLeave={() => setIsResearchFocusDropdownOpen(false)}
         >
-          <a href="#research-focus" style={{
-            ...styles.navLink,
-            fontWeight: '600',
-            fontSize: '1.05em',
-            borderBottom: isResearchFocusDropdownOpen ? '2px solid #003d7c' : '2px solid transparent',
-            transition: 'all 0.3s ease',
-          }}>Research Focus</a>
+          <a 
+            href="#research-focus" 
+            onClick={(e) => handleNavigation(e, 'research-focus')}
+            style={{
+              ...styles.navLink,
+              fontWeight: '600',
+              fontSize: '1.05em',
+              borderBottom: isResearchFocusDropdownOpen ? '2px solid #003d7c' : '2px solid transparent',
+              transition: 'all 0.3s ease',
+            }}
+          >
+            Research Focus
+          </a>
           {isResearchFocusDropdownOpen && (
             <div style={{
               ...styles.dropdownContent,
@@ -371,9 +403,9 @@ const Header = () => {
               borderRadius: '8px',
               marginTop: '5px',
             }}>
-              <a href="#research-aims" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Aims</a>
-              <a href="#research-problems" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Problems</a>
-              <a href="#research-questions" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Research Questions</a>
+              <a href="#research-aims" onClick={(e) => handleNavigation(e, 'research-aims')} style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Aims</a>
+              <a href="#research-problems" onClick={(e) => handleNavigation(e, 'research-problems')} style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Problems</a>
+              <a href="#research-questions" onClick={(e) => handleNavigation(e, 'research-questions')} style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Research Questions</a>
             </div>
           )}
         </div>
@@ -384,13 +416,19 @@ const Header = () => {
           onMouseEnter={() => setIsMethodsDropdownOpen(true)}
           onMouseLeave={() => setIsMethodsDropdownOpen(false)}
         >
-          <a href="#methods" style={{
-            ...styles.navLink,
-            fontWeight: '600',
-            fontSize: '1.05em',
-            borderBottom: isMethodsDropdownOpen ? '2px solid #003d7c' : '2px solid transparent',
-            transition: 'all 0.3s ease',
-          }}>Methods</a>
+          <a 
+            href="#methods" 
+            onClick={(e) => handleNavigation(e, 'methods')}
+            style={{
+              ...styles.navLink,
+              fontWeight: '600',
+              fontSize: '1.05em',
+              borderBottom: isMethodsDropdownOpen ? '2px solid #003d7c' : '2px solid transparent',
+              transition: 'all 0.3s ease',
+            }}
+          >
+            Methods
+          </a>
           {isMethodsDropdownOpen && (
             <div style={{
               ...styles.dropdownContent,
@@ -399,9 +437,9 @@ const Header = () => {
               borderRadius: '8px',
               marginTop: '5px',
             }}>
-              <a href="#research-design" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Research Design</a>
-              <a href="#participants" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Participants</a>
-              <a href="#data-analysis" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Data Analysis</a>
+              <a href="#research-design" onClick={(e) => handleNavigation(e, 'research-design')} style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Research Design</a>
+              <a href="#participants" onClick={(e) => handleNavigation(e, 'participants')} style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Participants</a>
+              <a href="#data-analysis" onClick={(e) => handleNavigation(e, 'data-analysis')} style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Data Analysis</a>
             </div>
           )}
         </div>
@@ -413,7 +451,8 @@ const Header = () => {
           onMouseLeave={() => setIsLiteratureReviewDropdownOpen(false)}
         >
           <a 
-            href="#" 
+            href="javascript:void(0)" 
+            onClick={() => window.navigateToHtmlPage('literature')}
             style={{
               ...styles.navLink,
               fontWeight: '600',
@@ -421,11 +460,9 @@ const Header = () => {
               borderBottom: isLiteratureReviewDropdownOpen ? '2px solid #003d7c' : '2px solid transparent',
               transition: 'all 0.3s ease',
             }}
-            onClick={(e) => {
-              e.preventDefault();
-              window.open(`${process.env.PUBLIC_URL}/literature-review.html`, "_blank");
-            }}
-          >Literature Review</a>
+          >
+            Literature Review
+          </a>
           {isLiteratureReviewDropdownOpen && (
             <div style={{
               ...styles.dropdownContent,
@@ -434,10 +471,10 @@ const Header = () => {
               borderRadius: '8px',
               marginTop: '5px',
             }}>
-              <a href="#lit-rq1" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>RQ1: Readiness (Main Page)</a>
-              <a href="#lit-rq2" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>RQ2: Ethics (Main Page)</a>
-              <a href="#lit-rq3" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>RQ3: Practices (Main Page)</a>
-              <a href="#" style={styles.dropdownLink} onClick={(e) => {e.preventDefault(); window.open(`${process.env.PUBLIC_URL}/literature-review.html`, "_blank");}} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Detailed Literature Review Page</a>
+              <a href="#lit-rq1" onClick={(e) => handleNavigation(e, 'lit-rq1')} style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>RQ1: Readiness (Main Page)</a>
+              <a href="#lit-rq2" onClick={(e) => handleNavigation(e, 'lit-rq2')} style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>RQ2: Ethics (Main Page)</a>
+              <a href="#lit-rq3" onClick={(e) => handleNavigation(e, 'lit-rq3')} style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>RQ3: Practices (Main Page)</a>
+              <a href="javascript:void(0)" onClick={() => window.navigateToHtmlPage('literature')} style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Detailed Literature Review Page</a>
             </div>
           )}
         </div>
@@ -449,7 +486,8 @@ const Header = () => {
           onMouseLeave={() => setIsFindingsOpen(false)}
         >
           <a 
-            href="#" 
+            href="javascript:void(0)" 
+            onClick={() => window.navigateToHtmlPage('findings')}
             style={{
               ...styles.navLink,
               fontWeight: '600',
@@ -457,11 +495,9 @@ const Header = () => {
               borderBottom: isFindingsOpen ? '2px solid #003d7c' : '2px solid transparent',
               transition: 'all 0.3s ease',
             }}
-            onClick={(e) => {
-              e.preventDefault();
-              window.open(`${process.env.PUBLIC_URL}/findings.html`, "_blank");
-            }}
-          >Findings</a>
+          >
+            Findings
+          </a>
           {isFindingsOpen && (
             <div style={{
               ...styles.dropdownContent,
@@ -470,9 +506,9 @@ const Header = () => {
               borderRadius: '8px',
               marginTop: '5px',
             }}>
-              <a href="#quantitative" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Quantitative (Main Page)</a>
-              <a href="#qualitative" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Qualitative (Main Page)</a>
-              <a href="#" style={styles.dropdownLink} onClick={(e) => {e.preventDefault(); window.open(`${process.env.PUBLIC_URL}/findings.html`, "_blank");}} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Detailed Findings Page</a>
+              <a href="#quantitative" onClick={(e) => handleNavigation(e, 'quantitative')} style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Quantitative (Main Page)</a>
+              <a href="#qualitative" onClick={(e) => handleNavigation(e, 'qualitative')} style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Qualitative (Main Page)</a>
+              <a href="javascript:void(0)" onClick={() => window.navigateToHtmlPage('findings')} style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Detailed Findings Page</a>
             </div>
           )}
         </div>
@@ -483,13 +519,19 @@ const Header = () => {
           onMouseEnter={() => setIsCaseStudiesDropdownOpen(true)}
           onMouseLeave={() => setIsCaseStudiesDropdownOpen(false)}
         >
-          <a href="#" style={{
-            ...styles.navLink,
-            fontWeight: '600',
-            fontSize: '1.05em',
-            borderBottom: isCaseStudiesDropdownOpen ? '2px solid #003d7c' : '2px solid transparent',
-            transition: 'all 0.3s ease',
-          }} onClick={(e) => {e.preventDefault(); window.open(`${process.env.PUBLIC_URL}/case-studies.html`, "_blank");}}>Case Studies</a>
+          <a 
+            href="javascript:void(0)" 
+            onClick={() => window.navigateToHtmlPage('cases')}
+            style={{
+              ...styles.navLink,
+              fontWeight: '600',
+              fontSize: '1.05em',
+              borderBottom: isCaseStudiesDropdownOpen ? '2px solid #003d7c' : '2px solid transparent',
+              transition: 'all 0.3s ease',
+            }}
+          >
+            Case Studies
+          </a>
           {isCaseStudiesDropdownOpen && (
             <div style={{
               ...styles.dropdownContent,
@@ -498,8 +540,8 @@ const Header = () => {
               borderRadius: '8px',
               marginTop: '5px',
             }}>
-              <a href="#browse-cases" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Browse Cases (Main Page)</a>
-              <a href="#" style={styles.dropdownLink} onClick={(e) => {e.preventDefault(); window.open(`${process.env.PUBLIC_URL}/case-studies.html`, "_blank");}} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Detailed Case Studies Page</a>
+              <a href="#browse-cases" onClick={(e) => handleNavigation(e, 'browse-cases')} style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Browse Cases (Main Page)</a>
+              <a href="javascript:void(0)" onClick={() => window.navigateToHtmlPage('cases')} style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Detailed Case Studies Page</a>
             </div>
           )}
         </div>
@@ -510,13 +552,19 @@ const Header = () => {
           onMouseEnter={() => setIsResourcesDropdownOpen(true)}
           onMouseLeave={() => setIsResourcesDropdownOpen(false)}
         >
-          <a href="#resources" style={{
-            ...styles.navLink,
-            fontWeight: '600',
-            fontSize: '1.05em',
-            borderBottom: isResourcesDropdownOpen ? '2px solid #003d7c' : '2px solid transparent',
-            transition: 'all 0.3s ease',
-          }}>Resources</a>
+          <a 
+            href="#resources" 
+            onClick={(e) => handleNavigation(e, 'resources')}
+            style={{
+              ...styles.navLink,
+              fontWeight: '600',
+              fontSize: '1.05em',
+              borderBottom: isResourcesDropdownOpen ? '2px solid #003d7c' : '2px solid transparent',
+              transition: 'all 0.3s ease',
+            }}
+          >
+            Resources
+          </a>
           {isResourcesDropdownOpen && (
             <div style={{
               ...styles.dropdownContent,
@@ -531,15 +579,15 @@ const Header = () => {
             }}>
               <div style={{ borderRight: '1px solid #eee', padding: '0 10px' }}>
                 <h4 style={{ margin: '5px 0 10px 0', color: '#003d7c', fontSize: '0.95em', textAlign: 'center' }}>Tools for Teaching</h4>
-                <a href="#instructor-tools" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Instructor Resources</a>
-                <a href="#ai-assessment" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>AI for Assessment</a>
-                <a href="#teaching-activities" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Teaching Activities</a>
+                <a href="#instructor-tools" onClick={(e) => handleNavigation(e, 'instructor-tools')} style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Instructor Resources</a>
+                <a href="#ai-assessment" onClick={(e) => handleNavigation(e, 'ai-assessment')} style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>AI for Assessment</a>
+                <a href="#teaching-activities" onClick={(e) => handleNavigation(e, 'teaching-activities')} style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Teaching Activities</a>
               </div>
               <div style={{ padding: '0 10px' }}>
                 <h4 style={{ margin: '5px 0 10px 0', color: '#e74c3c', fontSize: '0.95em', textAlign: 'center' }}>Tools for Learning</h4>
-                <a href="#student-tools" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Student Resources</a>
-                <a href="#learning-ai" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Learning with AI</a>
-                <a href="#student-research" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Research Materials</a>
+                <a href="#student-tools" onClick={(e) => handleNavigation(e, 'student-tools')} style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Student Resources</a>
+                <a href="#learning-ai" onClick={(e) => handleNavigation(e, 'learning-ai')} style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Learning with AI</a>
+                <a href="#student-research" onClick={(e) => handleNavigation(e, 'student-research')} style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Research Materials</a>
               </div>
             </div>
           )}
@@ -572,32 +620,32 @@ const MainContent = () => {
       
       if (hash.includes('who-we-are')) {
         setIsWhoWeAreOpen(true);
+        document.getElementById('who-we-are')?.scrollIntoView({ behavior: 'smooth' });
       } else if (hash.includes('research-')) {
         setIsResearchFocusOpen(true);
+        // Find the specific ID to scroll to
+        const specificId = hash.substring(1); // Remove the # character
+        document.getElementById(specificId)?.scrollIntoView({ behavior: 'smooth' });
       } else if (hash.includes('lit-')) {
         // This will handle lit-rq1, lit-rq2, lit-rq3
         setIsLiteratureReviewOpen(true);
-      } else if (hash.includes('research-design') || hash.includes('participants') || hash.includes('data-analysis')) {
+        document.getElementById(hash.substring(1))?.scrollIntoView({ behavior: 'smooth' });
+      } else if (hash.includes('methods') || hash.includes('research-design') || hash.includes('participants') || hash.includes('data-analysis')) {
         setIsMethodsOpen(true);
-      } else if (hash.includes('qualitative') || hash.includes('quantitative')) {
+        document.getElementById(hash.substring(1))?.scrollIntoView({ behavior: 'smooth' });
+      } else if (hash.includes('findings') || hash.includes('qualitative') || hash.includes('quantitative')) {
         setIsFindingsOpenSection(true);
-      } else if (hash.includes('-tools') || hash.includes('resources') || hash.includes('teaching-activities') || 
+        document.getElementById(hash.substring(1))?.scrollIntoView({ behavior: 'smooth' });
+      } else if (hash.includes('resources') || hash.includes('-tools') || hash.includes('teaching-activities') || 
                 hash.includes('learning-ai') || hash.includes('ai-assessment') || hash.includes('student-research')) {
         setIsResourcesOpen(true);
+        document.getElementById(hash.substring(1))?.scrollIntoView({ behavior: 'smooth' });
       } else if (hash.includes('case-studies') || hash.includes('browse-cases') || hash.includes('random-case')) {
         setIsCaseStudiesOpen(true);
+        document.getElementById(hash.substring(1))?.scrollIntoView({ behavior: 'smooth' });
       }
       
-      // Scroll to the element after a short delay to ensure the section is open
-      setTimeout(() => {
-        const element = document.getElementById(hash.substring(1));
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
-      
       // Signal to parent app component that we've navigated to a new page section
-      // Custom event to trigger post-page interaction
       window.dispatchEvent(new CustomEvent('pageNavigated', { detail: { section: hash } }));
     };
 
@@ -607,6 +655,33 @@ const MainContent = () => {
     // Listen for hash changes
     window.addEventListener('hashchange', handleHashChange);
     
+    // Listen for custom pageNavigated events from Header component
+    window.addEventListener('pageNavigated', (event) => {
+      const { section } = event.detail;
+      
+      // The section will be in the format "#section-id"
+      if (section.includes('who-we-are')) {
+        setIsWhoWeAreOpen(true);
+      } else if (section.includes('research-')) {
+        setIsResearchFocusOpen(true);
+      } else if (section.includes('lit-')) {
+        setIsLiteratureReviewOpen(true);
+      } else if (section.includes('methods') || section.includes('research-design') || 
+                section.includes('participants') || section.includes('data-analysis')) {
+        setIsMethodsOpen(true);
+      } else if (section.includes('findings') || section.includes('qualitative') || 
+                section.includes('quantitative')) {
+        setIsFindingsOpenSection(true);
+      } else if (section.includes('resources') || section.includes('-tools') || 
+                section.includes('teaching-activities') || section.includes('learning-ai') || 
+                section.includes('ai-assessment') || section.includes('student-research')) {
+        setIsResourcesOpen(true);
+      } else if (section.includes('case-studies') || section.includes('browse-cases') || 
+                section.includes('random-case')) {
+        setIsCaseStudiesOpen(true);
+      }
+    });
+    
     // Set up slideshow rotation
     const slideInterval = setInterval(() => {
       setCurrentImageIndex(prevIndex => (prevIndex + 1) % images.length);
@@ -615,6 +690,7 @@ const MainContent = () => {
     // Clean up event listener and interval
     return () => {
       window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('pageNavigated', handleHashChange);
       clearInterval(slideInterval);
     };
   }, [images.length]);
@@ -808,9 +884,8 @@ reshaping educational practices.
             
             <div style={{marginTop: '20px', textAlign: 'center'}}>
               <a 
-                href="#" 
-                target="_blank" 
-                rel="noopener noreferrer"
+                href="javascript:void(0)" 
+                onClick={() => window.navigateToHtmlPage('literature')}
                 style={{
                   display: 'inline-block',
                   padding: '10px 20px',
@@ -819,10 +894,6 @@ reshaping educational practices.
                   textDecoration: 'none',
                   borderRadius: '4px',
                   fontWeight: 'bold'
-                }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.open(`${process.env.PUBLIC_URL}/literature-review.html`, "_blank");
                 }}
               >
                 Explore Complete Literature Review
@@ -939,7 +1010,7 @@ reshaping educational practices.
               <h3 style={{ color: '#003d7c', margin: '0 0 10px 0' }}>Detailed Findings Available</h3>
               <p>Explore comprehensive data, visualizations, and analysis on our dedicated findings page, complete with an interactive chatbot assistant.</p>
               <a 
-                href="#" 
+                href={`redirect-to-findings.html`}
                 target="_blank" 
                 rel="noopener noreferrer"
                 style={{
@@ -951,10 +1022,6 @@ reshaping educational practices.
                   textDecoration: 'none',
                   marginTop: '10px',
                   fontWeight: 'bold'
-                }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.open(`${process.env.PUBLIC_URL}/findings.html`, "_blank");
                 }}
               >
                 Explore Complete Findings
@@ -984,7 +1051,7 @@ reshaping educational practices.
               <h3 style={{ color: '#003d7c', margin: '0 0 10px 0' }}>Dedicated Case Studies Page Now Available</h3>
               <p>We've created a dedicated page for all our case studies with improved browsing experience and visualization.</p>
               <a 
-                href="#" 
+                href={`${process.env.PUBLIC_URL}/case-studies.html`}
                 target="_blank" 
                 rel="noopener noreferrer"
                 style={{
@@ -996,10 +1063,6 @@ reshaping educational practices.
                   textDecoration: 'none',
                   marginTop: '10px',
                   fontWeight: 'bold'
-                }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.open(`${process.env.PUBLIC_URL}/case-studies.html`, "_blank");
                 }}
               >
                 Visit Full Case Studies Page
@@ -2344,1212 +2407,3 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
       }
     }, 1500);
   };
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
-  };
-
-  // Initial role selection buttons
-  const renderRoleSelection = () => {
-    if (userRole) return null;
-    
-    return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center',
-        gap: '15px', 
-        marginTop: '15px',
-        marginBottom: '15px'
-      }}>
-        <button 
-          onClick={() => handleRoleSelection('instructor')}
-          style={{
-            padding: '10px 15px',
-            backgroundColor: '#003d7c',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '14px',
-            fontWeight: 'bold',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-            transition: 'background-color 0.2s, transform 0.2s',
-          }}
-          onMouseOver={e => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.backgroundColor = '#00295a';
-          }}
-          onMouseOut={e => {
-            e.currentTarget.style.transform = 'scale(1)';
-            e.currentTarget.style.backgroundColor = '#003d7c';
-          }}
-        >
-          I'm an Instructor
-        </button>
-        <button 
-          onClick={() => handleRoleSelection('student')}
-          style={{
-            padding: '10px 15px',
-            backgroundColor: '#003d7c',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '14px',
-            fontWeight: 'bold',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-            transition: 'background-color 0.2s, transform 0.2s',
-          }}
-          onMouseOver={e => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.backgroundColor = '#00295a';
-          }}
-          onMouseOut={e => {
-            e.currentTarget.style.transform = 'scale(1)';
-            e.currentTarget.style.backgroundColor = '#003d7c';
-          }}
-        >
-          I'm a Student
-        </button>
-      </div>
-    );
-  };
-
-  // Function to handle role selection
-  const handleRoleSelection = (role) => {
-    setUserRole(role);
-    
-    // Show typing indicator
-    setBotTyping(true);
-    
-    // Simulate bot response after a short delay
-    setTimeout(() => {
-      setBotTyping(false);
-      
-      // Display interest options based on role
-      if (role === 'instructor') {
-        setMessages(prev => [...prev, { 
-          text: "What are you most interested in exploring?", 
-          sender: 'bot',
-          showInterestOptions: true,
-          options: [
-            { text: "Hands-on Teaching Activities", value: "teaching-activities", href: "#research-focus" },
-            { text: "Gen AI for Assessment", value: "ai-assessment", href: "#findings" },
-            { text: "Toolkit Materials", value: "instructor-toolkit", href: "#instructor-tools" },
-            { text: "Research Insights", value: "research-insights", href: "#literature-review" }
-          ]
-        }]);
-      } else {
-        setMessages(prev => [...prev, { 
-          text: "What are you most interested in exploring?", 
-          sender: 'bot',
-          showInterestOptions: true,
-          options: [
-            { text: "Learning with Gen AI", value: "learning-ai", href: "#methods" },
-            { text: "Research Materials", value: "student-research", href: "#research-focus" },
-            { text: "Student Tools", value: "student-tools", href: "#student-tools" },
-            { text: "Case Studies", value: "case-studies", href: "#case-studies" }
-          ]
-        }]);
-      }
-    }, 1000);
-  };
-
-  // Function to handle interest selection
-  const handleInterestSelection = (option) => {
-    const { text, value, href } = option;
-    
-    // Add user message
-    setMessages(prev => [...prev, { text: text, sender: 'user' }]);
-    
-    // Show typing indicator
-    setBotTyping(true);
-    
-    // Create content-specific response based on the selected interest
-    let responseText = '';
-    
-    switch (value) {
-      case 'teaching-activities':
-        responseText = "Great choice! Our hands-on teaching activities include prompt engineering exercises, collaborative AI projects, and classroom integration strategies. I'll take you to our Resources section where you can explore these activities.";
-        break;
-      case 'ai-assessment':
-        responseText = "Our findings section contains best practices for using Gen AI in assessment design, grading assistance, and creating authentic assessments in an AI era. Let me show you those resources.";
-        break;
-      case 'instructor-toolkit':
-        responseText = "Our resources provide ready-to-use templates, prompts, and guides for incorporating AI tools into your teaching. I'll direct you to our complete collection of teaching resources.";
-        break;
-      case 'research-insights':
-        responseText = "I'll direct you to our literature review which summarizes key research on AI readiness, ethics considerations, and effective implementation strategies.";
-        break;
-      case 'learning-ai':
-        responseText = "Our methods section includes strategies for effective learning with Gen AI, including prompt crafting, critical evaluation of AI outputs, and ethical usage guidelines.";
-        break;
-      case 'student-research':
-        responseText = "I'll take you to our research focus section which includes findings on how students are leveraging Gen AI across different disciplines and learning contexts.";
-        break;
-      case 'student-tools':
-        responseText = "Let me show you our collection of recommended AI tools specifically selected to enhance your academic work and learning efficiency.";
-        break;
-      case 'case-studies':
-        responseText = "Our case studies showcase real examples of how AI is being integrated into teaching and learning contexts. You'll find 8 detailed cases covering different aspects of AI in education. I'll direct you there now.";
-        break;
-      default:
-        responseText = "I'll direct you to resources related to " + text;
-    }
-    
-    // Respond after a short delay
-    setTimeout(() => {
-      setBotTyping(false);
-      setMessages(prev => [...prev, { text: responseText, sender: 'bot' }]);
-      
-      // Reset userPurpose to ensure quick replies stay available
-      setUserPurpose(null);
-      
-      // Add navigation button after a brief pause
-      setTimeout(() => {
-        // Create more descriptive button text based on the value/context
-        let buttonText = `Go to ${text}`;
-        
-        switch (value) {
-          case 'teaching-activities':
-            buttonText = 'View Teaching Activities';
-            break;
-          case 'ai-assessment':
-            buttonText = 'Explore Assessment Tools';
-            break;
-          case 'instructor-toolkit':
-            buttonText = 'Open Instructor Resources';
-            break;
-          case 'research-insights':
-            buttonText = 'Read Literature Review';
-            break;
-          case 'learning-ai':
-            buttonText = 'Learn AI Methods';
-            break;
-          case 'student-research':
-            buttonText = 'View Research Materials';
-            break;
-          case 'student-tools':
-            buttonText = 'Browse Student Tools';
-            break;
-          case 'case-studies':
-            buttonText = 'Explore Case Studies';
-            break;
-          default:
-            buttonText = `Go to ${text}`;
-        }
-        
-        setMessages(prev => [
-          ...prev, 
-          { 
-            text: buttonText, 
-            sender: 'bot', 
-            isButton: true, 
-            action: href 
-          }
-        ]);
-      }, 500);
-    }, 1500);
-  };
-
-  // Function to provide quick replies
-  const renderQuickReplies = () => {
-    // Only show quick replies if a role is selected
-    if (!userRole) return null;
-    
-    return (
-      <div style={{ 
-        display: 'flex', 
-        flexWrap: 'wrap', 
-        gap: '10px', 
-        marginTop: '12px',
-        marginBottom: '12px',
-        justifyContent: 'center'
-      }}>
-        <button 
-          onClick={() => handleQuickReply(userRole === 'instructor' ? 'instructor-tools' : 'student-tools')}
-          style={{
-            padding: '10px 16px',
-            backgroundColor: userRole === 'instructor' ? '#003d7c' : '#e74c3c',
-            color: 'white',
-            border: 'none',
-            borderRadius: '20px',
-            cursor: 'pointer',
-            fontSize: '0.95em',
-            fontWeight: '500',
-            boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
-            transition: 'all 0.2s ease',
-          }}
-          onMouseOver={e => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.3)';
-          }}
-          onMouseOut={e => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
-          }}
-        >
-          🔍 {userRole === 'instructor' ? 'Teaching Tools' : 'Learning Tools'}
-        </button>
-        <button 
-          onClick={() => handleQuickReply('feedback')}
-          style={{
-            padding: '10px 16px',
-            backgroundColor: '#27ae60',
-            color: 'white',
-            border: 'none',
-            borderRadius: '20px',
-            cursor: 'pointer',
-            fontSize: '0.95em',
-            fontWeight: '500',
-            boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
-            transition: 'all 0.2s ease',
-          }}
-          onMouseOver={e => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.3)';
-          }}
-          onMouseOut={e => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
-          }}
-        >
-          💬 Give Feedback
-        </button>
-      </div>
-    );
-  };
-
-  // Handle quick reply button clicks
-  const handleQuickReply = (purpose) => {
-    let userText = '';
-    let botResponse = '';
-    
-    switch (purpose) {
-      case 'instructor-tools':
-        userText = 'Show me teaching tools';
-        botResponse = 'Here are some recommended AI tools for instructors:\n\n• Copilot - For course material development\n• ChatGPT - For creating assessments and activities\n• TeacherGAIA - For personalized learning design\n\nWould you like to see the complete list of teaching tools?';
-        setUserPurpose('recommendations');
-        break;
-      case 'student-tools':
-        userText = 'Show me learning tools';
-        botResponse = 'Here are some recommended AI tools for students:\n\n• Gemini - Great for brainstorming and research\n• Claude - Excellent for essay feedback\n• Perplexity.ai - For in-depth research with citations\n• Google NotebookLM - For organizing research notes\n\nWould you like to see the complete list of learning tools?';
-        setUserPurpose('recommendations');
-        break;
-      case 'feedback':
-        userText = 'I want to give feedback';
-        botResponse = 'Thanks for wanting to share your feedback! Please let me know what you think about the research or this website.';
-        setUserPurpose('feedback');
-        break;
-      default:
-        return;
-    }
-    
-    // Add user message
-    setMessages(prev => [...prev, { text: userText, sender: 'user' }]);
-    
-    // Show typing indicator
-    setBotTyping(true);
-    
-    // Simulate bot response after a short delay
-    setTimeout(() => {
-      setBotTyping(false);
-      
-      const botResponseObj = { text: botResponse, sender: 'bot' };
-      
-      // Add action for tools
-      if (purpose === 'instructor-tools') {
-        botResponseObj.action = '#instructor-tools';
-      } else if (purpose === 'student-tools') {
-        botResponseObj.action = '#student-tools';
-      }
-      
-      setMessages(prev => [...prev, botResponseObj]);
-      
-      // If the response has an action (navigation link), provide a follow-up button
-      if (botResponseObj.action) {
-        setTimeout(() => {
-          // Create descriptive button text based on the action
-          let buttonText = 'Click here to navigate';
-          
-          // Customize button text based on the action
-          if (botResponseObj.action.includes('instructor-tools')) {
-            buttonText = 'View Instructor Tools';
-          } else if (botResponseObj.action.includes('student-tools')) {
-            buttonText = 'View Student Tools';
-          } else if (botResponseObj.action.includes('research-focus')) {
-            buttonText = 'Go to Research Focus';
-          } else if (botResponseObj.action.includes('methods')) {
-            buttonText = 'Explore Methods';
-          } else if (botResponseObj.action.includes('findings')) {
-            buttonText = 'View Findings';
-          } else if (botResponseObj.action.includes('case-studies')) {
-            buttonText = 'Browse Case Studies';
-          }
-          
-          const buttonMessage = { 
-            text: buttonText, 
-            sender: 'bot', 
-            isButton: true, 
-            action: botResponseObj.action 
-          };
-          
-          setMessages(prev => [...prev, buttonMessage]);
-          
-          // Store button message in database
-          storeMessage(buttonMessage);
-        }, 500);
-      } else {
-        // Reset userPurpose to ensure quick replies stay available
-        setUserPurpose(null);
-      }
-    }, 1500);
-  };
-  // Function to store user feedback
-  const storeFeedback = async (feedbackText, rating) => {
-    const feedbackData = {
-      sessionId,
-      timestamp: new Date().toISOString(),
-      section: currentSection,
-      feedbackText,
-      rating,
-      userRole
-    };
-    
-    await UserExperienceDB.storeUserFeedback(feedbackData);
-    
-    // Update session data
-    updateUserSessionData({ lastFeedback: feedbackData });
-  };
-  
-  // Function to store chat message
-  const storeMessage = async (message) => {
-    if (!sessionId) return; // Skip if no session ID
-    
-    await UserExperienceDB.storeConversation({
-      sessionId,
-      timestamp: new Date().toISOString(),
-      message,
-      section: currentSection
-    });
-    
-    // Update session interactions count
-    updateUserSessionData({});
-  };
-  
-  // Modify handleSendMessage to store messages
-  const handleSendMessage = (e) => {
-    e.preventDefault();
-    
-    if (inputValue.trim() === '') return;
-    
-    // Add user message
-    const userMessage = { text: inputValue, sender: 'user' };
-    setMessages(prev => [...prev, userMessage]);
-    
-    // Store user message in database
-    storeMessage(userMessage);
-    
-    const userText = inputValue.toLowerCase();
-    setInputValue('');
-    
-    // Show typing indicator
-    setBotTyping(true);
-    
-    // Simulate bot response after a short delay
-    setTimeout(() => {
-      setBotTyping(false);
-      let botResponse;
-      
-      // Only show role-specific responses after role selection
-      if (userRole === 'instructor') {
-        if (userText.includes('tool') || userText.includes('resource') || userText.includes('material')) {
-          botResponse = { 
-            text: 'For instructors, I recommend these tools:\n\n• Copilot - For course material development\n• ChatGPT - For creating assessments and activities\n• TeacherGAIA - For personalized learning design\n\nWould you like to see the complete list of teaching tools?', 
-            sender: 'bot', 
-            action: '#instructor-tools'
-          };
-        } else if (userText.includes('activity') || userText.includes('teaching') || userText.includes('classroom')) {
-          botResponse = {
-            text: "Our hands-on teaching activities include prompt engineering exercises, collaborative AI projects, and classroom integration strategies. Would you like to see those resources?",
-            sender: 'bot',
-            action: '#research-focus'
-          };
-        } else if (userText.includes('assessment') || userText.includes('grading') || userText.includes('evaluation')) {
-          botResponse = {
-            text: "Our findings section contains best practices for using Gen AI in assessment design, grading assistance, and creating authentic assessments in an AI era. Let me show you those resources.",
-            sender: 'bot',
-            action: '#findings'
-          };
-        } else {
-          botResponse = { 
-            text: 'As an instructor, you might be interested in our teaching resources, assessment tools, or research insights. What would you like to know more about?', 
-            sender: 'bot'
-          };
-        }
-      } else if (userRole === 'student') {
-        if (userText.includes('tool') || userText.includes('resource') || userText.includes('material')) {
-          botResponse = { 
-            text: 'For students, I recommend these tools:\n\n• Gemini - Great for brainstorming and research\n• Claude - Excellent for essay feedback\n• Perplexity.ai - For in-depth research with citations\n• Google NotebookLM - For organizing research notes\n\nWould you like to see the complete list of learning tools?', 
-            sender: 'bot', 
-            action: '#student-tools'
-          };
-        } else if (userText.includes('learning') || userText.includes('study') || userText.includes('strategy')) {
-          botResponse = {
-            text: "Our methods section includes strategies for effective learning with Gen AI, including prompt crafting, critical evaluation of AI outputs, and ethical usage guidelines.",
-            sender: 'bot',
-            action: '#methods'
-          };
-        } else if (userText.includes('case') || userText.includes('example') || userText.includes('application')) {
-          botResponse = {
-            text: "Our case studies showcase real examples of how AI is being integrated into teaching and learning contexts. You'll find 8 detailed cases covering different aspects of AI in education.",
-            sender: 'bot',
-            action: '#case-studies'
-          };
-        } else {
-          botResponse = { 
-            text: 'As a student, you might be interested in our learning resources, research materials, or case studies. What would you like to know more about?', 
-            sender: 'bot'
-          };
-        }
-      } else {
-        // If no role selected yet, only show the initial message about selecting a role
-        botResponse = { 
-          text: 'Please select whether you are an Instructor or a Student first so I can provide relevant information for you.', 
-          sender: 'bot'
-        };
-      }
-      
-      // Feedback collection - keep this for both roles
-      if (userText.includes('feedback') || userText.includes('suggest') || userText.includes('improve')) {
-        botResponse = { 
-          text: 'Thank you for your feedback! We greatly appreciate your input and will consider it as we continue to develop our research and resources. Is there anything else you\'d like to share or ask about?', 
-          sender: 'bot'
-        };
-        
-        // After receiving feedback, prompt for rating
-        setTimeout(() => {
-          setShowRating(true);
-        }, 2000);
-      }
-      
-      setMessages(prev => [...prev, botResponse]);
-      
-      // Reset userPurpose to ensure quick replies stay available
-      setUserPurpose(null);
-      
-      // If the response has an action (navigation link), provide a follow-up button
-      if (botResponse.action) {
-        setTimeout(() => {
-          // Create descriptive button text based on the action
-          let buttonText = 'Click here to navigate';
-          
-          // Customize button text based on the action
-          if (botResponse.action.includes('instructor-tools')) {
-            buttonText = 'View Instructor Tools';
-          } else if (botResponse.action.includes('student-tools')) {
-            buttonText = 'View Student Tools';
-          } else if (botResponse.action.includes('research-focus')) {
-            buttonText = 'Go to Research Focus';
-          } else if (botResponse.action.includes('methods')) {
-            buttonText = 'Explore Methods';
-          } else if (botResponse.action.includes('findings')) {
-            buttonText = 'View Findings';
-          } else if (botResponse.action.includes('case-studies')) {
-            buttonText = 'Browse Case Studies';
-          }
-          
-          const buttonMessage = { 
-            text: buttonText, 
-            sender: 'bot', 
-            isButton: true, 
-            action: botResponse.action 
-          };
-          
-          setMessages(prev => [...prev, buttonMessage]);
-          
-          // Store button message in database
-          storeMessage(buttonMessage);
-        }, 500);
-      }
-    }, 1500);
-  };
-
-  const handleRating = (value) => {
-    setRating(value);
-  };
-
-  // Modify submitRating to store rating data
-  const submitRating = () => {
-    if (rating === 0) return;
-    
-    setIsSubmitting(true);
-    console.log('开始保存评分和会话数据...');
-    console.log('当前存储模式:', UserExperienceDB.getStorageMode());
-    
-    // 强制设置为服务器模式
-    UserExperienceDB.setStorageMode('server');
-    console.log('已切换到服务器存储模式');
-    
-    // Prepare complete session data to save
-    const completeSessionData = {
-      sessionId,
-      timestamp: new Date().toISOString(),
-      section: currentSection,
-      rating: rating,
-      userRole: userRole,
-      messages: messages,
-      sessionDuration: Date.now() - new Date().getTime(), // 使用当前时间，不依赖userSessionData
-      pagesVisited: [] // 不依赖userSessionData.sections
-    };
-    
-    // 添加调试信息
-    console.log('准备保存的会话数据:', completeSessionData);
-    
-    // Store rating and complete conversation in database
-    Promise.all([
-      storeFeedback("Rating submission", rating),
-      UserExperienceDB.saveCompleteSession(completeSessionData)
-    ])
-    .then((results) => {
-      console.log('保存结果:', results);
-      setIsSubmitting(false);
-      setRatingSubmitted(true);
-      
-      // Log success message with filepath if available
-      const sessionResult = results[1];
-      if (sessionResult && sessionResult.success) {
-        console.log('Complete session saved successfully', 
-          sessionResult.filepath ? `to ${sessionResult.filepath}` : '');
-      } else {
-        console.error('保存会话数据失败:', sessionResult);
-      }
-      
-      // 检查数据目录
-      fetch('http://localhost:3001/api/data-files')
-        .then(response => response.json())
-        .then(data => {
-          console.log('数据目录内容:', data);
-        })
-        .catch(error => {
-          console.error('获取数据目录内容失败:', error);
-        });
-      
-      // If using browser storage and auto-download is enabled, trigger file download
-      if (UserExperienceDB.getStorageMode() === 'local') {
-        // For browser storage, trigger a file download for this specific session
-        const autoDownload = localStorage.getItem('ntu_auto_download_sessions') === 'true';
-        if (autoDownload) {
-          const sessionFilename = `user-session-${sessionId}-${new Date().toISOString().split('T')[0]}.json`;
-          const dataStr = JSON.stringify(completeSessionData, null, 2);
-          const dataBlob = new Blob([dataStr], { type: 'application/json' });
-          const url = URL.createObjectURL(dataBlob);
-          
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = sessionFilename;
-          document.body.appendChild(a);
-          a.click();
-          
-          // Clean up
-    setTimeout(() => {
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-          }, 100);
-        }
-      }
-    })
-    .catch(error => {
-      console.error("Error submitting rating:", error);
-      setIsSubmitting(false);
-    });
-  };
-
-  // Modify handleNavigation to store navigation data
-  const handleNavigation = (action) => {
-    // Log navigation in database
-    UserExperienceDB.logNavigation({
-      sessionId,
-      timestamp: new Date().toISOString(),
-      fromSection: currentSection,
-      toSection: action,
-      interactionType: 'chatbot_navigation'
-    });
-    
-    // Navigate to the section without closing the dialog
-    window.location.href = action;
-    
-    // Add a confirmation message
-    setTimeout(() => {
-    setBotTyping(true);
-    
-    setTimeout(() => {
-      setBotTyping(false);
-        const confirmMessage = { 
-          text: "I've navigated you to that section. Is there anything else you'd like to know?", 
-          sender: 'bot' 
-        };
-        
-        setMessages(prev => [...prev, confirmMessage]);
-        
-        // Store confirmation message in database
-        storeMessage(confirmMessage);
-      }, 1000);
-    }, 300);
-  };
-  
-  const handleClose = () => {
-    // If user has had a conversation but hasn't rated, show rating before closing
-    if (messages.length > 2 && !showRating && !ratingSubmitted) {
-      setShowRating(true);
-    } else {
-      // Reset all states when closing
-      setMessages([{ text: 'Welcome to the NTU GenAI Research Portal! Are you an Instructor or a Student?', sender: 'bot' }]);
-      setShowRating(false);
-      setRating(0);
-      setRatingSubmitted(false);
-      setUserPurpose(null);
-      setUserRole(null);
-      onClose();
-    }
-  };
-
-  if (!isOpen) {
-    return null;
-  }
-
-  // Add chat message styling
-  const chatMessageStyle = {
-    margin: '5px 0',
-    padding: '10px',
-    borderRadius: '18px',
-    maxWidth: '80%',
-    wordWrap: 'break-word',
-  };
-
-  const userMessageStyle = {
-    ...chatMessageStyle,
-    backgroundColor: '#003d7c', // Changed to match the case studies page
-    color: 'white',
-    alignSelf: 'flex-end',
-    marginLeft: 'auto',
-    borderBottomRightRadius: '3px',
-    boxShadow: '0 1px 2px rgba(0,0,0,0.1)'
-  };
-
-  const botMessageStyle = {
-    ...chatMessageStyle,
-    backgroundColor: '#f1f1f1', // Changed to match the case studies page
-    color: '#333',
-    alignSelf: 'flex-start',
-    marginRight: 'auto',
-    borderBottomLeftRadius: '3px',
-    boxShadow: '0 1px 2px rgba(0,0,0,0.1)'
-  };
-
-  const botButtonStyle = {
-    padding: '6px 12px',
-    backgroundColor: '#003d7c',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    fontSize: '12px',
-    fontWeight: 'bold',
-    margin: '0 0 8px 0',
-    whiteSpace: 'normal', // Allow text wrapping instead of nowrap
-    overflow: 'visible', // Changed from hidden to visible
-    textOverflow: 'initial', // Remove ellipsis effect
-    maxWidth: '300px', // Increased from 160px to 300px
-    alignSelf: 'flex-start',
-    marginRight: 'auto',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    transition: 'background-color 0.2s, transform 0.2s',
-  };
-
-  // Star rating styles
-  const starContainerStyle = {
-    display: 'flex',
-    justifyContent: 'center',
-    margin: '15px 0'
-  };
-  
-  const starStyle = {
-    fontSize: '30px',
-    color: '#ccc',
-    cursor: 'pointer',
-    margin: '0 5px',
-    transition: 'transform 0.1s ease, color 0.2s ease'
-  };
-  
-  const starActiveStyle = {
-    ...starStyle,
-    color: '#ffd700', // Gold color for selected stars
-    transform: 'scale(1.2)'
-  };
-
-  const typingIndicatorStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '10px 16px',
-    backgroundColor: '#f5f5f5',
-    borderRadius: '18px',
-    alignSelf: 'flex-start',
-    marginRight: 'auto',
-    width: 'fit-content',
-    boxShadow: '0 1px 2px rgba(0,0,0,0.1)'
-  };
-
-  const dotStyle = {
-    width: '8px',
-    height: '8px',
-    backgroundColor: '#777',
-    borderRadius: '50%',
-    margin: '0 2px',
-    animation: 'bounce 1.2s infinite'
-  };
-
-  return (
-    <div 
-      style={styles.dialogPopup} 
-      ref={dialogRef}
-      role="dialog" 
-      aria-labelledby="dialog-title"
-      aria-modal="true"
-    >
-      <div style={{
-        backgroundColor: '#003d7c',
-        color: 'white',
-        padding: '10px 15px',
-        borderTopLeftRadius: '10px',
-        borderTopRightRadius: '10px',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      }}>
-        <h3 style={{ margin: 0 }} id="dialog-title">NTU Research Assistant</h3>
-        <button 
-          style={{
-            background: 'none',
-            border: 'none',
-            color: 'white',
-            fontSize: '20px',
-            cursor: 'pointer',
-          }}
-          onClick={handleClose} 
-          title="Close Dialog"
-          aria-label="Close dialog"
-        >
-          ×
-        </button>
-      </div>
-      
-      {showRating ? (
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          padding: '20px'
-        }}>
-          {ratingSubmitted ? (
-            <>
-              <h3 style={{ textAlign: 'center', margin: '10px 0' }}>Thank You!</h3>
-              <p style={{ textAlign: 'center' }}>Your feedback has been recorded. We appreciate your input.</p>
-              <button 
-                onClick={() => {
-                  setMessages([{ text: 'Welcome to the NTU GenAI Research Portal! Are you an Instructor or a Student?', sender: 'bot' }]);
-                  setShowRating(false);
-                  setRating(0);
-                  setRatingSubmitted(false);
-                  setUserPurpose(null);
-                  setUserRole(null);
-                  onClose();
-                }}
-                style={{
-                  padding: '10px 20px',
-                  backgroundColor: '#003d7c',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  marginTop: '15px',
-                  fontSize: '1em',
-                  transition: 'background-color 0.2s ease',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-                }}
-              >
-                Close
-              </button>
-            </>
-          ) : (
-            <>
-              <h3 style={{ textAlign: 'center', margin: '10px 0' }}>Rate Your Experience</h3>
-              <p style={{ textAlign: 'center' }}>How helpful was this conversation?</p>
-              
-              <div style={starContainerStyle}>
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <span
-                    key={star}
-                    style={star <= rating ? starActiveStyle : starStyle}
-                    onClick={() => handleRating(star)}
-                    onMouseOver={(e) => {
-                      if (star > rating) e.currentTarget.style.transform = 'scale(1.1)';
-                    }}
-                    onMouseOut={(e) => {
-                      if (star > rating) e.currentTarget.style.transform = 'scale(1)';
-                    }}
-                  >
-                    ★
-                  </span>
-                ))}
-              </div>
-              
-              <button 
-                onClick={submitRating}
-                disabled={rating === 0 || isSubmitting}
-                style={{
-                  padding: '10px 20px',
-                  backgroundColor: rating === 0 || isSubmitting ? '#ccc' : '#003d7c',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '6px',
-                  cursor: rating === 0 || isSubmitting ? 'not-allowed' : 'pointer',
-                  marginTop: '15px',
-                  fontSize: '1em',
-                  transition: 'background-color 0.2s ease',
-                  boxShadow: rating === 0 || isSubmitting ? 'none' : '0 2px 4px rgba(0,0,0,0.2)',
-                }}
-              >
-                {isSubmitting ? 'Submitting...' : 'Submit Rating'}
-              </button>
-            </>
-          )}
-        </div>
-      ) : (
-        <>
-          {/* Chat messages container */}
-          <div style={{ 
-            flex: 1,
-            padding: '15px',
-            overflowY: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '10px',
-          }}>
-            {messages.map((msg, index) => (
-              msg.isButton ? (
-                <button
-                  key={index}
-                  style={botButtonStyle}
-                  onClick={() => handleNavigation(msg.action)}
-                >
-                  {msg.text}
-                </button>
-              ) : msg.showInterestOptions ? (
-                <div key={index} style={{width: '100%', margin: '10px 0'}}>
-                  <div style={botMessageStyle}>
-                    {msg.text}
-                  </div>
-                  
-                  <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(2, 1fr)',
-                    gap: '8px',
-                    marginTop: '10px',
-                    width: '100%'
-                  }}>
-                    {msg.options.map((option, i) => (
-                      <button
-                        key={i}
-                        onClick={() => handleInterestSelection(option)}
-                        style={{
-                          padding: '8px 12px',
-                          backgroundColor: '#003d7c',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '4px',
-                          cursor: 'pointer',
-                          fontSize: '12px',
-                          fontWeight: 'bold',
-                          whiteSpace: 'normal', // Allow text wrapping instead of nowrap
-                          overflow: 'visible', // Changed from hidden to visible
-                          textOverflow: 'initial', // Remove ellipsis effect
-                          maxWidth: '200px', // Increased from 160px
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          transition: 'background-color 0.2s, transform 0.2s',
-                        }}
-                        onMouseOver={e => {
-                          e.currentTarget.style.transform = 'translateY(-2px)';
-                          e.currentTarget.style.backgroundColor = '#00295a';
-                        }}
-                        onMouseOut={e => {
-                          e.currentTarget.style.transform = 'translateY(0)';
-                          e.currentTarget.style.backgroundColor = '#003d7c';
-                        }}
-                      >
-                        {option.text}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <div 
-                  key={index} 
-                  style={msg.sender === 'user' ? userMessageStyle : botMessageStyle}
-                >
-                  {msg.text.split('\n').map((line, i) => (
-                    <React.Fragment key={i}>
-                      {line}
-                      {i < msg.text.split('\n').length - 1 && <br />}
-                    </React.Fragment>
-                  ))}
-                </div>
-              )
-            ))}
-            
-            {botTyping && (
-              <div style={typingIndicatorStyle}>
-                <div style={{...dotStyle, animationDelay: '0s'}}></div>
-                <div style={{...dotStyle, animationDelay: '0.2s'}}></div>
-                <div style={{...dotStyle, animationDelay: '0.4s'}}></div>
-              </div>
-            )}
-            
-            <div ref={messagesEndRef} />
-          </div>
-          
-          {/* Role selection buttons */}
-          {renderRoleSelection()}
-          
-          {/* Quick replies - only show if role is selected but there are no interest options active */}
-          {userRole && renderQuickReplies()}
-          
-          {/* Input form - Only show when a role has been selected */}
-          {userRole && (
-            <div style={{
-              display: 'flex',
-              padding: '10px',
-              borderTop: '1px solid #eee',
-            }}>
-              <input
-                type="text"
-                value={inputValue}
-                onChange={handleInputChange}
-                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(e)}
-                placeholder="Type your message..."
-                aria-label="Chat message input"
-                style={{
-                  flex: 1,
-                  padding: '10px',
-                  border: '1px solid #ddd',
-                  borderRadius: '20px',
-                  marginRight: '10px',
-                  outline: 'none',
-                }}
-              />
-              <button
-                onClick={handleSendMessage}
-                aria-label="Send message"
-                title="Send message"
-                style={{
-                  backgroundColor: '#003d7c',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '20px',
-                  padding: '8px 15px',
-                  cursor: 'pointer',
-                }}
-              >
-                Send
-              </button>
-            </div>
-          )}
-        </>
-      )}
-      
-      {/* Add keyframes for typing indicator animation */}
-      <style dangerouslySetInnerHTML={{
-        __html: `
-          @keyframes bounce {
-            0%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-5px); }
-          }
-        `
-      }} />
-    </div>
-  );
-};
-
-// Error Boundary Component
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    console.error("App Error:", error, errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div style={{ 
-          padding: '20px', 
-          margin: '20px', 
-          backgroundColor: '#f8d7da', 
-          border: '1px solid #f5c6cb',
-          borderRadius: '4px',
-          color: '#721c24'
-        }}>
-          <h2>Something went wrong.</h2>
-          <p>Please try refreshing the page. If the issue persists, contact support.</p>
-          <button 
-            onClick={() => window.location.reload()}
-            style={{
-              padding: '8px 16px',
-              backgroundColor: '#dc3545',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}
-          >
-            Refresh Page
-          </button>
-        </div>
-      );
-    }
-
-    return this.props.children;
-  }
-}
-
-// Main App Component
-const App = () => {
-  // Use simple state with default values, no reliance on browser APIs
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [currentSection, setCurrentSection] = useState('');
-  const [sessionId, setSessionId] = useState(`session_${Date.now()}`);
-  const [userSessionData, setUserSessionData] = useState({
-    startTime: new Date().toISOString(),
-    sections: [],
-    interactions: 0
-  });
-
-  useEffect(() => {
-    // Initialize user session 
-    const initUserSession = async () => {
-      // Store initial session data
-      await UserExperienceDB.storeSession({
-        sessionId,
-        startTime: userSessionData.startTime,
-        userAgent: navigator.userAgent,
-        platform: navigator.platform,
-        referrer: document.referrer || 'direct'
-      });
-    };
-    
-    initUserSession();
-    
-    // Listen for pageNavigated events from MainContent
-    const handlePageNavigation = async (event) => {
-      const { section } = event.detail;
-      setCurrentSection(section);
-      
-      // Update and store navigation data
-      const navigationData = {
-        sessionId,
-        timestamp: new Date().toISOString(),
-        section,
-        timeSpent: 0 // Will be updated on next navigation
-      };
-      
-      // Log navigation in database
-      await UserExperienceDB.logNavigation(navigationData);
-      
-      // Update session data
-      setUserSessionData(prev => ({
-          ...prev, 
-        sections: [...prev.sections, section]
-      }));
-      
-      // Wait some time for user to consume content, then show chatbot
-    setTimeout(() => {
-        setIsDialogOpen(true);
-        
-        // Dispatch an event to tell the chatbot to show post-page interaction
-        window.dispatchEvent(new CustomEvent('triggerPostPageInteraction', { 
-          detail: { section }
-        }));
-      }, 15000); // Show after 15 seconds of browsing
-    };
-    
-    window.addEventListener('pageNavigated', handlePageNavigation);
-    
-    // Clean up
-    return () => {
-      window.removeEventListener('pageNavigated', handlePageNavigation);
-      
-      // Store final session data on unmount
-      UserExperienceDB.storeSession({
-        sessionId,
-        endTime: new Date().toISOString(),
-        sections: userSessionData.sections,
-        interactions: userSessionData.interactions
-      });
-    };
-  }, [sessionId, userSessionData.startTime, userSessionData.sections]);
-
-  const handleOpenDialog = () => {
-    setIsDialogOpen(true);
-  };
-
-  const handleCloseDialog = () => {
-    setIsDialogOpen(false);
-  };
-
-  // Simple render without useEffect
-  return (
-    <ErrorBoundary>
-      <Header />
-      <MainContent />
-      <Footer />
-      <FloatingButton onClick={handleOpenDialog} />
-      {isDialogOpen && <Dialog 
-        isOpen={true} 
-        onClose={handleCloseDialog} 
-        currentSection={currentSection}
-        sessionId={sessionId}
-        updateUserSessionData={(data) => {
-          setUserSessionData(prev => ({
-          ...prev, 
-            ...data,
-            interactions: prev.interactions + 1
-          }));
-        }}
-      />}
-    </ErrorBoundary>
-  );
-};
-
-// Render the App
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-// reportWebVitals(); // Removed as requested
-
-
