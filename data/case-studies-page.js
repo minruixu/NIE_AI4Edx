@@ -106,423 +106,167 @@ const CaseStudiesPage = () => {
           {
             sender: 'bot',
             text: `You're viewing "${selectedCase.title}". ${getCaseStudyDetails(selectedCase)}`
+          },
+          {
+            sender: 'bot',
+            text: 'Would you like to explore the reflection prompts for this case?',
+            buttons: [
+              {
+                text: 'Show Reflection Prompts',
+                action: () => {
+                  setChatMessages(prevMessages => [
+                    ...prevMessages,
+                    { sender: 'user', text: 'Show Reflection Prompts' },
+                    { 
+                      sender: 'bot', 
+                      text: `Here are the reflection questions for "${selectedCase.title}". Click on any question to explore it further:`,
+                    },
+                    { 
+                      sender: 'bot', 
+                      text: 'Select a reflection question to explore:',
+                      buttons: selectedCase.reflectionPrompts.map((prompt, idx) => {
+                        return {
+                          text: prompt,
+                          action: () => {
+                            setChatMessages(prevMessages => [
+                              ...prevMessages,
+                              { sender: 'user', text: prompt },
+                              { 
+                                sender: 'bot', 
+                                text: `Let's explore this reflection question: "${prompt}"\n\nConsider how this applies to your own teaching context. Would you like some suggestions for implementing this approach?`,
+                                buttons: [
+                                  {
+                                    text: 'Give me implementation ideas',
+                                    action: () => {
+                                      setChatMessages(prevMessages => [
+                                        ...prevMessages,
+                                        { sender: 'user', text: 'Give me implementation ideas' },
+                                        { 
+                                          sender: 'bot', 
+                                          text: `Here are some implementation ideas for this reflection question:\n\n• Start with a small assignment or activity to test the approach\n• Provide clear guidelines to students about AI tool usage\n• Create a reflection worksheet for students to document their process\n• Consider both individual and collaborative activities\n• Build in checkpoints to ensure students are engaging critically`
+                                        }
+                                      ]);
+                                    }
+                                  },
+                                  {
+                                    text: 'See related case studies',
+                                    action: () => {
+                                      const relatedCases = window.caseStudies.filter(cs => 
+                                        cs.id !== selectedCase.id && cs.category === selectedCase.category
+                                      );
+                                      setChatMessages(prevMessages => [
+                                        ...prevMessages,
+                                        { sender: 'user', text: 'See related case studies' },
+                                        createCategoryNavButtons(selectedCase.category, relatedCases)
+                                      ]);
+                                    }
+                                  }
+                                ]
+                              }
+                            ]);
+                          }
+                        };
+                      })
+                    }
+                  ]);
+                }
+              },
+              {
+                text: 'See Related Cases',
+                action: () => {
+                  // Find related case studies (same category)
+                  const relatedCases = window.caseStudies.filter(cs => 
+                    cs.id !== selectedCase.id && cs.category === selectedCase.category
+                  );
+                  setChatMessages(prevMessages => [
+                    ...prevMessages,
+                    { sender: 'user', text: 'See Related Cases' },
+                    { 
+                      sender: 'bot', 
+                      text: `Here are other ${selectedCase.category} case studies you might find interesting:` 
+                    },
+                    createCategoryNavButtons(selectedCase.category, relatedCases)
+                  ]);
+                }
+              },
+              {
+                text: 'All Categories',
+                action: () => {
+                  setChatMessages(prevMessages => [
+                    ...prevMessages,
+                    { sender: 'user', text: 'All Categories' },
+                    { 
+                      sender: 'bot', 
+                      text: 'We have AI case studies in these categories:',
+                      buttons: [
+                        {
+                          text: 'Explore Teaching Cases',
+                          action: () => {
+                            const teachingCases = window.caseStudies.filter(cs => cs.category === 'Teaching');
+                            setChatMessages(prevMessages => [
+                              ...prevMessages,
+                              { sender: 'user', text: 'Teaching Cases' },
+                              { 
+                                sender: 'bot', 
+                                text: 'We have multiple teaching-related case studies:' 
+                              },
+                              createCategoryNavButtons('Teaching', teachingCases)
+                            ]);
+                          }
+                        },
+                        {
+                          text: 'View Science Case Studies',
+                          action: () => {
+                            const scienceCases = window.caseStudies.filter(cs => cs.category === 'Science');
+                            setChatMessages(prevMessages => [
+                              ...prevMessages,
+                              { sender: 'user', text: 'Science Cases' },
+                              { 
+                                sender: 'bot', 
+                                text: 'Our science case studies:' 
+                              },
+                              createCategoryNavButtons('Science', scienceCases)
+                            ]);
+                          }
+                        },
+                        {
+                          text: 'Browse Engineering Cases',
+                          action: () => {
+                            const engineeringCases = window.caseStudies.filter(cs => cs.category === 'Engineering');
+                            setChatMessages(prevMessages => [
+                              ...prevMessages,
+                              { sender: 'user', text: 'Engineering Cases' },
+                              { 
+                                sender: 'bot', 
+                                text: 'Our engineering case studies:' 
+                              },
+                              createCategoryNavButtons('Engineering', engineeringCases)
+                            ]);
+                          }
+                        },
+                        {
+                          text: 'See Ethics & AI Cases',
+                          action: () => {
+                            const ethicsCases = window.caseStudies.filter(cs => cs.category === 'Ethics');
+                            setChatMessages(prevMessages => [
+                              ...prevMessages,
+                              { sender: 'user', text: 'Ethics Cases' },
+                              { 
+                                sender: 'bot', 
+                                text: 'Our ethics case studies:' 
+                              },
+                              createCategoryNavButtons('Ethics', ethicsCases)
+                            ]);
+                          }
+                        }
+                      ]
+                    }
+                  ]);
+                }
+              }
+            ]
           }
         ]);
-        
-        // If there are related cases, suggest them with buttons - after a short delay
-        if (relatedCases.length > 0) {
-          setTimeout(() => {
-            setChatMessages(prevMessages => [
-              ...prevMessages,
-              {
-                sender: 'bot',
-                text: `You might also be interested in these other ${selectedCase.category} case studies:`,
-                buttons: [
-                  ...relatedCases.slice(0, 2).map(cs => ({
-                    text: cs.title,
-                    action: () => {
-                      setSelectedCase(cs);
-                    }
-                  })),
-                  {
-                    text: 'See all case studies',
-                    action: () => {
-                      setSelectedCase(null);
-                      setChatMessages([
-                        {
-                          sender: 'bot',
-                          text: 'We have AI case studies in Teaching, Science, Engineering, and Ethics. Please select an area of interest:',
-                          buttons: [
-                            {
-                              text: 'Teaching Cases',
-                              action: () => {
-                                const teachingCases = window.caseStudies.filter(cs => cs.category === 'Teaching');
-                                setChatMessages(prevMessages => [
-                                  ...prevMessages,
-                                  { sender: 'user', text: 'Teaching Cases' },
-                                  { 
-                                    sender: 'bot', 
-                                    text: 'We have multiple teaching-related case studies showing different approaches to AI integration:' 
-                                  },
-                                  createCategoryNavButtons('Teaching', teachingCases)
-                                ]);
-                              }
-                            },
-                            {
-                              text: 'Science Cases',
-                              action: () => {
-                                const scienceCases = window.caseStudies.filter(cs => cs.category === 'Science');
-                                setChatMessages(prevMessages => [
-                                  ...prevMessages,
-                                  { sender: 'user', text: 'Science Cases' },
-                                  { 
-                                    sender: 'bot', 
-                                    text: 'Our science case studies focus on lab work, data interpretation, and scientific literacy:' 
-                                  },
-                                  createCategoryNavButtons('Science', scienceCases)
-                                ]);
-                              }
-                            },
-                            {
-                              text: 'Engineering Cases',
-                              action: () => {
-                                const engineeringCases = window.caseStudies.filter(cs => cs.category === 'Engineering');
-                                setChatMessages(prevMessages => [
-                                  ...prevMessages,
-                                  { sender: 'user', text: 'Engineering Cases' },
-                                  { 
-                                    sender: 'bot', 
-                                    text: 'Our engineering case studies showcase AI applications in design feedback and technical problem-solving:' 
-                                  },
-                                  createCategoryNavButtons('Engineering', engineeringCases)
-                                ]);
-                              }
-                            },
-                            {
-                              text: 'Ethics Cases',
-                              action: () => {
-                                const ethicsCases = window.caseStudies.filter(cs => cs.category === 'Ethics');
-                                setChatMessages(prevMessages => [
-                                  ...prevMessages,
-                                  { sender: 'user', text: 'Ethics Cases' },
-                                  { 
-                                    sender: 'bot', 
-                                    text: 'Our ethics case studies examine ethical considerations in AI integration:' 
-                                  },
-                                  createCategoryNavButtons('Ethics', ethicsCases)
-                                ]);
-                              }
-                            }
-                          ]
-                        }
-                      ]);
-                    }
-                  },
-                  {
-                    text: 'Tell me about reflection questions',
-                    action: () => {
-                      setChatMessages(prevMessages => [
-                        ...prevMessages,
-                        { sender: 'user', text: 'Tell me about reflection questions' },
-                        { 
-                          sender: 'bot', 
-                          text: `Here are the reflection questions for "${selectedCase.title}". Click on any question to explore it further:`,
-                        },
-                        { 
-                          sender: 'bot', 
-                          text: 'Select a reflection question to explore:',
-                          buttons: selectedCase.reflectionPrompts.map((prompt, idx) => {
-                            return {
-                              text: prompt,
-                              action: () => {
-                                setChatMessages(prevMessages => [
-                                  ...prevMessages,
-                                  { sender: 'user', text: prompt },
-                                  { 
-                                    sender: 'bot', 
-                                    text: `Let's explore this reflection question: "${prompt}"\n\nConsider how this applies to your own teaching context. Would you like some suggestions for implementing this approach?`,
-                                    buttons: [
-                                      {
-                                        text: 'Give me implementation ideas',
-                                        action: () => {
-                                          setChatMessages(prevMessages => [
-                                            ...prevMessages,
-                                            { sender: 'user', text: 'Give me implementation ideas' },
-                                            { 
-                                              sender: 'bot', 
-                                              text: `Here are some implementation ideas for this reflection question:\n\n• Start with a small assignment or activity to test the approach\n• Provide clear guidelines to students about AI tool usage\n• Create a reflection worksheet for students to document their process\n• Consider both individual and collaborative activities\n• Build in checkpoints to ensure students are engaging critically`
-                                            }
-                                          ]);
-                                        }
-                                      },
-                                      {
-                                        text: 'See related case studies',
-                                        action: () => {
-                                          const relatedCases = window.caseStudies.filter(cs => 
-                                            cs.id !== selectedCase.id && cs.category === selectedCase.category
-                                          );
-                                          if (relatedCases.length > 0) {
-                                            setChatMessages(prevMessages => [
-                                              ...prevMessages,
-                                              { sender: 'user', text: 'See related case studies' },
-                                              createCategoryNavButtons(selectedCase.category, relatedCases)
-                                            ]);
-                                          } else {
-                                            setChatMessages(prevMessages => [
-                                              ...prevMessages,
-                                              { sender: 'user', text: 'See related case studies' },
-                                              { 
-                                                sender: 'bot', 
-                                                text: `There are no other case studies in the ${selectedCase.category} category. Would you like to explore case studies in other categories?`,
-                                                buttons: [
-                                                  {
-                                                    text: 'See all categories',
-                                                    action: () => {
-                                                      setSelectedCase(null);
-                                                      setChatMessages([
-                                                        {
-                                                          sender: 'bot',
-                                                          text: 'We have AI case studies in Teaching, Science, Engineering, and Ethics. Please select an area of interest:',
-                                                          buttons: [
-                                                            {
-                                                              text: 'Teaching Cases',
-                                                              action: () => {
-                                                                const teachingCases = window.caseStudies.filter(cs => cs.category === 'Teaching');
-                                                                setChatMessages(prevMessages => [
-                                                                  ...prevMessages,
-                                                                  { sender: 'user', text: 'Teaching Cases' },
-                                                                  { 
-                                                                    sender: 'bot', 
-                                                                    text: 'We have multiple teaching-related case studies showing different approaches to AI integration:' 
-                                                                  },
-                                                                  createCategoryNavButtons('Teaching', teachingCases)
-                                                                ]);
-                                                              }
-                                                            },
-                                                            {
-                                                              text: 'Science Cases',
-                                                              action: () => {
-                                                                const scienceCases = window.caseStudies.filter(cs => cs.category === 'Science');
-                                                                setChatMessages(prevMessages => [
-                                                                  ...prevMessages,
-                                                                  { sender: 'user', text: 'Science Cases' },
-                                                                  { 
-                                                                    sender: 'bot', 
-                                                                    text: 'Our science case studies focus on lab work, data interpretation, and scientific literacy:' 
-                                                                  },
-                                                                  createCategoryNavButtons('Science', scienceCases)
-                                                                ]);
-                                                              }
-                                                            },
-                                                            {
-                                                              text: 'Engineering Cases',
-                                                              action: () => {
-                                                                const engineeringCases = window.caseStudies.filter(cs => cs.category === 'Engineering');
-                                                                setChatMessages(prevMessages => [
-                                                                  ...prevMessages,
-                                                                  { sender: 'user', text: 'Engineering Cases' },
-                                                                  { 
-                                                                    sender: 'bot', 
-                                                                    text: 'Our engineering case studies showcase AI applications in design feedback and technical problem-solving:' 
-                                                                  },
-                                                                  createCategoryNavButtons('Engineering', engineeringCases)
-                                                                ]);
-                                                              }
-                                                            },
-                                                            {
-                                                              text: 'Ethics Cases',
-                                                              action: () => {
-                                                                const ethicsCases = window.caseStudies.filter(cs => cs.category === 'Ethics');
-                                                                setChatMessages(prevMessages => [
-                                                                  ...prevMessages,
-                                                                  { sender: 'user', text: 'Ethics Cases' },
-                                                                  { 
-                                                                    sender: 'bot', 
-                                                                    text: 'Our ethics case studies examine ethical considerations in AI integration:' 
-                                                                  },
-                                                                  createCategoryNavButtons('Ethics', ethicsCases)
-                                                                ]);
-                                                              }
-                                                            }
-                                                          ]
-                                                        }
-                                                      ]);
-                                                    }
-                                                  }
-                                                ]
-                                              }
-                                            ]);
-                                          }
-                                        }
-                                      }
-                                    ]
-                                  }
-                                ]);
-                              }
-                            };
-                          })
-                        }
-                      ]);
-                    }
-                  }
-                ]
-              }
-            ]);
-          }, 500);
-        } else {
-          // If no related cases, just show the reflection questions prompt
-          setTimeout(() => {
-            setChatMessages(prevMessages => [
-              ...prevMessages,
-              {
-                sender: 'bot',
-                text: `Would you like to know more about the reflection questions for this case study?`,
-                buttons: [
-                  {
-                    text: 'Show reflection questions',
-                    action: () => {
-                      setChatMessages(prevMessages => [
-                        ...prevMessages,
-                        { sender: 'user', text: 'Show reflection questions' },
-                        { 
-                          sender: 'bot', 
-                          text: `Here are the reflection questions for "${selectedCase.title}". Click on any question to explore it further:`,
-                        },
-                        { 
-                          sender: 'bot', 
-                          text: 'Select a reflection question to explore:',
-                          buttons: selectedCase.reflectionPrompts.map((prompt, idx) => {
-                            return {
-                              text: prompt,
-                              action: () => {
-                                setChatMessages(prevMessages => [
-                                  ...prevMessages,
-                                  { sender: 'user', text: prompt },
-                                  { 
-                                    sender: 'bot', 
-                                    text: `Let's explore this reflection question: "${prompt}"\n\nConsider how this applies to your own teaching context. Would you like some suggestions for implementing this approach?`,
-                                    buttons: [
-                                      {
-                                        text: 'Give me implementation ideas',
-                                        action: () => {
-                                          setChatMessages(prevMessages => [
-                                            ...prevMessages,
-                                            { sender: 'user', text: 'Give me implementation ideas' },
-                                            { 
-                                              sender: 'bot', 
-                                              text: `Here are some implementation ideas for this reflection question:\n\n• Start with a small assignment or activity to test the approach\n• Provide clear guidelines to students about AI tool usage\n• Create a reflection worksheet for students to document their process\n• Consider both individual and collaborative activities\n• Build in checkpoints to ensure students are engaging critically`
-                                            }
-                                          ]);
-                                        }
-                                      },
-                                      {
-                                        text: 'See related case studies',
-                                        action: () => {
-                                          const relatedCases = window.caseStudies.filter(cs => 
-                                            cs.id !== selectedCase.id && cs.category === selectedCase.category
-                                          );
-                                          if (relatedCases.length > 0) {
-                                            setChatMessages(prevMessages => [
-                                              ...prevMessages,
-                                              { sender: 'user', text: 'See related case studies' },
-                                              createCategoryNavButtons(selectedCase.category, relatedCases)
-                                            ]);
-                                          } else {
-                                            setChatMessages(prevMessages => [
-                                              ...prevMessages,
-                                              { sender: 'user', text: 'See related case studies' },
-                                              { 
-                                                sender: 'bot', 
-                                                text: `There are no other case studies in the ${selectedCase.category} category. Would you like to explore case studies in other categories?`,
-                                                buttons: [
-                                                  {
-                                                    text: 'See all categories',
-                                                    action: () => {
-                                                      setSelectedCase(null);
-                                                      setChatMessages([
-                                                        {
-                                                          sender: 'bot',
-                                                          text: 'We have AI case studies in Teaching, Science, Engineering, and Ethics. Please select an area of interest:',
-                                                          buttons: [
-                                                            {
-                                                              text: 'Teaching Cases',
-                                                              action: () => {
-                                                                const teachingCases = window.caseStudies.filter(cs => cs.category === 'Teaching');
-                                                                setChatMessages(prevMessages => [
-                                                                  ...prevMessages,
-                                                                  { sender: 'user', text: 'Teaching Cases' },
-                                                                  { 
-                                                                    sender: 'bot', 
-                                                                    text: 'We have multiple teaching-related case studies showing different approaches to AI integration:' 
-                                                                  },
-                                                                  createCategoryNavButtons('Teaching', teachingCases)
-                                                                ]);
-                                                              }
-                                                            },
-                                                            {
-                                                              text: 'Science Cases',
-                                                              action: () => {
-                                                                const scienceCases = window.caseStudies.filter(cs => cs.category === 'Science');
-                                                                setChatMessages(prevMessages => [
-                                                                  ...prevMessages,
-                                                                  { sender: 'user', text: 'Science Cases' },
-                                                                  { 
-                                                                    sender: 'bot', 
-                                                                    text: 'Our science case studies focus on lab work, data interpretation, and scientific literacy:' 
-                                                                  },
-                                                                  createCategoryNavButtons('Science', scienceCases)
-                                                                ]);
-                                                              }
-                                                            },
-                                                            {
-                                                              text: 'Engineering Cases',
-                                                              action: () => {
-                                                                const engineeringCases = window.caseStudies.filter(cs => cs.category === 'Engineering');
-                                                                setChatMessages(prevMessages => [
-                                                                  ...prevMessages,
-                                                                  { sender: 'user', text: 'Engineering Cases' },
-                                                                  { 
-                                                                    sender: 'bot', 
-                                                                    text: 'Our engineering case studies showcase AI applications in design feedback and technical problem-solving:' 
-                                                                  },
-                                                                  createCategoryNavButtons('Engineering', engineeringCases)
-                                                                ]);
-                                                              }
-                                                            },
-                                                            {
-                                                              text: 'Ethics Cases',
-                                                              action: () => {
-                                                                const ethicsCases = window.caseStudies.filter(cs => cs.category === 'Ethics');
-                                                                setChatMessages(prevMessages => [
-                                                                  ...prevMessages,
-                                                                  { sender: 'user', text: 'Ethics Cases' },
-                                                                  { 
-                                                                    sender: 'bot', 
-                                                                    text: 'Our ethics case studies examine ethical considerations in AI integration:' 
-                                                                  },
-                                                                  createCategoryNavButtons('Ethics', ethicsCases)
-                                                                ]);
-                                                              }
-                                                            }
-                                                          ]
-                                                        }
-                                                      ]);
-                                                    }
-                                                  }
-                                                ]
-                                              }
-                                            ]);
-                                          }
-                                        }
-                                      }
-                                    ]
-                                  }
-                                ]);
-                              }
-                            };
-                          })
-                        }
-                      ]);
-                    }
-                  },
-                  {
-                    text: 'No, thanks',
-                    action: () => {
-                      setChatMessages(prevMessages => [
-                        ...prevMessages,
-                        { sender: 'user', text: 'No, thanks' },
-                        { 
-                          sender: 'bot', 
-                          text: `Let me know if you have any questions about "${selectedCase.title}" or want to explore other case studies.` 
-                        }
-                      ]);
-                    }
-                  }
-                ]
-              }
-            ]);
-          }, 500);
-        }
       }
     }
   }, [selectedCase]);
@@ -694,7 +438,7 @@ const CaseStudiesPage = () => {
                 text: 'Here\'s the overview of all our case studies:',
                 buttons: [
                   {
-                    text: 'Teaching Cases',
+                    text: 'Explore Teaching Cases',
                     action: () => {
                       const teachingCases = window.caseStudies.filter(cs => cs.category === 'Teaching');
                       setChatMessages(prevMessages => [
@@ -709,7 +453,7 @@ const CaseStudiesPage = () => {
                     }
                   },
                   {
-                    text: 'Science Cases',
+                    text: 'View Science Case Studies',
                     action: () => {
                       const scienceCases = window.caseStudies.filter(cs => cs.category === 'Science');
                       setChatMessages(prevMessages => [
@@ -724,7 +468,7 @@ const CaseStudiesPage = () => {
                     }
                   },
                   {
-                    text: 'Engineering Cases',
+                    text: 'Browse Engineering Cases',
                     action: () => {
                       const engineeringCases = window.caseStudies.filter(cs => cs.category === 'Engineering');
                       setChatMessages(prevMessages => [
@@ -739,7 +483,7 @@ const CaseStudiesPage = () => {
                     }
                   },
                   {
-                    text: 'Ethics Cases',
+                    text: 'See Ethics & AI Cases',
                     action: () => {
                       const ethicsCases = window.caseStudies.filter(cs => cs.category === 'Ethics');
                       setChatMessages(prevMessages => [
@@ -876,7 +620,7 @@ const CaseStudiesPage = () => {
             text: '您可以选择以下方向查看案例研究：',
             buttons: [
               {
-                text: '教学案例',
+                text: '查看教学相关案例',
                 action: () => {
                   const teachingCases = window.caseStudies.filter(cs => cs.category === 'Teaching');
                   setChatMessages(prevMessages => [
@@ -891,7 +635,7 @@ const CaseStudiesPage = () => {
                 }
               },
               {
-                text: '科学案例',
+                text: '浏览科学领域案例',
                 action: () => {
                   const scienceCases = window.caseStudies.filter(cs => cs.category === 'Science');
                   setChatMessages(prevMessages => [
@@ -906,7 +650,7 @@ const CaseStudiesPage = () => {
                 }
               },
               {
-                text: '工程案例',
+                text: '探索工程类案例研究',
                 action: () => {
                   const engineeringCases = window.caseStudies.filter(cs => cs.category === 'Engineering');
                   setChatMessages(prevMessages => [
@@ -921,7 +665,7 @@ const CaseStudiesPage = () => {
                 }
               },
               {
-                text: '道德案例',
+                text: '了解AI伦理相关案例',
                 action: () => {
                   const ethicsCases = window.caseStudies.filter(cs => cs.category === 'Ethics');
                   setChatMessages(prevMessages => [
@@ -1616,10 +1360,10 @@ const CaseStudiesPage = () => {
       cursor: 'pointer',
       fontSize: '12px',
       fontWeight: 'bold',
-      whiteSpace: 'nowrap',
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      maxWidth: '160px',
+      whiteSpace: 'normal',
+      overflow: 'visible',
+      textOverflow: 'initial',
+      maxWidth: '300px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -1635,10 +1379,10 @@ const CaseStudiesPage = () => {
       cursor: 'pointer',
       fontSize: '12px',
       fontWeight: 'bold',
-      whiteSpace: 'nowrap',
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      maxWidth: '160px',
+      whiteSpace: 'normal',
+      overflow: 'visible',
+      textOverflow: 'initial',
+      maxWidth: '300px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -1654,10 +1398,10 @@ const CaseStudiesPage = () => {
       cursor: 'pointer',
       fontSize: '12px',
       fontWeight: 'bold',
-      whiteSpace: 'nowrap',
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      maxWidth: '160px',
+      whiteSpace: 'normal',
+      overflow: 'visible',
+      textOverflow: 'initial',
+      maxWidth: '300px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -1677,7 +1421,7 @@ const CaseStudiesPage = () => {
           onClick: () => setShowChatbot(!showChatbot),
           'aria-label': showChatbot ? 'Close chat' : 'Open chat',
         },
-        showChatbot ? '×' : '?'
+        showChatbot ? '×' : '💬'
       ),
       // Show a notification badge if chatbot is closed and a case is selected
       !showChatbot && selectedCase && React.createElement(

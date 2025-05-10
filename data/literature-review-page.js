@@ -48,7 +48,7 @@ const LiteratureReviewPage = () => {
   // State for sidebar visibility on mobile
   const [isSidebarVisible, setIsSidebarVisible] = React.useState(false);
   // State for chat visibility
-  const [isChatVisible, setIsChatVisible] = React.useState(true);
+  const [isChatVisible, setIsChatVisible] = React.useState(false);
   // State for quick nav visibility
   const [showQuickNav, setShowQuickNav] = React.useState(false);
 
@@ -970,7 +970,7 @@ const LiteratureReviewPage = () => {
             style={styles.chatButtonFixed}
             onClick={toggleChatVisibility}
           >
-            ?
+            💬
           </div>
         )}
       </div>
