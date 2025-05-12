@@ -5,6 +5,7 @@ import createWordCloudViewer from './case-wordcloud.js';
 
 const CaseStudiesPage = () => {
   const [selectedCase, setSelectedCase] = useState(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   
   // Initialize word clouds after component mounts
   useEffect(() => {
@@ -100,7 +101,315 @@ const CaseStudiesPage = () => {
     promptItem: {
       marginBottom: '10px',
     },
+    // 聊天机器人样式
+    fab: {
+      position: 'fixed',
+      bottom: '30px',
+      right: '30px',
+      width: '60px', 
+      height: '60px',
+      backgroundColor: '#003d7c',
+      color: 'white',
+      borderRadius: '50%',
+      border: 'none',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      fontSize: '28px',
+      cursor: 'pointer',
+      boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+      zIndex: 1001,
+      transition: 'all 0.3s ease',
+    },
+    dialogPopup: {
+      position: 'fixed',
+      bottom: '30px',
+      right: '30px',
+      width: '400px',
+      height: '600px',
+      backgroundColor: 'white',
+      boxShadow: '0 5px 15px rgba(0,0,0,0.2)',
+      borderRadius: '12px',
+      zIndex: 1002,
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden',
+    },
+    dialogHeader: {
+      backgroundColor: '#1a4785',
+      color: 'white',
+      padding: '15px 20px',
+      borderTopLeftRadius: '12px',
+      borderTopRightRadius: '12px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    dialogMessages: {
+      flex: 1,
+      padding: '20px',
+      overflowY: 'auto',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '12px',
+      backgroundColor: '#ffffff',
+    },
+    userMessage: {
+      backgroundColor: '#003d7c',
+      color: 'white',
+      padding: '10px',
+      borderRadius: '18px',
+      maxWidth: '80%',
+      alignSelf: 'flex-end',
+      marginLeft: 'auto',
+      borderBottomRightRadius: '3px',
+      boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
+      wordWrap: 'break-word',
+    },
+    botMessage: {
+      backgroundColor: '#f1f1f1',
+      color: '#333',
+      padding: '10px',
+      borderRadius: '18px',
+      maxWidth: '80%',
+      alignSelf: 'flex-start',
+      marginRight: 'auto',
+      borderBottomLeftRadius: '3px',
+      boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
+      wordWrap: 'break-word',
+    },
+    dialogInputContainer: {
+      display: 'flex',
+      flexDirection: 'column',
+      backgroundColor: '#f9f9f9',
+      borderTop: '1px solid #eaeaea',
+    },
+    messageInputContainer: {
+      display: 'flex',
+      marginBottom: '10px',
+      padding: '10px 15px',
+      backgroundColor: '#f9f9f9',
+      borderTop: '1px solid #eaeaea',
+    },
+    messageInput: {
+      flex: 1,
+      padding: '15px',
+      border: '1px solid #ddd',
+      borderRadius: '30px',
+      marginRight: '10px',
+      outline: 'none',
+      fontSize: '16px',
+    },
+    sendButton: {
+      backgroundColor: '#1a4785',
+      color: 'white',
+      border: 'none',
+      borderRadius: '50%',
+      width: '50px',
+      height: '50px',
+      padding: '0',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'pointer',
+      fontSize: '16px',
+      fontWeight: 'bold',
+    },
+    apiKeyContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      padding: '5px 15px 15px',
+      backgroundColor: '#f9f9f9',
+    },
+    apiKeyLabel: {
+      marginRight: '10px',
+      fontSize: '18px',
+      color: '#666',
+      fontWeight: '500',
+    },
+    apiKeyInput: {
+      flex: 1,
+      padding: '12px 15px',
+      border: '1px solid #ddd',
+      borderRadius: '5px',
+      fontSize: '16px',
+      color: '#666',
+    },
+    typingIndicator: {
+      display: 'flex',
+      alignItems: 'center',
+      padding: '10px 16px',
+      backgroundColor: '#f5f5f5',
+      borderRadius: '18px',
+      alignSelf: 'flex-start',
+      marginRight: 'auto',
+      width: 'fit-content',
+      boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
+    },
+    typingDot: {
+      width: '8px',
+      height: '8px',
+      backgroundColor: '#777',
+      borderRadius: '50%',
+      margin: '0 2px',
+      animation: 'bounce 1.2s infinite',
+    },
   };
+
+  // 聊天机器人组件
+  const Dialog = () => {
+    const [inputValue, setInputValue] = useState('');
+    const [messages, setMessages] = useState([
+      { text: 'Welcome to the Case Studies Assistant! How can I help you explore our case studies?', sender: 'bot' }
+    ]);
+    const [botTyping, setBotTyping] = useState(false);
+    const [apiKey, setApiKey] = useState('');
+    const messagesEndRef = React.useRef(null);
+
+    // 自动滚动到底部
+    React.useEffect(() => {
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, [messages]);
+
+    const handleInputChange = (e) => {
+      setInputValue(e.target.value);
+    };
+
+    const handleApiKeyChange = (e) => {
+      setApiKey(e.target.value);
+    };
+
+    const handleSendMessage = (e) => {
+      e.preventDefault();
+      
+      if (inputValue.trim() === '') return;
+      
+      // 添加用户消息
+      const userMessage = { text: inputValue, sender: 'user' };
+      setMessages(prev => [...prev, userMessage]);
+      
+      setInputValue('');
+      setBotTyping(true);
+      
+      // 模拟机器人思考
+      setTimeout(() => {
+        setBotTyping(false);
+        
+        // 处理用户消息并生成回复
+        const userText = inputValue.toLowerCase();
+        let botResponse = { text: '', sender: 'bot' };
+        
+        if (userText.includes('case') && userText.includes('list')) {
+          botResponse.text = `We have ${caseStudies.length} case studies covering different aspects of AI in education. Would you like me to list them for you?`;
+        } else if (userText.includes('hello') || userText.includes('hi') || userText.includes('hey')) {
+          botResponse.text = 'Hello! I can help you navigate through our case studies. What would you like to know?';
+        } else if (userText.includes('categories') || userText.includes('types')) {
+          const categories = [...new Set(caseStudies.map(c => c.category))];
+          botResponse.text = `Our case studies cover these categories: ${categories.join(', ')}. Which category interests you?`;
+        } else if (selectedCase) {
+          botResponse.text = `You're currently viewing "${selectedCase.title}". This case study explores ${selectedCase.summary} Would you like to see a different case study?`;
+        } else {
+          botResponse.text = 'I can help you find specific case studies or explain their content. You can ask me about specific AI tools, teaching methods, or educational contexts covered in our case studies.';
+        }
+        
+        setMessages(prev => [...prev, botResponse]);
+      }, 1500);
+    };
+
+    return (
+      <div style={styles.dialogPopup}>
+        <div style={styles.dialogHeader}>
+          <h3 style={{ margin: 0 }}>Case Studies Assistant</h3>
+          <button 
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'white',
+              fontSize: '20px',
+              cursor: 'pointer',
+            }}
+            onClick={() => setIsDialogOpen(false)}
+          >
+            ×
+          </button>
+        </div>
+        
+        <div style={styles.dialogMessages}>
+          {messages.map((msg, index) => (
+            <div 
+              key={index} 
+              style={msg.sender === 'user' ? styles.userMessage : styles.botMessage}
+            >
+              {msg.text}
+            </div>
+          ))}
+          
+          {botTyping && (
+            <div style={styles.typingIndicator}>
+              <div style={{...styles.typingDot, animationDelay: '0s'}}></div>
+              <div style={{...styles.typingDot, animationDelay: '0.2s'}}></div>
+              <div style={{...styles.typingDot, animationDelay: '0.4s'}}></div>
+            </div>
+          )}
+          
+          <div ref={messagesEndRef} />
+        </div>
+        
+        <div style={styles.dialogInputContainer}>
+          <div style={styles.messageInputContainer}>
+            <input
+              type="text"
+              value={inputValue}
+              onChange={handleInputChange}
+              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(e)}
+              placeholder="Type your message..."
+              style={styles.messageInput}
+            />
+            <button
+              onClick={handleSendMessage}
+              style={styles.sendButton}
+            >
+              Send
+            </button>
+          </div>
+          
+          <div style={styles.apiKeyContainer}>
+            <div style={styles.apiKeyLabel}>API Key:</div>
+            <input
+              type="password"
+              value={apiKey}
+              onChange={handleApiKeyChange}
+              placeholder="Enter your OpenAI API Key"
+              style={styles.apiKeyInput}
+            />
+          </div>
+        </div>
+        
+        {/* 动画样式 */}
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            @keyframes bounce {
+              0%, 80%, 100% { transform: translateY(0); }
+              40% { transform: translateY(-5px); }
+            }
+          `
+        }} />
+      </div>
+    );
+  };
+
+  // 浮动按钮组件
+  const FloatingButton = () => (
+    <button 
+      style={styles.fab} 
+      onClick={() => setIsDialogOpen(true)}
+      title="Chat with Case Studies Assistant"
+    >
+      💬
+    </button>
+  );
 
   return (
     <div style={styles.container}>
@@ -180,6 +489,10 @@ const CaseStudiesPage = () => {
           </div>
         </div>
       )}
+      
+      {/* 聊天机器人组件 */}
+      {isDialogOpen && <Dialog />}
+      <FloatingButton />
     </div>
   );
 };

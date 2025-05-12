@@ -148,14 +148,14 @@ const styles = {
    },
    dialogPopup: {
       position: 'fixed',
-      bottom: '100px',
+      bottom: '30px',
       right: '30px',
       width: '350px',
       height: '500px',
       backgroundColor: 'white',
       boxShadow: '0 0 10px rgba(0,0,0,0.2)',
       borderRadius: '10px',
-      zIndex: 1000,
+      zIndex: 1002,
       display: 'flex',
       flexDirection: 'column',
       overflow: 'hidden',
@@ -423,7 +423,7 @@ const Header = () => {
             }}
             onClick={(e) => {
               e.preventDefault();
-              window.open(`${process.env.PUBLIC_URL}/literature-review.html`, "_blank");
+              window.location.href = `${process.env.PUBLIC_URL}/literature-review.html`;
             }}
           >Literature Review</a>
           {isLiteratureReviewDropdownOpen && (
@@ -437,7 +437,7 @@ const Header = () => {
               <a href="#lit-rq1" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>RQ1: Readiness (Main Page)</a>
               <a href="#lit-rq2" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>RQ2: Ethics (Main Page)</a>
               <a href="#lit-rq3" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>RQ3: Practices (Main Page)</a>
-              <a href="#" style={styles.dropdownLink} onClick={(e) => {e.preventDefault(); window.open(`${process.env.PUBLIC_URL}/literature-review.html`, "_blank");}} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Detailed Literature Review Page</a>
+              <a href="#" style={styles.dropdownLink} onClick={(e) => {e.preventDefault(); window.location.href = `${process.env.PUBLIC_URL}/literature-review.html`;}} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Detailed Literature Review Page</a>
             </div>
           )}
         </div>
@@ -459,7 +459,7 @@ const Header = () => {
             }}
             onClick={(e) => {
               e.preventDefault();
-              window.open(`${process.env.PUBLIC_URL}/findings.html`, "_blank");
+              window.location.href = `${process.env.PUBLIC_URL}/findings.html`;
             }}
           >Findings</a>
           {isFindingsOpen && (
@@ -472,7 +472,7 @@ const Header = () => {
             }}>
               <a href="#quantitative" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Quantitative (Main Page)</a>
               <a href="#qualitative" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Qualitative (Main Page)</a>
-              <a href="#" style={styles.dropdownLink} onClick={(e) => {e.preventDefault(); window.open(`${process.env.PUBLIC_URL}/findings.html`, "_blank");}} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Detailed Findings Page</a>
+              <a href="#" style={styles.dropdownLink} onClick={(e) => {e.preventDefault(); window.location.href = `${process.env.PUBLIC_URL}/findings.html`;}} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Detailed Findings Page</a>
             </div>
           )}
         </div>
@@ -489,7 +489,7 @@ const Header = () => {
             fontSize: '1.05em',
             borderBottom: isCaseStudiesDropdownOpen ? '2px solid #003d7c' : '2px solid transparent',
             transition: 'all 0.3s ease',
-          }} onClick={(e) => {e.preventDefault(); window.open(`${process.env.PUBLIC_URL}/case-studies.html`, "_blank");}}>Case Studies</a>
+          }} onClick={(e) => {e.preventDefault(); window.location.href = `${process.env.PUBLIC_URL}/case-studies.html`;}}>Case Studies</a>
           {isCaseStudiesDropdownOpen && (
             <div style={{
               ...styles.dropdownContent,
@@ -499,7 +499,7 @@ const Header = () => {
               marginTop: '5px',
             }}>
               <a href="#browse-cases" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Browse Cases (Main Page)</a>
-              <a href="#" style={styles.dropdownLink} onClick={(e) => {e.preventDefault(); window.open(`${process.env.PUBLIC_URL}/case-studies.html`, "_blank");}} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Detailed Case Studies Page</a>
+              <a href="#" style={styles.dropdownLink} onClick={(e) => {e.preventDefault(); window.location.href = `${process.env.PUBLIC_URL}/case-studies.html`;}} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Detailed Case Studies Page</a>
             </div>
           )}
         </div>
@@ -822,7 +822,7 @@ reshaping educational practices.
                 }}
                 onClick={(e) => {
                   e.preventDefault();
-                  window.open(`${process.env.PUBLIC_URL}/literature-review.html`, "_blank");
+                  window.location.href = `${process.env.PUBLIC_URL}/literature-review.html`;
                 }}
               >
                 Explore Complete Literature Review
@@ -954,7 +954,7 @@ reshaping educational practices.
                 }}
                 onClick={(e) => {
                   e.preventDefault();
-                  window.open(`${process.env.PUBLIC_URL}/findings.html`, "_blank");
+                  window.location.href = `${process.env.PUBLIC_URL}/findings.html`;
                 }}
               >
                 Explore Complete Findings
@@ -999,7 +999,7 @@ reshaping educational practices.
                 }}
                 onClick={(e) => {
                   e.preventDefault();
-                  window.open(`${process.env.PUBLIC_URL}/case-studies.html`, "_blank");
+                  window.location.href = `${process.env.PUBLIC_URL}/case-studies.html`;
                 }}
               >
                 Visit Full Case Studies Page
@@ -1773,9 +1773,41 @@ const AdminPanel = ({ onClose }) => {
 
 // Floating Action Button Component
 const FloatingButton = ({ onClick }) => (
-  <button style={styles.fab} onClick={onClick} title="Open Dialog">
+  <div
+    style={{
+      position: 'fixed',
+      bottom: '30px',
+      right: '30px',
+      width: '65px',
+      height: '65px',
+      backgroundColor: '#0056b3',
+      backgroundImage: 'linear-gradient(135deg, #003d7c 0%, #0056b3 100%)',
+      color: 'white',
+      borderRadius: '50%',
+      border: 'none',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      fontSize: '28px',
+      cursor: 'pointer',
+      boxShadow: '0 4px 10px rgba(0,0,0,0.25)',
+      zIndex: 100,
+      transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+    }}
+    onClick={onClick}
+    onMouseOver={e => {
+      e.currentTarget.style.transform = 'scale(1.08) translateY(-3px)';
+      e.currentTarget.style.boxShadow = '0 6px 15px rgba(0,0,0,0.3)';
+    }}
+    onMouseOut={e => {
+      e.currentTarget.style.transform = 'scale(1)';
+      e.currentTarget.style.boxShadow = '0 4px 10px rgba(0,0,0,0.25)';
+    }}
+    title="Open Chat Assistant"
+    aria-label="Open chat assistant"
+  >
     💬
-  </button>
+  </div>
 );
 
 // Database service for storing user experience
@@ -2246,8 +2278,8 @@ const UserExperienceDB = {
   },
 };
 
-// Dialog Component (Modified to include chat functionality)
-const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionData }) => {
+// Dialog Component (Redesigned to match Literature Review Assistant)
+const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionData, llmApiKey, setLlmApiKey }) => {
   const [inputValue, setInputValue] = useState('');
   const [messages, setMessages] = useState([
     { text: 'Welcome to the NTU GenAI Research Portal! Are you an Instructor or a Student?', sender: 'bot' }
@@ -2262,6 +2294,30 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
   const [userRole, setUserRole] = useState(null); // 'instructor' or 'student'
   const dialogRef = React.useRef(null); // Reference to the dialog element
   const [hasShownPostPageInteraction, setHasShownPostPageInteraction] = useState(false); // Track if post-page interaction occurred
+  const [visible, setVisible] = useState(false);
+
+  // Animate dialog open
+  useEffect(() => {
+    if (isOpen) {
+      setVisible(true);
+      // 使用短暂延迟允许DOM更新
+      setTimeout(() => {
+        if (dialogRef.current) {
+          dialogRef.current.style.opacity = '1';
+          dialogRef.current.style.transform = 'translateY(0)';
+          dialogRef.current.style.boxShadow = '0 5px 20px rgba(0,0,0,0.15)';
+        }
+      }, 10);
+    } else {
+      if (dialogRef.current) {
+        dialogRef.current.style.opacity = '0';
+        dialogRef.current.style.transform = 'translateY(30px)';
+        dialogRef.current.style.boxShadow = '0 0px 0px rgba(0,0,0,0)';
+      }
+      // 使用更长的延迟来确保动画完成
+      setTimeout(() => setVisible(false), 300);
+    }
+  }, [isOpen]);
 
   // Auto-scroll to bottom when messages update
   React.useEffect(() => {
@@ -2736,142 +2792,99 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
     updateUserSessionData({});
   };
   
-  // Modify handleSendMessage to store messages
-  const handleSendMessage = (e) => {
+  // Function to get response from OpenAI
+  const getOpenAIResponse = async (userInput, chatHistory) => {
+    const apiKey = llmApiKey;
+    if (!apiKey) {
+      throw new Error("OpenAI API Key is not set.");
+    }
+
+    const apiUrl = 'https://api.openai.com/v1/chat/completions';
+
+    const systemMessage = {
+      role: "system",
+      content: "You are a helpful research assistant for the NTU GenAI Research Portal. Your goal is to assist users with their queries about the research project, guide them through the website content, and help them find relevant information. Be concise and informative."
+    };
+    
+    const formattedMessages = [
+      systemMessage,
+      ...chatHistory.map(msg => ({
+        role: msg.sender === 'user' ? 'user' : 'assistant',
+        content: msg.text
+      })),
+      { role: 'user', content: userInput }
+    ];
+
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4.1-nano',
+        messages: formattedMessages,
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error?.message || `API request failed with status ${response.status}`);
+    }
+
+    const data = await response.json();
+    const choice = data.choices && data.choices[0];
+    return choice?.message?.content || "Sorry, I couldn't retrieve a valid response from the AI.";
+  };
+
+  // Modify handleSendMessage to call OpenAI and store messages
+  const handleSendMessage = async (e) => {
     e.preventDefault();
     
     if (inputValue.trim() === '') return;
-    
-    // Add user message
+
     const userMessage = { text: inputValue, sender: 'user' };
-    setMessages(prev => [...prev, userMessage]);
+    // Add user message to state immediately for responsiveness
+    // Use the functional update form of setState to ensure we have the latest messages array
+    setMessages(prevMessages => [...prevMessages, userMessage]); 
+    storeMessage(userMessage); // Log user message
     
-    // Store user message in database
-    storeMessage(userMessage);
-    
-    const userText = inputValue.toLowerCase();
-    setInputValue('');
-    
-    // Show typing indicator
+    const currentInput = inputValue; // Capture current input before clearing
+    setInputValue(''); // Clear input field
+
+    // Check for API key
+    if (!llmApiKey) {
+      setBotTyping(true);
+      setTimeout(() => {
+        setBotTyping(false);
+        const errorMsg = { text: 'Please enter your OpenAI API Key in the field below to enable AI responses.', sender: 'bot' };
+        setMessages(prevMessages => [...prevMessages, errorMsg]);
+        storeMessage(errorMsg);
+      }, 500); // Short delay for the message to appear
+      return;
+    }
+
     setBotTyping(true);
-    
-    // Simulate bot response after a short delay
-    setTimeout(() => {
+
+    try {
+      // Pass the current messages state (excluding the latest user message because it's already in `userMessage` object)
+      // The `getOpenAIResponse` function expects history *before* the current user input, which it adds itself.
+      const chatHistoryForAPI = [...messages]; // Capture snapshot of messages *before* adding the new one
+      
+      // The previous method of obtaining historyForAPI via a setMessages callback was removed.
+
+      const botResponseText = await getOpenAIResponse(currentInput, chatHistoryForAPI);
+      const botMessage = { text: botResponseText, sender: 'bot' };
+      setMessages(prevMessages => [...prevMessages, botMessage]);
+      storeMessage(botMessage);
+    } catch (error) {
+      console.error("Error getting OpenAI response:", error);
+      const errorMsg = { text: `Error from AI: ${error.message}. Please check your API key and network.`, sender: 'bot' };
+      setMessages(prevMessages => [...prevMessages, errorMsg]);
+      storeMessage(errorMsg);
+    } finally {
       setBotTyping(false);
-      let botResponse;
-      
-      // Only show role-specific responses after role selection
-      if (userRole === 'instructor') {
-        if (userText.includes('tool') || userText.includes('resource') || userText.includes('material')) {
-          botResponse = { 
-            text: 'For instructors, I recommend these tools:\n\n• Copilot - For course material development\n• ChatGPT - For creating assessments and activities\n• TeacherGAIA - For personalized learning design\n\nWould you like to see the complete list of teaching tools?', 
-            sender: 'bot', 
-            action: '#instructor-tools'
-          };
-        } else if (userText.includes('activity') || userText.includes('teaching') || userText.includes('classroom')) {
-          botResponse = {
-            text: "Our hands-on teaching activities include prompt engineering exercises, collaborative AI projects, and classroom integration strategies. Would you like to see those resources?",
-            sender: 'bot',
-            action: '#research-focus'
-          };
-        } else if (userText.includes('assessment') || userText.includes('grading') || userText.includes('evaluation')) {
-          botResponse = {
-            text: "Our findings section contains best practices for using Gen AI in assessment design, grading assistance, and creating authentic assessments in an AI era. Let me show you those resources.",
-            sender: 'bot',
-            action: '#findings'
-          };
-        } else {
-          botResponse = { 
-            text: 'As an instructor, you might be interested in our teaching resources, assessment tools, or research insights. What would you like to know more about?', 
-            sender: 'bot'
-          };
-        }
-      } else if (userRole === 'student') {
-        if (userText.includes('tool') || userText.includes('resource') || userText.includes('material')) {
-          botResponse = { 
-            text: 'For students, I recommend these tools:\n\n• Gemini - Great for brainstorming and research\n• Claude - Excellent for essay feedback\n• Perplexity.ai - For in-depth research with citations\n• Google NotebookLM - For organizing research notes\n\nWould you like to see the complete list of learning tools?', 
-            sender: 'bot', 
-            action: '#student-tools'
-          };
-        } else if (userText.includes('learning') || userText.includes('study') || userText.includes('strategy')) {
-          botResponse = {
-            text: "Our methods section includes strategies for effective learning with Gen AI, including prompt crafting, critical evaluation of AI outputs, and ethical usage guidelines.",
-            sender: 'bot',
-            action: '#methods'
-          };
-        } else if (userText.includes('case') || userText.includes('example') || userText.includes('application')) {
-          botResponse = {
-            text: "Our case studies showcase real examples of how AI is being integrated into teaching and learning contexts. You'll find 8 detailed cases covering different aspects of AI in education.",
-            sender: 'bot',
-            action: '#case-studies'
-          };
-        } else {
-          botResponse = { 
-            text: 'As a student, you might be interested in our learning resources, research materials, or case studies. What would you like to know more about?', 
-            sender: 'bot'
-          };
-        }
-      } else {
-        // If no role selected yet, only show the initial message about selecting a role
-        botResponse = { 
-          text: 'Please select whether you are an Instructor or a Student first so I can provide relevant information for you.', 
-          sender: 'bot'
-        };
-      }
-      
-      // Feedback collection - keep this for both roles
-      if (userText.includes('feedback') || userText.includes('suggest') || userText.includes('improve')) {
-        botResponse = { 
-          text: 'Thank you for your feedback! We greatly appreciate your input and will consider it as we continue to develop our research and resources. Is there anything else you\'d like to share or ask about?', 
-          sender: 'bot'
-        };
-        
-        // After receiving feedback, prompt for rating
-        setTimeout(() => {
-          setShowRating(true);
-        }, 2000);
-      }
-      
-      setMessages(prev => [...prev, botResponse]);
-      
-      // Reset userPurpose to ensure quick replies stay available
-      setUserPurpose(null);
-      
-      // If the response has an action (navigation link), provide a follow-up button
-      if (botResponse.action) {
-        setTimeout(() => {
-          // Create descriptive button text based on the action
-          let buttonText = 'Click here to navigate';
-          
-          // Customize button text based on the action
-          if (botResponse.action.includes('instructor-tools')) {
-            buttonText = 'View Instructor Tools';
-          } else if (botResponse.action.includes('student-tools')) {
-            buttonText = 'View Student Tools';
-          } else if (botResponse.action.includes('research-focus')) {
-            buttonText = 'Go to Research Focus';
-          } else if (botResponse.action.includes('methods')) {
-            buttonText = 'Explore Methods';
-          } else if (botResponse.action.includes('findings')) {
-            buttonText = 'View Findings';
-          } else if (botResponse.action.includes('case-studies')) {
-            buttonText = 'Browse Case Studies';
-          }
-          
-          const buttonMessage = { 
-            text: buttonText, 
-            sender: 'bot', 
-            isButton: true, 
-            action: botResponse.action 
-          };
-          
-          setMessages(prev => [...prev, buttonMessage]);
-          
-          // Store button message in database
-          storeMessage(buttonMessage);
-        }, 500);
-      }
-    }, 1500);
+    }
   };
 
   const handleRating = (value) => {
@@ -3013,59 +3026,180 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
     }
   };
 
-  if (!isOpen) {
-    return null;
-  }
+  if (!visible) return null;
 
-  // Add chat message styling
-  const chatMessageStyle = {
-    margin: '5px 0',
-    padding: '10px',
-    borderRadius: '18px',
-    maxWidth: '80%',
-    wordWrap: 'break-word',
-  };
-
-  const userMessageStyle = {
-    ...chatMessageStyle,
-    backgroundColor: '#003d7c', // Changed to match the case studies page
-    color: 'white',
-    alignSelf: 'flex-end',
-    marginLeft: 'auto',
-    borderBottomRightRadius: '3px',
-    boxShadow: '0 1px 2px rgba(0,0,0,0.1)'
-  };
-
-  const botMessageStyle = {
-    ...chatMessageStyle,
-    backgroundColor: '#f1f1f1', // Changed to match the case studies page
-    color: '#333',
-    alignSelf: 'flex-start',
-    marginRight: 'auto',
-    borderBottomLeftRadius: '3px',
-    boxShadow: '0 1px 2px rgba(0,0,0,0.1)'
-  };
-
-  const botButtonStyle = {
-    padding: '6px 12px',
-    backgroundColor: '#003d7c',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    fontSize: '12px',
-    fontWeight: 'bold',
-    margin: '0 0 8px 0',
-    whiteSpace: 'normal', // Allow text wrapping instead of nowrap
-    overflow: 'visible', // Changed from hidden to visible
-    textOverflow: 'initial', // Remove ellipsis effect
-    maxWidth: '300px', // Increased from 160px to 300px
-    alignSelf: 'flex-start',
-    marginRight: 'auto',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    transition: 'background-color 0.2s, transform 0.2s',
+  // Dialog styles from Literature Review page
+  const dialogStyles = {
+    dialogPopup: {
+      position: 'fixed',
+      bottom: '30px',
+      right: '30px',
+      width: '380px',
+      height: '520px',
+      backgroundColor: 'white',
+      boxShadow: '0 5px 20px rgba(0,0,0,0.15)',
+      borderRadius: '16px',
+      zIndex: 1000,
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden',
+      transition: 'all 0.3s ease',
+      // opacity: 0,
+      // transform: 'translateY(30px)',
+      // pointerEvents: isOpen ? 'auto' : 'none',
+    },
+    dialogHeader: {
+      backgroundColor: '#003d7c',
+      backgroundImage: 'linear-gradient(135deg, #003d7c 0%, #0056b3 100%)',
+      color: '#fff',
+      padding: '15px 20px',
+      borderTopLeftRadius: '16px',
+      borderTopRightRadius: '16px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+    },
+    dialogMessages: {
+      flex: 1,
+      padding: '20px',
+      paddingBottom: '10px',
+      marginBottom: '5px',
+      overflowY: 'auto',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '8px',
+      backgroundColor: '#f8f9fa',
+    },
+    userMessage: {
+      margin: '5px 0',
+      padding: '12px 16px',
+      borderRadius: '18px',
+      backgroundColor: '#0056b3',
+      color: 'white',
+      alignSelf: 'flex-end',
+      marginLeft: 'auto',
+      borderBottomRightRadius: '4px',
+      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+      maxWidth: '80%',
+      wordWrap: 'break-word',
+      fontWeight: '400',
+      animation: 'fadeInRight 0.3s ease',
+    },
+    botMessage: {
+      margin: '5px 0',
+      padding: '12px 16px',
+      borderRadius: '18px',
+      backgroundColor: 'white',
+      color: '#333',
+      alignSelf: 'flex-start',
+      marginRight: 'auto',
+      borderBottomLeftRadius: '4px',
+      boxShadow: '0 2px 4px rgba(0,0,0,0.08)',
+      maxWidth: '80%',
+      wordWrap: 'break-word',
+      fontWeight: '400',
+      animation: 'fadeInLeft 0.3s ease',
+    },
+    typingIndicator: {
+      display: 'flex',
+      alignItems: 'center',
+      padding: '12px 16px',
+      backgroundColor: 'white',
+      borderRadius: '18px',
+      alignSelf: 'flex-start',
+      marginRight: 'auto',
+      width: 'fit-content',
+      boxShadow: '0 2px 4px rgba(0,0,0,0.08)',
+      animation: 'fadeIn 0.3s ease',
+    },
+    dot: {
+      width: '8px',
+      height: '8px',
+      backgroundColor: '#666',
+      borderRadius: '50%',
+      margin: '0 2px',
+      animation: 'bounce 1.4s infinite',
+    },
+    dialogInputContainer: {
+      display: 'flex',
+      flexDirection: 'column',
+      padding: '10px 15px',
+      borderTop: '1px solid #eaeaea',
+      backgroundColor: 'white',
+    },
+    messageInputContainerStyle: {
+      display: 'flex',
+      alignItems: 'flex-start',
+    },
+    dialogInput: {
+      flex: 1,
+      padding: '10px 15px',
+      border: '1px solid #ddd',
+      borderRadius: '40px',
+      marginRight: '10px',
+      marginBottom: '8px',
+      outline: 'none',
+      fontSize: '14px',
+      backgroundColor: 'white',
+      boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)',
+      transition: 'all 0.2s ease',
+      height: '45px',
+      boxSizing: 'border-box',
+    },
+    sendButton: {
+      backgroundColor: '#0056b3',
+      backgroundImage: 'linear-gradient(135deg, #0056b3 0%, #003d7c 100%)',
+      color: 'white',
+      border: 'none',
+      borderRadius: '40px',
+      padding: '10px 25px',
+      cursor: 'pointer',
+      fontWeight: '500',
+      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+      transition: 'all 0.2s ease',
+      alignSelf: 'flex-start',
+      height: '45px',
+      marginBottom: '8px',
+      fontSize: '16px',
+    },
+    apiKeyContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      marginBottom: '5px',
+    },
+    apiKeyLabel: {
+      marginRight: '10px',
+      fontSize: '0.9em',
+      color: '#555',
+    },
+    apiKeyInput: {
+      flex: 1,
+      padding: '8px 12px',
+      border: '1px solid #ddd',
+      borderRadius: '5px',
+      fontSize: '0.9em',
+      backgroundColor: '#f8f9fa',
+      boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)',
+      transition: 'all 0.2s ease',
+      height: '40px',
+      boxSizing: 'border-box',
+    },
+    botButton: {
+      padding: '10px 14px',
+      backgroundColor: '#0056b3',
+      color: 'white',
+      border: 'none',
+      borderRadius: '6px',
+      cursor: 'pointer',
+      fontSize: '13px',
+      fontWeight: 'bold',
+      transition: 'background-color 0.2s, transform 0.2s, box-shadow 0.2s',
+      margin: '0 0 8px 0',
+      alignSelf: 'flex-start',
+      marginRight: 'auto',
+      animation: 'fadeIn 0.3s ease',
+    },
   };
 
   // Star rating styles
@@ -3089,46 +3223,18 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
     transform: 'scale(1.2)'
   };
 
-  const typingIndicatorStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '10px 16px',
-    backgroundColor: '#f5f5f5',
-    borderRadius: '18px',
-    alignSelf: 'flex-start',
-    marginRight: 'auto',
-    width: 'fit-content',
-    boxShadow: '0 1px 2px rgba(0,0,0,0.1)'
-  };
-
-  const dotStyle = {
-    width: '8px',
-    height: '8px',
-    backgroundColor: '#777',
-    borderRadius: '50%',
-    margin: '0 2px',
-    animation: 'bounce 1.2s infinite'
-  };
-
   return (
     <div 
-      style={styles.dialogPopup} 
+      style={dialogStyles.dialogPopup} 
       ref={dialogRef}
       role="dialog" 
       aria-labelledby="dialog-title"
       aria-modal="true"
     >
-      <div style={{
-        backgroundColor: '#003d7c',
-        color: 'white',
-        padding: '10px 15px',
-        borderTopLeftRadius: '10px',
-        borderTopRightRadius: '10px',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      }}>
-        <h3 style={{ margin: 0 }} id="dialog-title">NTU Research Assistant</h3>
+      <div style={dialogStyles.dialogHeader}>
+        <h3 style={{ margin: 0, fontWeight: '500', fontSize: '1.1rem' }} id="dialog-title">
+          NTU GenAI Research Portal Assistant
+        </h3>
         <button 
           style={{
             background: 'none',
@@ -3229,26 +3335,19 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
       ) : (
         <>
           {/* Chat messages container */}
-          <div style={{ 
-            flex: 1,
-            padding: '15px',
-            overflowY: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '10px',
-          }}>
+          <div style={dialogStyles.dialogMessages}>
             {messages.map((msg, index) => (
               msg.isButton ? (
                 <button
                   key={index}
-                  style={botButtonStyle}
+                  style={dialogStyles.botButton}
                   onClick={() => handleNavigation(msg.action)}
                 >
                   {msg.text}
                 </button>
               ) : msg.showInterestOptions ? (
                 <div key={index} style={{width: '100%', margin: '10px 0'}}>
-                  <div style={botMessageStyle}>
+                  <div style={dialogStyles.botMessage}>
                     {msg.text}
                   </div>
                   
@@ -3268,26 +3367,16 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
                           backgroundColor: '#003d7c',
                           color: 'white',
                           border: 'none',
-                          borderRadius: '4px',
+                          borderRadius: '16px',
                           cursor: 'pointer',
-                          fontSize: '12px',
-                          fontWeight: 'bold',
-                          whiteSpace: 'normal', // Allow text wrapping instead of nowrap
-                          overflow: 'visible', // Changed from hidden to visible
-                          textOverflow: 'initial', // Remove ellipsis effect
-                          maxWidth: '200px', // Increased from 160px
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          transition: 'background-color 0.2s, transform 0.2s',
+                          fontSize: '0.9em',
+                          transition: 'all 0.2s ease',
                         }}
                         onMouseOver={e => {
                           e.currentTarget.style.transform = 'translateY(-2px)';
-                          e.currentTarget.style.backgroundColor = '#00295a';
                         }}
                         onMouseOut={e => {
                           e.currentTarget.style.transform = 'translateY(0)';
-                          e.currentTarget.style.backgroundColor = '#003d7c';
                         }}
                       >
                         {option.text}
@@ -3298,7 +3387,7 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
               ) : (
                 <div 
                   key={index} 
-                  style={msg.sender === 'user' ? userMessageStyle : botMessageStyle}
+                  style={msg.sender === 'user' ? dialogStyles.userMessage : dialogStyles.botMessage}
                 >
                   {msg.text.split('\n').map((line, i) => (
                     <React.Fragment key={i}>
@@ -3311,10 +3400,10 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
             ))}
             
             {botTyping && (
-              <div style={typingIndicatorStyle}>
-                <div style={{...dotStyle, animationDelay: '0s'}}></div>
-                <div style={{...dotStyle, animationDelay: '0.2s'}}></div>
-                <div style={{...dotStyle, animationDelay: '0.4s'}}></div>
+              <div style={dialogStyles.typingIndicator}>
+                <div style={{...dialogStyles.dot, animationDelay: '0s'}}></div>
+                <div style={{...dialogStyles.dot, animationDelay: '0.2s'}}></div>
+                <div style={{...dialogStyles.dot, animationDelay: '0.4s'}}></div>
               </div>
             )}
             
@@ -3329,53 +3418,96 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
           
           {/* Input form - Only show when a role has been selected */}
           {userRole && (
-            <div style={{
-              display: 'flex',
-              padding: '10px',
-              borderTop: '1px solid #eee',
-            }}>
-              <input
-                type="text"
-                value={inputValue}
-                onChange={handleInputChange}
-                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(e)}
-                placeholder="Type your message..."
-                aria-label="Chat message input"
-                style={{
-                  flex: 1,
-                  padding: '10px',
-                  border: '1px solid #ddd',
-                  borderRadius: '20px',
-                  marginRight: '10px',
-                  outline: 'none',
-                }}
-              />
-              <button
-                onClick={handleSendMessage}
-                aria-label="Send message"
-                title="Send message"
-                style={{
-                  backgroundColor: '#003d7c',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '20px',
-                  padding: '8px 15px',
-                  cursor: 'pointer',
-                }}
-              >
-                Send
-              </button>
+            <div style={dialogStyles.dialogInputContainer}>
+              <div style={dialogStyles.messageInputContainerStyle}> {/* Container for message input */}
+                <input
+                  type="text"
+                  value={inputValue}
+                  onChange={handleInputChange}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(e)}
+                  placeholder="Type your message..."
+                  aria-label="Chat message input"
+                  style={dialogStyles.dialogInput}
+                />
+                <button
+                  onClick={handleSendMessage}
+                  aria-label="Send message"
+                  title="Send message"
+                  style={dialogStyles.sendButton}
+                >
+                  Send
+                </button>
+              </div>
+              {/* API Key input field */}
+              <div style={dialogStyles.apiKeyContainer}>
+                <label htmlFor="apiKeyInput" style={dialogStyles.apiKeyLabel}>API Key:</label>
+                <input
+                  id="apiKeyInput"
+                  type="password"
+                  value={llmApiKey}
+                  onChange={(e) => setLlmApiKey(e.target.value)}
+                  placeholder="Enter your OpenAI API Key"
+                  aria-label="OpenAI API Key"
+                  style={dialogStyles.apiKeyInput}
+                />
+              </div>
             </div>
           )}
         </>
       )}
       
-      {/* Add keyframes for typing indicator animation */}
+      {/* Add keyframes for all animations */}
       <style dangerouslySetInnerHTML={{
         __html: `
           @keyframes bounce {
             0%, 80%, 100% { transform: translateY(0); }
             40% { transform: translateY(-5px); }
+          }
+          
+          @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+          }
+          
+          @keyframes fadeInLeft {
+            from { 
+              opacity: 0;
+              transform: translateX(-10px);
+            }
+            to { 
+              opacity: 1;
+              transform: translateX(0);
+            }
+          }
+          
+          @keyframes fadeInRight {
+            from { 
+              opacity: 0;
+              transform: translateX(10px);
+            }
+            to { 
+              opacity: 1;
+              transform: translateX(0);
+            }
+          }
+          
+          /* 滚动条样式 */
+          #chat-messages::-webkit-scrollbar {
+            width: 6px;
+          }
+          
+          #chat-messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+          }
+          
+          #chat-messages::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 10px;
+          }
+          
+          #chat-messages::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
           }
         `
       }} />
@@ -3443,6 +3575,7 @@ const App = () => {
     sections: [],
     interactions: 0
   });
+  const [llmApiKey, setLlmApiKey] = useState(''); // Added for persistent API Key
 
   useEffect(() => {
     // Initialize user session 
@@ -3535,6 +3668,8 @@ const App = () => {
             interactions: prev.interactions + 1
           }));
         }}
+        llmApiKey={llmApiKey} // Pass API key state
+        setLlmApiKey={setLlmApiKey} // Pass API key setter
       />}
     </ErrorBoundary>
   );

@@ -353,9 +353,6 @@
   
   <!-- Load Main Visualization Script (if needed by static content) -->
   <script src="./data/findings-visualization.js"></script>
-  
-  <!-- Load Unified Chatbot Script -->
-  <script src="./data/unified-chatbot.js"></script>
 </head>
 <body>
   <div id="root"></div>
@@ -4748,18 +4745,5 @@
   
   <!-- Script for the React Chatbot -->
   <script type="text/babel" src="./data/chatbot-embed.js"></script>
-  
-  <!-- Debug script for chatbot -->
-  <script>
-    console.log('Findings page loaded');
-    setTimeout(() => {
-      console.log('Checking chatbot status:');
-      console.log('- Unified chatbot object exists:', !!window.unifiedChatbot);
-      if (window.unifiedChatbot) {
-        console.log('- Available components:', Object.keys(window.unifiedChatbot).join(', '));
-      }
-      console.log('- Chatbot container exists:', !!document.getElementById('chatbot-container'));
-    }, 2000);
-  </script>
 </body>
 </html> 
