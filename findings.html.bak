@@ -308,6 +308,40 @@
 .analysis-card-collapsible-content {
   /* Content that gets toggled */
 }
+
+    /* Styles for new header navigation links */
+    .header-nav-link {
+      padding: 8px 12px; /* Slightly less padding than original tabs */
+      background: none;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      position: relative;
+      font-weight: 500;
+      color: #555; /* Default color */
+      text-decoration: none;
+      transition: color 0.3s;
+      white-space: nowrap; /* Prevent wrapping */
+    }
+
+    .header-nav-link.active {
+      color: #003d7c; /* Active color */
+      font-weight: bold; 
+    }
+
+    .header-nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0px; /* Underline at the bottom of the padding box */
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background-color: #003d7c; /* Underline color */
+    }
+
+    .header-nav-link:hover {
+      color: #003d7c; /* Hover color */
+    }
   </style>
   
   <!-- Load D3.js library for visualization -->
@@ -394,21 +428,55 @@
       }, [activeTab, activeSection, collapsibleStates.studentFactorAnalysis]);
       
       React.useEffect(() => {
-        // Existing useEffect for chart initialization
-        if (activeSection === 'students' && activeTab === 'quantitative') {
-          console.log('Active section is students, attempting to initialize student radar chart (Chart.js) via useEffect.');
-          if (typeof window.createStudentSchoolClassificationEthicsRadarChart_ChartJS === 'function') {
+        // Existing useEffect for chart initialization - MODIFIED for studentSchoolClassification
+        if (activeTab === 'quantitative' &&
+            activeSection === 'students' &&
+            collapsibleStates.studentSchoolClassification && // Added condition
+            typeof window.createStudentSchoolClassificationEthicsRadarChart_ChartJS === 'function') {
+          console.log('Student Classification card expanded, attempting to initialize student radar chart (Chart.js) via useEffect.');
+          // Wait a short moment for the DOM to update, similar to scree plots
+          setTimeout(() => {
             const canvasElement = document.getElementById('studentSchoolClassificationEthicsRadarChartCanvas');
             if (canvasElement) {
+              // The create function should ideally handle not re-initializing if already drawn,
+              // or a check like Chart.getChart(canvasElement) could be used.
               window.createStudentSchoolClassificationEthicsRadarChart_ChartJS('studentSchoolClassificationEthicsRadarChartCanvas');
             } else {
-              // console.error('useEffect: Canvas studentSchoolClassificationEthicsRadarChartCanvas not found when attempting to draw chart.');
+              console.error('useEffect: Canvas studentSchoolClassificationEthicsRadarChartCanvas not found for student classification chart.');
             }
-          } else {
-            // console.error('useEffect: createStudentSchoolClassificationEthicsRadarChart_ChartJS function not found.');
-          }
+          }, 100);
         }
-      }, [activeTab, activeSection]); 
+      }, [activeTab, activeSection, collapsibleStates.studentSchoolClassification]); // Added dependency
+
+      // New useEffect for Instructor Descriptive Chart
+      React.useEffect(() => {
+        if (
+          activeTab === 'quantitative' &&
+          activeSection === 'instructors' &&
+          collapsibleStates.instructorDescriptive &&
+          typeof window.createInstructorDescriptiveChart === 'function'
+        ) {
+          setTimeout(() => { // Timeout to ensure DOM is fully updated
+            console.log('FindingsApp: Initializing Instructor Descriptive Chart');
+            window.createInstructorDescriptiveChart('instructor-descriptive-container');
+          }, 100);
+        }
+      }, [activeTab, activeSection, collapsibleStates.instructorDescriptive]);
+
+      // New useEffect for Student Descriptive Chart
+      React.useEffect(() => {
+        if (
+          activeTab === 'quantitative' &&
+          activeSection === 'students' &&
+          collapsibleStates.studentDescriptive &&
+          typeof window.createStudentDescriptiveChart === 'function'
+        ) {
+          setTimeout(() => { // Timeout to ensure DOM is fully updated
+            console.log('FindingsApp: Initializing Student Descriptive Chart');
+            window.createStudentDescriptiveChart('student-descriptive-container');
+          }, 100);
+        }
+      }, [activeTab, activeSection, collapsibleStates.studentDescriptive]);
 
       // New useEffect for chatbot navigation
       React.useEffect(() => {
@@ -452,41 +520,39 @@
           }}>
             <a href="index.html">
               <img 
-                src="https://www.ntu.edu.sg/ResourcePackages/NTU/assets/images/NTU_Logo.png" 
+                src="./images/NTU_Logo.webp" 
                 alt="NTU Logo" 
                 style={{ height: '45px' }}
               />
             </a>
-            <nav style={{ display: 'flex', gap: '20px' }}>
+            <nav style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
               <a href="index.html" style={{ textDecoration: 'none', color: '#333' }}>Home</a>
-              <a href="#" style={{ textDecoration: 'none', color: '#333', fontWeight: 'bold' }}>Findings</a>
+              <a
+                href="#"
+                className={`header-nav-link ${activeTab === 'quantitative' ? 'active' : ''}`}
+                onClick={(e) => { e.preventDefault(); setActiveTab('quantitative'); }}
+              >
+                Quantitative Findings
+              </a>
+              <a
+                href="#"
+                className={`header-nav-link ${activeTab === 'qualitative' ? 'active' : ''}`}
+                onClick={(e) => { e.preventDefault(); setActiveTab('qualitative'); setActiveSection('instructors'); }}
+              >
+                Qualitative Findings
+              </a>
+              <a
+                href="#"
+                className={`header-nav-link ${activeTab === 'recommendations' ? 'active' : ''}`}
+                onClick={(e) => { e.preventDefault(); setActiveTab('recommendations'); }}
+              >
+                Recommendations
+              </a>
             </nav>
           </header>
           
           <main className="container">
             <h1 style={{ textAlign: 'center', marginBottom: '30px' }}>Research Findings</h1>
-            
-            {/* Main Navigation Tabs */}
-            <div className="findings-tabs">
-              <button 
-                className={`tab-button ${activeTab === 'quantitative' ? 'active' : ''}`}
-                onClick={() => setActiveTab('quantitative')}
-              >
-                Quantitative Findings
-              </button>
-              <button 
-                className={`tab-button ${activeTab === 'qualitative' ? 'active' : ''}`}
-                onClick={() => setActiveTab('qualitative')}
-              >
-                Qualitative Findings
-              </button>
-              <button 
-                className={`tab-button ${activeTab === 'recommendations' ? 'active' : ''}`}
-                onClick={() => setActiveTab('recommendations')}
-              >
-                Recommendations
-              </button>
-            </div>
             
             {/* Quantitative Findings Content */}
             <div className={`content-section ${activeTab === 'quantitative' ? 'active' : ''}`}>
@@ -602,10 +668,6 @@
                             <div style={{ flex: '1 1 400px' }}>
                               <h4 style={{ color: '#4056A1', marginBottom: '15px' }}>Descriptive Visualization</h4>
                               <div id="instructor-descriptive-container" style={{ width: '100%', height: '400px' }}></div>
-                            </div>
-                            <div style={{ flex: '1 1 400px' }}>
-                              <h4 style={{ color: '#4056A1', marginBottom: '15px' }}>Reliability Visualization</h4>
-                              <div id="instructor-reliability" style={{ width: '100%', height: '400px' }}></div>
                             </div>
                           </div>
                         </div>
@@ -1015,13 +1077,13 @@
                           
                           {/* Right side: Construct Table */}
                           <div style={{ flex: '1 1 400px' }}>
-                            <h4 style={{ color: '#4056A1', marginBottom: '15px', textAlign: 'center' }}>Construct Definitions and Item Examples</h4>
+                            <h4 style={{ color: '#4056A1', marginBottom: '15px', textAlign: 'center' }}>Description of Survey Dimendations and Items</h4>
                             <div style={{ overflowX: 'auto', maxHeight: '360px', overflowY: 'auto' }}>
                               <table style={{ width: '100%', borderCollapse: 'collapse', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', borderRadius: '4px', overflow: 'hidden' }}>
                                 <thead>
                                   <tr style={{ backgroundColor: '#4056A1', color: 'white', position: 'sticky', top: 0, zIndex: 10 }}>
-                                    <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Construct</th>
-                                    <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Item prefix</th>
+                                    <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Dimension</th>
+                                    <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Abbreviation</th>
                                     <th style={{ padding: '12px 15px', textAlign: 'center', borderBottom: '1px solid #ddd' }}># of items</th>
                                     <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Example item</th>
                                   </tr>
@@ -1093,37 +1155,32 @@
                   
                   <div className="analysis-card">
                     <div className="analysis-card-header" onClick={() => toggleCollapsible('instructorSchoolClassification')}>
-                      <h3 className="analysis-card-title">School Classification Comparison</h3>
+                      <h3 className="analysis-card-title">Perception of Instructor Survey Responses on Ethics</h3>
                       <span className="analysis-card-toggle-icon">
                         {collapsibleStates.instructorSchoolClassification ? '−' : '+'}
                       </span>
                     </div>
                     {collapsibleStates.instructorSchoolClassification && (
                       <div className="analysis-card-collapsible-content">
-                        <p>Comparison of Ethics dimension items between NIE and NTU lecturers</p>
                         
                         <div style={{ overflowX: 'auto', marginBottom: '20px' }}>
                           <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
                             <thead>
                               <tr style={{ backgroundColor: '#4056A1', color: 'white' }}>
-                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>School Classification</th>
-                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Variables</th>
-                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Indicators</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>School</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Ethics Survey Items</th>
                                 <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>M</th>
                                 <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>SD</th>
-                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Item Mean</th>
-                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Scale Mean</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Item Mean (SD)</th>
                               </tr>
                             </thead>
                             <tbody>
                               <tr style={{ backgroundColor: '#f9f9f9' }}>
-                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }} rowSpan="4">NIE Lectures (89)</td>
-                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }} rowSpan="4">Ethics</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }} rowSpan="4">NIE (89)</td>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>ET1</td>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>3.88</td>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>0.84</td>
-                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }} rowSpan="4">3.70</td>
-                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }} rowSpan="4">14.81</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }} rowSpan="4">3.70 (0.22)</td>
                               </tr>
                               <tr>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>ET2</td>
@@ -1141,13 +1198,11 @@
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>1.15</td>
                               </tr>
                               <tr style={{ backgroundColor: '#f9f9f9' }}>
-                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }} rowSpan="4">NTU Lectures (39)</td>
-                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }} rowSpan="4">Ethics</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }} rowSpan="4">NTU (39)</td>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>ET1</td>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>3.92</td>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>1.04</td>
-                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }} rowSpan="4">3.77</td>
-                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }} rowSpan="4">15.08</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }} rowSpan="4">3.77 (0.21)</td>
                               </tr>
                               <tr>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>ET2</td>
@@ -1157,7 +1212,7 @@
                               <tr style={{ backgroundColor: '#f9f9f9' }}>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>ET3</td>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>3.56</td>
-                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>1.09</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>1.10</td>
                               </tr>
                               <tr>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>ET4</td>
@@ -1168,7 +1223,6 @@
                           </table>
                         </div>
                         
-                        <h4 style={{ color: '#4056A1', marginTop: '30px', marginBottom: '15px' }}>Instructor Ethics Items Comparison (ET1-ET4, Mean) by School</h4>
                         <div id="instructor-ethics-items-chart-container" style={{ width: '100%', height: '450px' }}>
                             <canvas id="instructorEthicsItemsChartCanvas"></canvas>
                         </div>
@@ -1184,12 +1238,12 @@
                         }}>
                           <p style={{ marginTop: 0 }}><strong>Key findings:</strong></p>
                           <ul style={{ paddingLeft: '20px', marginBottom: '5px' }}>
-                            <li>NTU lecturers scored slightly higher overall on Ethics items (M = 3.77) compared to NIE lecturers (M = 3.70)</li>
+                            <li>NTU instructors scored slightly higher overall on Ethics items (M = 3.77) compared to NIEinstructors (M = 3.70)</li>
                             <li>Both groups scored highest on ET2 (NIE: 3.90, NTU: 3.97)</li>
-                            <li>NIE lecturers showed lower scores on ET3 (3.47) compared to other ethics items</li>
+                            <li>NIE instructors showed lower scores on ET3 (3.47) compared to other ethics items</li>
                             <li>The pattern of responses across ethics items was similar between both institution types</li>
                           </ul>
-                          <p style={{ marginBottom: 0 }}><strong>Interpretation:</strong> The data suggests that lecturers from both institutions demonstrate high ethical awareness regarding AI adoption in education, with minimal differences between institutions. This indicates that ethical considerations are similarly valued across different higher education institutions.</p>
+                          <p style={{ marginBottom: 0 }}><strong>Interpretation:</strong> The data suggests thatinstructors from both institutions demonstrate high ethical awareness regarding AI adoption in education, with minimal differences between institutions. This indicates that ethical considerations are similarly valued across different higher education institutions.</p>
                         </div>
                       </div>
                     )}
@@ -1215,68 +1269,68 @@
                           <div>
                             <h4 style={{ color: '#4056A1', marginBottom: '15px' }}>Descriptive Statistics & Reliability Coefficients (N=496)</h4>
                             <div style={{ overflowX: 'auto' }}>
-                              <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
-                                <thead>
-                                  <tr style={{ backgroundColor: '#4056A1', color: 'white' }}>
-                                    <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Dimension</th>
+                          <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
+                            <thead>
+                              <tr style={{ backgroundColor: '#4056A1', color: 'white' }}>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Dimension</th>
                                     <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Mean</th>
                                     <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>SD</th>
                                     <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Min</th>
                                     <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Max</th>
                                     <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Cronbach's α</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  <tr style={{ backgroundColor: '#f9f9f9' }}>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Cognition</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>3.48</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>0.69</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>1.00</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>5.00</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>0.82</td>
-                                  </tr>
-                                  <tr>
+                              </tr>
+                              <tr>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Ability</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>3.47</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>0.76</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>1.00</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>5.00</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>0.91</td>
-                                  </tr>
-                                  <tr style={{ backgroundColor: '#f9f9f9' }}>
+                              </tr>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Vision</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>3.58</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>0.73</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>1.00</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>5.00</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>0.75</td>
-                                  </tr>
-                                  <tr>
+                              </tr>
+                              <tr>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Ethics</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>3.70</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>0.75</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>1.00</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>5.00</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>0.80</td>
-                                  </tr>
-                                  <tr style={{ backgroundColor: '#f9f9f9' }}>
+                              </tr>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Perceived Threats</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>3.28</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>0.83</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>1.00</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>5.00</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>0.83</td>
-                                  </tr>
-                                  <tr>
+                              </tr>
+                              <tr>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AI-Enhanced Innovation</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>3.69</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>0.78</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>1.00</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>5.00</td>
                                     <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>0.85</td>
-                                  </tr>
-                                </tbody>
-                              </table>
+                              </tr>
+                            </tbody>
+                          </table>
                             </div>
                             <p style={{ fontSize: '0.9em', color: '#666', marginTop: '10px' }}>
                               <strong>Note:</strong> Scale ranges from 1-5. Higher scores indicate greater readiness. 
@@ -1289,16 +1343,12 @@
                               <h4 style={{ color: '#4056A1', marginBottom: '15px' }}>Descriptive Visualization</h4>
                               <div id="student-descriptive-container" style={{ width: '100%', height: '400px' }}></div>
                             </div>
-                            <div style={{ flex: '1 1 400px' }}>
-                              <h4 style={{ color: '#4056A1', marginBottom: '15px' }}>Reliability Visualization</h4>
-                              <div id="student-reliability" style={{ width: '100%', height: '400px' }}></div>
-                            </div>
                           </div>
                         </div>
                       </div>
                     )}
-                  </div>
-                  
+                        </div>
+                        
                   <div className="analysis-card">
                     <div className="analysis-card-header" onClick={() => toggleCollapsible('studentCorrelation')}>
                       <h3 className="analysis-card-title">Correlation Matrix</h3>
@@ -1611,7 +1661,7 @@
                           </table>
                         </div>
                         
-                        <div style={{ 
+                          <div style={{ 
                           display: 'flex', 
                           justifyContent: 'center', 
                           alignItems: 'center', 
@@ -1665,7 +1715,7 @@
                           fontSize: '0.9em', 
                           color: '#555', 
                           marginBottom: '30px',
-                          padding: '15px',
+                            padding: '15px', 
                           backgroundColor: '#f9f9f9',
                           borderRadius: '6px',
                           border: '1px solid #eee'
@@ -1701,13 +1751,13 @@
                           
                           {/* Right side: Construct Table */}
                           <div style={{ flex: '1 1 400px' }}>
-                            <h4 style={{ color: '#4056A1', marginBottom: '15px', textAlign: 'center' }}>Student Construct Definitions and Item Examples</h4>
+                            <h4 style={{ color: '#4056A1', marginBottom: '15px', textAlign: 'center' }}>Description of Survey Dimendations and Items</h4>
                             <div style={{ overflowX: 'auto', maxHeight: '360px', overflowY: 'auto' }}>
                               <table style={{ width: '100%', borderCollapse: 'collapse', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', borderRadius: '4px', overflow: 'hidden' }}>
                                 <thead>
                                   <tr style={{ backgroundColor: '#4056A1', color: 'white', position: 'sticky', top: 0, zIndex: 10 }}>
-                                    <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Construct</th>
-                                    <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Item prefix</th>
+                                    <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Dimension</th>
+                                    <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Abbreviation</th>
                                     <th style={{ padding: '12px 15px', textAlign: 'center', borderBottom: '1px solid #ddd' }}># of items</th>
                                     <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Example item (verbatim wording)</th>
                                   </tr>
@@ -1779,37 +1829,32 @@
                   
                   <div className="analysis-card">
                     <div className="analysis-card-header" onClick={() => toggleCollapsible('studentSchoolClassification')}>
-                      <h3 className="analysis-card-title">School Classification Comparison</h3>
+                      <h3 className="analysis-card-title">Perception of Student Survey Responses on Ethics</h3>
                       <span className="analysis-card-toggle-icon">
                         {collapsibleStates.studentSchoolClassification ? '−' : '+'}
                       </span>
                     </div>
                     {collapsibleStates.studentSchoolClassification && (
                       <div className="analysis-card-collapsible-content">
-                        <p>Comparison of Ethics dimension items between NIE and NTU students</p>
-                        
+
                         <div style={{ overflowX: 'auto', marginBottom: '20px' }}>
                           <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
                             <thead>
                               <tr style={{ backgroundColor: '#4056A1', color: 'white' }}>
-                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>School Classification</th>
-                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Variables</th>
-                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Indicators</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>School</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Ethics Survey Items</th>
                                 <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>M</th>
                                 <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>SD</th>
-                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Item Mean</th>
-                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Scale Mean</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Item Mean (SD)</th>
                               </tr>
                             </thead>
                             <tbody>
                               <tr style={{ backgroundColor: '#f9f9f9' }}>
-                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }} rowSpan="4">NIE Students (264)</td>
-                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }} rowSpan="4">Ethics</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }} rowSpan="4">NIE Students (364)</td>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>ET1</td>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>3.95</td>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>0.79</td>
-                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }} rowSpan="4">3.70</td>
-                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }} rowSpan="4">14.79</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }} rowSpan="4">3.70 (0.29)</td>
                               </tr>
                               <tr>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>ET2</td>
@@ -1828,12 +1873,10 @@
                               </tr>
                               <tr style={{ backgroundColor: '#f9f9f9' }}>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }} rowSpan="4">NTU Students (106)</td>
-                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }} rowSpan="4">Ethics</td>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>ET1</td>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>4.00</td>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>0.89</td>
-                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }} rowSpan="4">3.71</td>
-                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }} rowSpan="4">14.83</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }} rowSpan="4">3.71 (0.39)</td>
                               </tr>
                               <tr>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>ET2</td>
@@ -1853,6 +1896,31 @@
                             </tbody>
                           </table>
                         </div>
+                        
+                        {/* Added Radar Chart for Student School Classification Comparison */}
+                        <div id="student-school-classification-ethics-radar-chart-container" style={{ width: '100%', height: '450px' }}>
+                            <canvas id="studentSchoolClassificationEthicsRadarChartCanvas"></canvas>
+                        </div>
+                        <div style={{
+                          fontSize: '0.9em',
+                          color: '#555',
+                          marginTop: '20px',
+                          marginBottom: '10px',
+                          padding: '15px',
+                          backgroundColor: '#f9f9f9',
+                          borderRadius: '6px',
+                          border: '1px solid #eee'
+                        }}>
+                          <p style={{ marginTop: 0 }}><strong>Key findings:</strong></p>
+                          <ul style={{ paddingLeft: '20px', marginBottom: '5px' }}>
+                            <li>NTU students scored slightly higher overall on Ethics items (M = 3.71) compared to NIE students (M = 3.70).</li>
+                            <li>Both groups scored highest on ET1 (NIE: 3.95, NTU: 4.00) and ET2 (NIE: 3.94, NTU: 3.97).</li>
+                            <li>NIE students showed lower scores on ET3 (3.43) and NTU students also scored lowest on ET3 (3.41) compared to other ethics items for their respective groups.</li>
+                            <li>The pattern of responses across ethics items was similar between both institution types.</li>
+                          </ul>
+                          <p style={{ marginBottom: 0 }}><strong>Interpretation:</strong> The data suggests that students from both institutions demonstrate high ethical awareness regarding AI adoption in education, with minimal differences between institutions. This indicates that ethical considerations are similarly valued across different higher education institutions among students.</p>
+                        </div>
+                        
                       </div>
                     )}
                   </div>
@@ -1877,7 +1945,7 @@
                 </button>
               </div>
               
-              {/* Instructor Qualitative Analysis */}
+              {/* Sample content for Instructor Qualitative Analysis */}
               {activeSection === 'instructors' && (
                 <div>
                   <h2 className="section-heading">Instructor Qualitative Analysis</h2>
@@ -2369,8 +2437,8 @@
                             <h5 style={{ margin: '0 0 10px 0', color: '#3f51b5' }}>Privacy eclipses all other issues</h5>
                             <p style={{ margin: '0', fontSize: '0.95em' }}>The single biggest "wrong" instructors fear is exposing confidential student or institutional data to external AI platforms.</p>
                           </div>
-                        </div>
-                        
+                          </div>
+                          
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', marginBottom: '25px' }}>
                           <div style={{ 
                             flex: '1 1 450px', 
@@ -2393,13 +2461,13 @@
                             <h5 style={{ margin: '0 0 10px 0', color: '#3f51b5' }}>Ownership and IP remain murky</h5>
                             <p style={{ margin: '0', fontSize: '0.95em' }}>Many are unclear who should be credited—and therefore held accountable—when AI co-creates lesson content or assessments.</p>
                           </div>
-                        </div>
-                        
-                        <div style={{ 
-                          flex: '1 1 450px', 
-                          padding: '15px', 
+                          </div>
+                          
+                          <div style={{ 
+                            flex: '1 1 450px', 
+                            padding: '15px', 
                           backgroundColor: '#f5f5f5', 
-                          borderRadius: '8px',
+                            borderRadius: '8px',
                           borderLeft: '4px solid #3f51b5',
                           marginBottom: '25px'
                         }}>
@@ -2449,9 +2517,9 @@
                                 <span style={{ fontSize: '1.6em', fontWeight: 'bold', color: '#333' }}>100%</span>
                                 <span style={{ fontSize: '0.85em', color: '#666' }}>Concerns</span>
                               </div>
-                            </div>
                           </div>
-                          
+                        </div>
+                        
                           {/* Legend */}
                           <div style={{ 
                             display: 'flex', 
@@ -2515,8 +2583,8 @@
                               </div>
                       </div>
                     )}
-                            </div>
-
+                        </div>
+                        
                   {/* Perceived Threats Dimension Analysis */}
                   <div className="analysis-card">
                     <div className="analysis-card-header" onClick={() => toggleCollapsible('instructorPerceivedThreats')}>
@@ -2535,7 +2603,6 @@
                             <thead>
                               <tr style={{ backgroundColor: '#4056A1', color: 'white' }}>
                                 <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Survey item (PT1-PT5)</th>
-                                <th style={{ padding: '12px 15px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>Central tendency†</th>
                                 <th style={{ padding: '12px 15px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>% Agree‡</th>
                                 <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Key takeaway</th>
                               </tr>
@@ -2543,38 +2610,32 @@
                             <tbody>
                               <tr style={{ backgroundColor: '#f9f9f9' }}>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>PT1 – AI could weaken the importance of teachers</td>
-                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>Mean 2.5</td>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>25%</td>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Most instructors disagree that their professional role is in danger.</td>
                               </tr>
                               <tr>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>PT2 – AI reduces face-to-face communication</td>
-                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>Mean 2.7</td>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>23%</td>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Nearly half do not see a serious threat to interpersonal contact.</td>
                               </tr>
                               <tr style={{ backgroundColor: '#f9f9f9' }}>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>PT3 – Student over-reliance on AI may undermine teacher-student relationships</td>
-                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>Mean 3.3</td>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>51%</td>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>A majority feel uncertain and see relational dangers here.</td>
                               </tr>
                               <tr>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>PT4 – Heavy AI use could erode critical thinking & decision-making</td>
-                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>Mean 3.4</td>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>52%</td>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>This is the strongest perceived danger: loss of higher-order skills.</td>
                               </tr>
                               <tr style={{ backgroundColor: '#f9f9f9' }}>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>PT5 – Overuse of AI may hinder teachers from passing on values</td>
-                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>Mean 3.0</td>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>36%</td>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Views are mixed; the threat is possible but not dominant.</td>
                               </tr>
                             </tbody>
                           </table>
                           <p style={{ fontSize: '0.9em', color: '#666', marginTop: '0px' }}>
-                            †Means on a 1 = Strongly Disagree to 5 = Strongly Agree scale (N = 128).<br/>
                             ‡"Agree" combines response options 4 and 5.
                           </p>
                         </div>
@@ -2582,7 +2643,7 @@
                         <h4 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>Overall pattern</h4>
                         
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', marginBottom: '25px' }}>
-                            <div style={{
+                          <div style={{ 
                             flex: '1 1 450px', 
                             padding: '15px', 
                             backgroundColor: '#f5f5f5', 
@@ -2603,8 +2664,8 @@
                             <h5 style={{ margin: '0 0 10px 0', color: '#673ab7' }}>Greatest concern: cognitive & relational erosion</h5>
                             <p style={{ margin: '0', fontSize: '0.95em' }}>About half the sample worries that frequent or uncritical AI use could dull critical-thinking skills and strain teacher–student rapport.</p>
                           </div>
-                        </div>
-                        
+                          </div>
+                          
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', marginBottom: '25px' }}>
                           <div style={{ 
                             flex: '1 1 450px', 
@@ -2639,8 +2700,8 @@
                                 <span style={{ color: 'white', fontSize: '0.8em', fontWeight: '500' }}>52%</span>
                               </div>
                             </div>
-                          </div>
-                          
+                        </div>
+                        
                           <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                             <div style={{ width: '180px', fontSize: '0.9em', fontWeight: '500' }}>Student-teacher relationship</div>
                             <div style={{ flex: '1', height: '25px', backgroundColor: '#eee', borderRadius: '4px', overflow: 'hidden' }}>
@@ -2648,8 +2709,8 @@
                                 <span style={{ color: 'white', fontSize: '0.8em', fontWeight: '500' }}>51%</span>
                               </div>
                             </div>
-                          </div>
-                          
+                        </div>
+                        
                           <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                             <div style={{ width: '180px', fontSize: '0.9em', fontWeight: '500' }}>Values transmission</div>
                             <div style={{ flex: '1', height: '25px', backgroundColor: '#eee', borderRadius: '4px', overflow: 'hidden' }}>
@@ -2658,7 +2719,7 @@
                               </div>
                             </div>
                           </div>
-                          
+                        
                           <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                             <div style={{ width: '180px', fontSize: '0.9em', fontWeight: '500' }}>Teacher relevance</div>
                             <div style={{ flex: '1', height: '25px', backgroundColor: '#eee', borderRadius: '4px', overflow: 'hidden' }}>
@@ -2700,7 +2761,7 @@
                       <span className="analysis-card-toggle-icon">
                         {collapsibleStates.instructorAIInnovation ? '−' : '+'}
                       </span>
-                    </div>
+                </div>
                     {collapsibleStates.instructorAIInnovation && (
                       <div className="analysis-card-collapsible-content">
                         <h4 style={{ color: '#003d7c', marginBottom: '15px' }}>Snapshot of AI-enhanced innovation among instructors</h4>
@@ -2784,7 +2845,7 @@
                         <h4 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>Sentiment & constraints shaping innovation</h4>
                         
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', marginBottom: '25px' }}>
-                          <div style={{ 
+                        <div style={{ 
                             flex: '1 1 300px', 
                             padding: '15px', 
                             backgroundColor: '#f5f5f5', 
@@ -2827,7 +2888,7 @@
                           borderRadius: '12px', 
                           boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
                           marginBottom: '25px',
-                          display: 'flex',
+                          display: 'flex', 
                           flexDirection: 'column',
                           alignItems: 'center'
                         }}>
@@ -2836,15 +2897,15 @@
                             maxWidth: '900px',
                             display: 'flex',
                             flexWrap: 'wrap',
-                            justifyContent: 'center',
-                            alignItems: 'center',
+                          justifyContent: 'center', 
+                          alignItems: 'center', 
                             gap: '30px'
-                          }}>
+                        }}>
                             {/* Experience Distribution Donut Chart */}
-                            <div style={{ 
+                          <div style={{ 
                               flex: '1 1 450px',
                               minWidth: '300px',
-                              display: 'flex', 
+                            display: 'flex', 
                               flexDirection: 'column',
                               alignItems: 'center'
                             }}>
@@ -2858,7 +2919,7 @@
                                 Instructor Experience with AI Tools
                               </h5>
                               
-                              <div style={{ 
+                            <div style={{ 
                                 position: 'relative',
                                 width: '280px',
                                 height: '280px',
@@ -2872,10 +2933,10 @@
                                   background: 'conic-gradient(#009688 0% 40%, #10b3a1 40% 71%, #27c2b0 71% 91%, #40d1c0 91% 100%)',
                                   position: 'relative',
                                   boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
-                                }}></div>
+                            }}></div>
                                 
                                 {/* Center white circle to create donut effect */}
-                                <div style={{
+                          <div style={{ 
                                   position: 'absolute',
                                   top: '25%',
                                   left: '25%',
@@ -2884,17 +2945,17 @@
                                   borderRadius: '50%',
                                   backgroundColor: 'white',
                                   boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.1)',
-                                  display: 'flex',
-                                  alignItems: 'center',
+                            display: 'flex', 
+                            alignItems: 'center', 
                                   justifyContent: 'center',
                                   flexDirection: 'column'
-                                }}>
+                          }}>
                                   <span style={{ fontSize: '1.8em', fontWeight: 'bold', color: '#009688' }}>100%</span>
                                   <span style={{ fontSize: '0.9em', color: '#666' }}>Instructors</span>
                                 </div>
                                 
                                 {/* Labels */}
-                                <div style={{ 
+                            <div style={{ 
                                   position: 'absolute', 
                                   top: '40%', 
                                   left: '70%',
@@ -2906,9 +2967,9 @@
                                   fontWeight: '600'
                                 }}>
                                   <span style={{ color: '#009688' }}>40%</span> Novice
-                                </div>
+                          </div>
                                 
-                                <div style={{ 
+                          <div style={{ 
                                   position: 'absolute', 
                                   top: '80%', 
                                   right: '40%',
@@ -2956,9 +3017,9 @@
                             <div style={{ 
                               flex: '1 1 300px',
                               minWidth: '280px',
-                              display: 'flex',
+                            display: 'flex', 
                               flexDirection: 'column',
-                              alignItems: 'center',
+                            alignItems: 'center', 
                               justifyContent: 'center'
                             }}>
                               <h5 style={{ 
@@ -2971,7 +3032,7 @@
                                 AI Adoption Rate in Courses
                               </h5>
                               
-                              <div style={{ 
+                            <div style={{ 
                                 width: '180px',
                                 height: '180px',
                                 borderRadius: '50%',
@@ -2996,9 +3057,9 @@
                                 }}>
                                   <span style={{ fontSize: '2em', fontWeight: 'bold', color: '#009688' }}>55%</span>
                                   <span style={{ fontSize: '0.9em', color: '#666' }}>Use AI</span>
-                                </div>
-                              </div>
-                              
+                          </div>
+                        </div>
+                        
                               <div style={{ padding: '15px', backgroundColor: '#f0f8f7', borderRadius: '8px', maxWidth: '280px' }}>
                                 <p style={{ margin: '0', fontSize: '0.9em', color: '#444' }}>
                                   <strong>Key insight:</strong> Despite varying experience levels, over half of instructors already incorporate AI into their teaching.
@@ -3045,19 +3106,14 @@
                         </div>
                       </div>
                     )}
-                        </div>
+                  </div>
                       </div>
                     )}
-                  </div>
-                </div>
-              )}
-              
-              {/* Student Qualitative Analysis */}
-              {activeSection === 'students' && (
+                    {activeSection === 'students' && (
                 <div>
                   <h2 className="section-heading">Student Qualitative Analysis</h2>
                   
-                  {/* Cognitive Dimension Analysis */}
+                  {/* Student Cognitive Analysis */}
                   <div className="analysis-card">
                     <div className="analysis-card-header" onClick={() => toggleCollapsible('studentCognitive')}>
                       <h3 className="analysis-card-title">Cognitive Analysis</h3>
@@ -3067,10 +3123,11 @@
                     </div>
                     {collapsibleStates.studentCognitive && (
                       <div className="analysis-card-collapsible-content">
-                        <h4 style={{ color: '#003d7c', marginBottom: '15px' }}>Cognition-focused summary of student survey responses (N=496)</h4>
-                        <p><em>(Cognition = "mental processes of acquiring knowledge and understanding")</em></p>
+                        <h4 style={{ color: '#003d7c', marginBottom: '15px' }}>Cognition-focused summary of the 496 student survey responses</h4>
+                        <p><em>(using cognition as "the mental processes of acquiring knowledge and understanding")</em></p>
                         
-                        <h4 style={{ color: '#003d7c', marginTop: '25px', marginBottom: '15px' }}>1. How students acquire knowledge with Generative-AI tools</h4>
+                        <h5 style={{ color: '#003d7c', marginTop: '25px', marginBottom: '15px' }}>1. How students acquire knowledge with Generative-AI tools</h5>
+                        
                         <div style={{ overflowX: 'auto', marginBottom: '20px' }}>
                           <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
                             <thead>
@@ -3100,14 +3157,15 @@
                           </table>
                         </div>
                         
-                        <h4 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>2. How well students believe they understand AI itself</h4>
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>2. How well students believe they understand AI itself</h5>
+                        
                         <div style={{ overflowX: 'auto', marginBottom: '20px' }}>
                           <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
                             <thead>
                               <tr style={{ backgroundColor: '#4056A1', color: 'white' }}>
                                 <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Indicator of understanding (CO1-CO5 scale)</th>
                                 <th style={{ padding: '12px 15px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>Mean (1–5)</th>
-                                <th style={{ padding: '12px 15px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>% rating 4–5</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>% rating 4 – 5</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -3139,81 +3197,79 @@
                             </tbody>
                           </table>
                         </div>
-                        <p style={{ fontSize: '0.9em', color: '#555' }}>
-                          <strong>Interpretation:</strong> Students' conceptual grasp of what AI is and why its ethical use matters is solid-to-moderate, but fewer feel confident explaining how the models work.
-                        </p>
                         
-                        <h4 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>3. Cognitive abilities students attribute to themselves when using AI</h4>
-                        <p>On the AB1-AB6 items (effective integration, problem-solving, collaboration, etc.) the overall mean is 3.47/5. Roughly half (48–63%) score themselves "high" (4–5), suggesting they feel reasonably capable of weaving AI output into their own reasoning, but still see room to grow—especially for collaborative knowledge construction (only 47% high on AB6).</p>
-                        
-                        <h4 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>4. Metacognitive concerns & emerging themes (open-ended answers)</h4>
-                        
-                        <div className="quote-card" style={{ marginBottom: '15px' }}>
-                          <div className="dimension-badge">Positive cognitive impact</div>
-                          <p className="quote-text">"Helps me organise my thoughts," "makes abstract concepts clearer," "boosts creativity."</p>
-                          <p className="quote-text">Time–efficiency and confidence are repeatedly mentioned.</p>
-                        </div>
-                        
-                        <div className="quote-card" style={{ marginBottom: '15px' }}>
-                          <div className="dimension-badge">Watch-outs for healthy cognition</div>
-                          <ul style={{ paddingLeft: '20px', margin: '10px 0' }}>
-                            <li>Risk of over-reliance ("Afraid I can't learn independently without AI").</li>
-                            <li>Need for source validation & truthfulness ("have to check authenticity of resources").</li>
-                            <li>Fear of stunted higher-order thinking if AI provides ready-made answers.</li>
-                          </ul>
-                        </div>
-                        
-                        <h4 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>5. Implications for teaching & support</h4>
-                        
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', marginBottom: '25px' }}>
-                          <div style={{ 
-                            flex: '1 1 300px', 
-                            padding: '15px', 
-                            backgroundColor: '#f5f5f5', 
-                            borderRadius: '8px',
-                            borderLeft: '4px solid #3f51b5'
-                          }}>
-                            <h5 style={{ margin: '0 0 10px 0', color: '#3f51b5' }}>Deepen model literacy</h5>
-                            <p style={{ margin: '0', fontSize: '0.95em' }}>More than half still feel unsure about how generative models actually work; demystifying training data and biases will strengthen critical understanding.</p>
-                          </div>
-                          
-                          <div style={{ 
-                            flex: '1 1 300px', 
-                            padding: '15px', 
-                            backgroundColor: '#f5f5f5', 
-                            borderRadius: '8px',
-                            borderLeft: '4px solid #3f51b5'
-                          }}>
-                            <h5 style={{ margin: '0 0 10px 0', color: '#3f51b5' }}>Train evaluative strategies</h5>
-                            <p style={{ margin: '0', fontSize: '0.95em' }}>Embed activities where learners must compare AI output with disciplinary standards or primary sources.</p>
-                          </div>
-                          
-                          <div style={{ 
-                            flex: '1 1 300px', 
-                            padding: '15px', 
-                            backgroundColor: '#f5f5f5', 
-                            borderRadius: '8px',
-                            borderLeft: '4px solid #3f51b5'
-                          }}>
-                            <h5 style={{ margin: '0 0 10px 0', color: '#3f51b5' }}>Foster reflective prompts</h5>
-                            <p style={{ margin: '0', fontSize: '0.95em' }}>Guide students to ask AI why and how answers are formed, turning the tool into a metacognitive coach rather than an answer machine.</p>
-                          </div>
-                          
-                          <div style={{ 
-                            flex: '1 1 300px', 
-                            padding: '15px', 
-                            backgroundColor: '#f5f5f5', 
-                            borderRadius: '8px',
-                            borderLeft: '4px solid #3f51b5'
-                          }}>
-                            <h5 style={{ margin: '0 0 10px 0', color: '#3f51b5' }}>Build collaborative cognition</h5>
-                            <p style={{ margin: '0', fontSize: '0.95em' }}>Design group tasks where AI aids joint problem-solving, addressing lower confidence in that area.</p>
-                          </div>
-                        </div>
-                        
-                        <h4 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>Bottom line</h4>
                         <div style={{ 
                           padding: '15px',
+                          backgroundColor: '#f5f8ff',
+                          borderRadius: '6px',
+                          border: '1px solid #d0e0ff',
+                          marginBottom: '20px'
+                        }}>
+                          <p style={{ margin: '0' }}><strong>Interpretation:</strong> Students' conceptual grasp of what AI is and why its ethical use matters is solid-to-moderate, but fewer feel confident explaining how the models work.</p>
+                        </div>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>3. Cognitive abilities students attribute to themselves when using AI</h5>
+                        
+                        <p>On the AB1-AB6 items (effective integration, problem-solving, collaboration, etc.) the overall mean is 3.47/5. Roughly half (48 – 63%) score themselves "high" (4–5), suggesting they feel reasonably capable of weaving AI output into their own reasoning, but still see room to grow—especially for collaborative knowledge construction (only 47% high on AB6).</p>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>4. Metacognitive concerns & emerging themes (open-ended answers)</h5>
+                        
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '25px' }}>
+                          <div style={{ 
+                            flex: '1 1 450px', 
+                            padding: '15px', 
+                            backgroundColor: '#f0f7ff', 
+                            borderRadius: '8px',
+                            borderLeft: '4px solid #2196f3'
+                          }}>
+                            <h6 style={{ margin: '0 0 10px 0', color: '#1565c0' }}>Positive cognitive impact</h6>
+                            <p style={{ margin: '0', fontSize: '0.95em' }}>
+                              "Helps me organise my thoughts," "makes abstract concepts clearer," "boosts creativity."<br/>
+                              Time–efficiency and confidence are repeatedly mentioned.
+                            </p>
+                          </div>
+                          
+                          <div style={{ 
+                            flex: '1 1 450px', 
+                            padding: '15px', 
+                            backgroundColor: '#fff8e1', 
+                            borderRadius: '8px',
+                            borderLeft: '4px solid #ff9800'
+                          }}>
+                            <h6 style={{ margin: '0 0 10px 0', color: '#e65100' }}>Watch-outs for healthy cognition</h6>
+                            <ul style={{ paddingLeft: '20px', margin: '0' }}>
+                              <li>Risk of over-reliance ("Afraid I can't learn independently without AI").</li>
+                              <li>Need for source validation & truthfulness ("have to check authenticity of resources").</li>
+                              <li>Fear of stunted higher-order thinking if AI provides ready-made answers.</li>
+                            </ul>
+                          </div>
+                          </div>
+                          
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>5. Implications for teaching & support</h5>
+                        
+                        <div className="quote-card" style={{ marginBottom: '15px' }}>
+                          <div className="dimension-badge">Deepen model literacy</div>
+                          <p className="quote-text">More than half still feel unsure about how generative models actually work; demystifying training data and biases will strengthen critical understanding.</p>
+                        </div>
+                        
+                        <div className="quote-card" style={{ marginBottom: '15px' }}>
+                          <div className="dimension-badge">Train evaluative strategies</div>
+                          <p className="quote-text">Embed activities where learners must compare AI output with disciplinary standards or primary sources.</p>
+                        </div>
+                        
+                        <div className="quote-card" style={{ marginBottom: '15px' }}>
+                          <div className="dimension-badge">Foster reflective prompts</div>
+                          <p className="quote-text">Guide students to ask AI why and how answers are formed, turning the tool into a metacognitive coach rather than an answer machine.</p>
+                        </div>
+                        
+                        <div className="quote-card" style={{ marginBottom: '15px' }}>
+                          <div className="dimension-badge">Build collaborative cognition</div>
+                          <p className="quote-text">Design group tasks where AI aids joint problem-solving, addressing lower confidence in that area.</p>
+                        </div>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>Bottom line</h5>
+                          <div style={{ 
+                            padding: '15px', 
                           backgroundColor: '#f5f8ff',
                           borderRadius: '6px',
                           border: '1px solid #d0e0ff'
@@ -3223,28 +3279,1123 @@
                       </div>
                     )}
                   </div>
+
+                  {/* Student Ability Analysis */}
+                  <div className="analysis-card">
+                    <div className="analysis-card-header" onClick={() => toggleCollapsible('studentAbility')}>
+                      <h3 className="analysis-card-title">Ability Analysis</h3>
+                      <span className="analysis-card-toggle-icon">
+                        {collapsibleStates.studentAbility ? '−' : '+'}
+                      </span>
+                    </div>
+                    {collapsibleStates.studentAbility && (
+                      <div className="analysis-card-collapsible-content">
+                        <h4 style={{ color: '#003d7c', marginBottom: '15px' }}>Summary of Students' Ability</h4>
+                        <p><em>(interpreting "ability" strictly as their capacity to perform tasks with Generative-AI tools, based on items AB1-AB6, N ≈ 406)</em></p>
+                        
+                        <div style={{ overflowX: 'auto', marginBottom: '20px' }}>
+                          <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
+                            <thead>
+                              <tr style={{ backgroundColor: '#4056A1', color: 'white' }}>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Aspect of task-performance (AB item)</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>Mean (1-5)</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>What this tells us</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AB5 – Optimising & reorganising learning with Gen-AI</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.62</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Students feel most able to streamline their own study workflow.</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AB4 – Using real-time AI feedback to improve next steps</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.61</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>They are comfortable turning AI feedback into concrete action.</td>
+                              </tr>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AB3 – Problem-solving with Gen-AI</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.51</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Over half believe they can enlist AI to tackle learning hurdles.</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AB1 – Integrating Gen-AI into routine study tasks</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.41</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Day-to-day integration is solid but leaves room to grow.</td>
+                              </tr>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AB2 – Transferring AI-supported skills to new contexts</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.35</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Students are less certain about adapting AI use across subjects.</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AB6 – Collaborating with peers using Gen-AI</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.34</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Collective task work with AI is their weakest area.</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>Overall capacity</h5>
+                        <p>Average Ability score: 3.47 / 5 – a moderate-to-high level.</p>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '25px', marginBottom: '15px' }}>Distribution:</h5>
+                        
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', marginBottom: '25px' }}>
+                          <div style={{ 
+                            flex: '1 1 200px', 
+                            padding: '15px', 
+                            backgroundColor: '#e3f2fd', 
+                            borderRadius: '8px',
+                            border: '1px solid #bbdefb'
+                          }}>
+                            <h6 style={{ margin: '0 0 10px 0', color: '#1565c0', fontWeight: 'bold' }}>High ability ( {'>'} 3.5 )</h6>
+                            <p style={{ margin: '0', fontSize: '1.8em', fontWeight: 'bold', color: '#1565c0' }}>~ 50%</p>
+                            <p style={{ margin: '5px 0 0 0', fontSize: '0.9em' }}>of students</p>
+                          </div>
+                          
+                          <div style={{ 
+                            flex: '1 1 200px', 
+                            padding: '15px', 
+                            backgroundColor: '#fff8e1', 
+                            borderRadius: '8px',
+                            border: '1px solid #ffecb3'
+                          }}>
+                            <h6 style={{ margin: '0 0 10px 0', color: '#ff8f00', fontWeight: 'bold' }}>Moderate ( 2.5–3.5 )</h6>
+                            <p style={{ margin: '0', fontSize: '1.8em', fontWeight: 'bold', color: '#ff8f00' }}>~ 38%</p>
+                            <p style={{ margin: '5px 0 0 0', fontSize: '0.9em' }}>of students</p>
+                          </div>
+                          
+                          <div style={{ 
+                            flex: '1 1 200px', 
+                            padding: '15px', 
+                            backgroundColor: '#fbe9e7', 
+                            borderRadius: '8px',
+                            border: '1px solid #ffccbc'
+                          }}>
+                            <h6 style={{ margin: '0 0 10px 0', color: '#d84315', fontWeight: 'bold' }}>Low (&lt; 3)</h6>
+                            <p style={{ margin: '0', fontSize: '1.8em', fontWeight: 'bold', color: '#d84315' }}>~ 12%</p>
+                            <p style={{ margin: '5px 0 0 0', fontSize: '0.9em' }}>of students</p>
+                          </div>
+                          </div>
+                          
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>What this means</h5>
+                        
+                        <ul style={{ paddingLeft: '25px', marginBottom: '20px' }}>
+                          <li style={{ marginBottom: '10px' }}>Half the cohort already feels confident performing a broad set of AI-supported tasks.</li>
+                          <li style={{ marginBottom: '10px' }}>Task-specific strengths centre on using AI feedback and restructuring their own learning processes.</li>
+                          <li>Growth areas are (i) applying AI skills in unfamiliar situations and (ii) leveraging AI for peer collaboration—suggesting that scaffolded cross-disciplinary projects and group-oriented AI activities could raise overall ability.</li>
+                        </ul>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>In short</h5>
+                        <div style={{ 
+                          padding: '15px',
+                          backgroundColor: '#f5f8ff',
+                          borderRadius: '6px',
+                          border: '1px solid #d0e0ff'
+                        }}>
+                          <p style={{ margin: '0' }}>Students generally have the capacity to perform AI-assisted learning tasks, but targeted support on transfer and teamwork would help the remaining half move from moderate toward high ability.</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Student Vision Analysis */}
+                  <div className="analysis-card">
+                    <div className="analysis-card-header" onClick={() => toggleCollapsible('studentVision')}>
+                      <h3 className="analysis-card-title">Vision Analysis</h3>
+                      <span className="analysis-card-toggle-icon">
+                        {collapsibleStates.studentVision ? '−' : '+'}
+                      </span>
+                    </div>
+                    {collapsibleStates.studentVision && (
+                      <div className="analysis-card-collapsible-content">
+                        <h4 style={{ color: '#003d7c', marginBottom: '15px' }}>Snapshot of Students' Vision</h4>
+                        <p><em>(defined here as the ability to visualise future possibility)</em></p>
+                        
+                        <div style={{ overflowX: 'auto', marginBottom: '20px' }}>
+                          <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
+                            <thead>
+                              <tr style={{ backgroundColor: '#4056A1', color: 'white' }}>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Vision indicator (AT-items)</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>% who Agree / Strongly Agree</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>Mean ± SD on 1-5 scale</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>What this tells us about their "future lens"</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AT21 – "I would use AI to summarise & analyse learning materials."</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>72%</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.86 ± 1.02</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>They readily picture AI automating the heavy lifting of digesting content.</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AT19 – "I would use AI as educational resources."</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>65%</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.74 ± 1.04</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>They see AI turning into a go-to knowledge base.</td>
+                              </tr>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AT22 – "I will keep using AI to reach my learning goals."</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>66%</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.75 ± 1.02</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Persistence: most imagine AI as a long-term companion.</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AT16 – "I will follow AI improvements."</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>66%</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.73 ± 1.05</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>They expect to track—and perhaps ride—the AI innovation wave.</td>
+                              </tr>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AT14 – "AI supports lifelong learning."</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>65%</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.71 ± 1.03</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>They connect AI with continuous, future-oriented growth.</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AT17 – "I'd tell friends about AI benefits."</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>61%</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.66 ± 1.04</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Vision spills over into advocacy—seeing AI shaping peers' futures too.</td>
+                              </tr>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AT20 – "I'd use AI for practice & exam prep."</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>53%</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.49 ± 1.14</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Half foresee AI drilling them for future assessments.</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AT18 – "I'd use AI as a tutor."</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>50%</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.38 ± 1.19</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Tutor role is imaginable but not yet mainstream.</td>
+                              </tr>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AT15 – "AI improves higher-order skills (creativity, evaluation)."</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>48%</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.34 ± 1.16</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Harder to picture AI boosting advanced thinking—vision here is still fuzzy.</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        
+                        <div style={{ 
+                          padding: '15px',
+                          backgroundColor: '#e8f4f8',
+                          borderRadius: '6px',
+                          border: '1px solid #b3e0e8',
+                          marginBottom: '20px'
+                        }}>
+                          <p style={{ margin: '0' }}><strong>Overall "Vision" index</strong> (mean of AT14-22, n = 496): <strong>3.63 / 5</strong></p>
+                          <p style={{ margin: '10px 0 0 0' }}>→ On a five-point Likert scale, students lean clearly positive—they can see AI playing a beneficial role in their learning futures, though not without reservations.</p>
+                        </div>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>What the numbers are saying in plain English</h5>
+                        
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '25px' }}>
+                          <div style={{ 
+                            flex: '1 1 450px', 
+                            padding: '15px', 
+                            backgroundColor: '#f0f7ff', 
+                            borderRadius: '8px',
+                            borderLeft: '4px solid #2196f3'
+                          }}>
+                            <h6 style={{ margin: '0 0 10px 0', color: '#1565c0', fontWeight: 'bold' }}>High-clarity futures</h6>
+                            <ul style={{ paddingLeft: '20px', margin: '0' }}>
+                              <li style={{ marginBottom: '10px' }}><strong>Material comprehension & resource hub</strong> are the clearest imagined use-cases. Students very easily picture AI tools that condense readings, surface key points, and act as an always-on library.</li>
+                              <li><strong>Continuous self-development</strong> resonates: roughly two-thirds link AI to lifelong learning, staying current with upgrades, and persisting toward goals.</li>
+                            </ul>
+                          </div>
+                          
+                          <div style={{ 
+                            flex: '1 1 450px', 
+                            padding: '15px', 
+                            backgroundColor: '#fff8e1', 
+                            borderRadius: '8px',
+                            borderLeft: '4px solid #ff9800'
+                          }}>
+                            <h6 style={{ margin: '0 0 10px 0', color: '#e65100', fontWeight: 'bold' }}>Still-forming pictures</h6>
+                            <ul style={{ paddingLeft: '20px', margin: '0' }}>
+                              <li style={{ marginBottom: '10px' }}><strong>Higher-order cognitive gains</strong> are harder to visualise. Under half believe AI will truly stretch creativity or evaluation skills—suggesting uncertainty about AI as a co-creator or critical-thinking partner.</li>
+                              <li><strong>AI-as-tutor</strong> gets only tentative support; many may still prefer human guidance or are unsure how tutoring chatbots will evolve.</li>
+                            </ul>
+                          </div>
+                        </div>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>Qualitative echoes (open-ended comments, thematically coded)</h5>
+                        
+                        <div style={{ overflowX: 'auto', marginBottom: '20px' }}>
+                          <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
+                            <thead>
+                              <tr style={{ backgroundColor: '#4056A1', color: 'white' }}>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Theme</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Typical student voice</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Visionary takeaway</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Efficiency & access</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', fontStyle: 'italic' }}>"It's like having a 24/7 study buddy that summarises 10 pages in seconds."</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>They foresee friction-free learning workflows.</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Personalised guidance</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', fontStyle: 'italic' }}>"I imagine AI tailoring practice questions to my weak spots."</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Clear mental picture of adaptive support.</td>
+                              </tr>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Career preparedness</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', fontStyle: 'italic' }}>"Knowing how to harness AI will be vital for my future job."</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Vision extends beyond campus to professional life.</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Ethical & dependency concerns</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', fontStyle: 'italic' }}>"I worry we'll rely too much and lose critical thinking."</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Their vision includes cautionary boundaries.</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>Bottom line</h5>
+                        <div style={{ 
+                          padding: '15px',
+                          backgroundColor: '#f5f8ff',
+                          borderRadius: '6px',
+                          border: '1px solid #d0e0ff',
+                          marginBottom: '20px'
+                        }}>
+                          <p style={{ margin: '0 0 15px 0' }}>Students can already picture multiple concrete, forward-looking scenarios where generative-AI tools enhance their learning journey—especially for digesting information and supporting lifelong growth. The brightest future snapshots revolve around automation of routine academic tasks and continuous access to knowledge. Blurrier areas—AI's role in cultivating creativity, deep evaluation, or replacing human tutors—represent opportunities for educators to scaffold experiences that make those possibilities more vivid and credible.</p>
+                          <p style={{ margin: '0', fontWeight: '500' }}>In short, their collective Vision is promising yet pragmatic: they see AI as a valuable partner in the learning future, but they're still exploring how far that partnership can go.</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Student Ethics Analysis */}
+                  <div className="analysis-card">
+                    <div className="analysis-card-header" onClick={() => toggleCollapsible('studentEthics')}>
+                      <h3 className="analysis-card-title">Ethics Analysis</h3>
+                      <span className="analysis-card-toggle-icon">
+                        {collapsibleStates.studentEthics ? '−' : '+'}
+                      </span>
+                    </div>
+                    {collapsibleStates.studentEthics && (
+                      <div className="analysis-card-collapsible-content">
+                        <h4 style={{ color: '#003d7c', marginBottom: '15px' }}>Ethics lens used</h4>
+                        <p><em>Ethics = "concepts of right or wrong in decision-making."</em></p>
+                        <p>I read every item in the survey through that lens and grouped what students told us into the decisions they face, what they currently judge to be "right," what they see as "wrong," and where they feel uncertain.</p>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>1. Where students already feel confident about "doing the right thing"</h5>
+                        
+                        <div style={{ overflowX: 'auto', marginBottom: '20px' }}>
+                          <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
+                            <thead>
+                              <tr style={{ backgroundColor: '#4056A1', color: 'white' }}>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Decision context</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Typical "right" choice students named</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>How often it appeared*</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Attribution / plagiarism</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Cite AI outputs, use them only as a draft or outline, put original reflection in final work</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Very common (mentioned in almost every third open-ended response)</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Privacy & data handling</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Avoid pasting personal data or classmates' work into public tools; check tool's T&C</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Common</td>
+                              </tr>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Quality control</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Cross-check AI answers with textbooks, peer-reviewed sources</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Common</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Fairness</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Use AI to support, not replace, peer collaboration so that grades still reflect individual effort</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Moderately common</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <p style={{ fontSize: '0.9em', color: '#666', marginTop: '0' }}>
+                            *Qualitative frequency categories are based on repeated phrases and themes rather than exact counts, because many students used similar wording.
+                          </p>
+                        </div>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>2. Situations students label as "wrong"</h5>
+                        
+                        <div style={{ overflowX: 'auto', marginBottom: '20px' }}>
+                          <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
+                            <thead>
+                              <tr style={{ backgroundColor: '#4056A1', color: 'white' }}>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Decision context</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>"Wrong" behaviour students warned against</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Salient quotes / paraphrases</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Academic integrity</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Submitting AI-generated text "as is," or crafting prompts that let the model write the whole assignment</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', fontStyle: 'italic' }}>"It feels like ghost-writing."</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Over-reliance</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Letting the tool "think for me," leading to shallow understanding</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', fontStyle: 'italic' }}>"I worry my critical thinking muscles will atrophy."</td>
+                              </tr>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Bias & fairness</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Accepting biased or culturally insensitive answers because "the AI said so"</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', fontStyle: 'italic' }}>"It sometimes stereotypes my region."</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Data misuse</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Uploading classmates' drafts or sensitive survey data without consent</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', fontStyle: 'italic' }}>"I'm not sure where the data goes."</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>3. Areas of ethical uncertainty</h5>
+                        <p>Students repeatedly asked "Am I allowed to…?" in these gray zones:</p>
+                        
+                        <div style={{ 
+                          margin: '20px 0', 
+                          padding: '15px 20px', 
+                          backgroundColor: '#f5f8ff', 
+                            borderRadius: '8px',
+                          border: '1px solid #d0e0ff'
+                        }}>
+                          <ul style={{ marginBottom: '0', paddingLeft: '20px' }}>
+                            <li style={{ marginBottom: '10px' }}>How much AI editing is still my work?</li>
+                            <li style={{ marginBottom: '10px' }}>Where is the line between inspiration and plagiarism?</li>
+                            <li style={{ marginBottom: '10px' }}>Can I rely on citations generated by the model?</li>
+                            <li style={{ marginBottom: '0' }}>Does our university policy trump the tool's terms of service?</li>
+                          </ul>
+                        </div>
+                        
+                        <p>About half of respondents say they have heard an instructor mention "ethical use," but far fewer feel they have received explicit decision rules or examples.</p>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>4. Self-reported ethical readiness (Likert items ET1-ET4)</h5>
+                        <p>Even without exact numbers, the pattern is clear:</p>
+                        
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '25px' }}>
+                          <div style={{ 
+                            flex: '1 1 450px', 
+                            padding: '15px', 
+                            backgroundColor: '#f0f7ff', 
+                            borderRadius: '8px',
+                            borderLeft: '4px solid #2196f3'
+                          }}>
+                            <p style={{ margin: '0', fontSize: '0.95em' }}>
+                              <strong>Digital-ethics literacy (ET1)</strong> and <strong>keeping personal data safe (ET3)</strong> scored the highest averages – most students chose "Agree" or "Strongly agree."
+                            </p>
+                          </div>
+                          
+                          <div style={{ 
+                            flex: '1 1 450px', 
+                            padding: '15px', 
+                            backgroundColor: '#fff8e1', 
+                            borderRadius: '8px',
+                            borderLeft: '4px solid #ff9800'
+                          }}>
+                            <p style={{ margin: '0', fontSize: '0.95em' }}>
+                              <strong>Applying legal/ethical norms to peers' data (ET4)</strong> and <strong>understanding one's broader obligations (ET2)</strong> drew more "Neutral" and "Disagree," signalling gaps.
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <div style={{ 
+                          padding: '15px',
+                          backgroundColor: '#f2f7ff',
+                          borderRadius: '6px',
+                          border: '1px solid #d0e0ff',
+                          marginBottom: '20px'
+                        }}>
+                          <p style={{ margin: '0', fontWeight: '500' }}>In short, students know ethics matter but are less sure how to act ethically in nuanced, real-world cases.</p>
+                        </div>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>5. Recommended next steps (what students explicitly asked for)</h5>
+                        
+                        <div style={{ overflowX: 'auto', marginBottom: '20px' }}>
+                          <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
+                            <thead>
+                              <tr style={{ backgroundColor: '#4056A1', color: 'white' }}>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Need</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Practical response the university could give</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Clear academic-integrity scenarios</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>A short decision tree or rubric: "If AI produced ≥ 30% of the wording, you must cite."</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Tool-specific privacy guidance</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>A living FAQ listing which campus tools store prompts on external servers.</td>
+                              </tr>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Workshops on bias checking</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Hands-on sessions where they critique AI answers for hidden bias.</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Ethics policy visibility</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Put the "AI use" clause on the front page of every course outline, not buried in fine print.</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>Bottom line</h5>
+                        <div style={{ 
+                          padding: '15px',
+                          backgroundColor: '#f5f8ff',
+                          borderRadius: '6px',
+                          border: '1px solid #d0e0ff'
+                        }}>
+                          <p style={{ margin: '0 0 15px 0' }}>Using the definition of ethics as "concepts of right or wrong in decision-making," students already hold a strong intuitive sense of right vs. wrong around plagiarism, privacy, and fairness.</p>
+                          <p style={{ margin: '0' }}>However, consistency and confidence break down in gray areas (how much AI help is too much, handling peers' data, detecting bias). They are explicitly asking for decision-making frameworks and concrete examples so that their ethical instincts can translate into consistent day-to-day choices.</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                                    {/* Student Perceived Threats Analysis */}
+                                    <div className="analysis-card">
+                    <div
+                      className="analysis-card-header"
+                      onClick={() => toggleCollapsible('studentPerceivedThreats')}
+                    >
+                      <h3 className="analysis-card-title">Perceived Threats Analysis</h3>
+                      <span className="analysis-card-toggle-icon">
+                        {collapsibleStates.studentPerceivedThreats ? '−' : '+'}
+                      </span>
+                    </div>
+
+                    {collapsibleStates.studentPerceivedThreats && (
+                      <div className="analysis-card-collapsible-content">
+
+                        {/* Context & sample size */}
+                        <h4 style={{ color: '#003d7c', marginBottom: '15px' }}>Students' perception of uncertain situations that pose dangers</h4>
+                        <p style={{ marginBottom: '20px' }}>
+                          <em>
+                            Analysis of perceived threats when using Generative-AI tools
+                            (<strong>N = 496</strong> undergraduate & postgraduate respondents)
+                          </em>
+                        </p>
+
+                        {/* Overall temperature */}
+                        <section style={{ marginBottom: '30px' }}>
+                          <h5 style={{ color: '#003d7c', marginTop: '25px', marginBottom: '15px' }}>Overall temperature of perceived threat</h5>
+                          
+                          <div style={{ 
+                            display: 'flex', 
+                            flexWrap: 'wrap', 
+                            gap: '20px', 
+                            marginBottom: '15px', 
+                            alignItems: 'center'
+                          }}>
+                            <div style={{ 
+                              flex: '0 0 180px', 
+                              height: '180px', 
+                              borderRadius: '50%', 
+                              background: 'conic-gradient(#e57373 0% 24%, #ffb74d 24% 88%, #81c784 88% 100%)',
+                              position: 'relative',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
+                            }}>
+                              <div style={{ 
+                                width: '70%', 
+                                height: '70%', 
+                                borderRadius: '50%', 
+                                backgroundColor: 'white',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                flexDirection: 'column',
+                                boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.1)'
+                              }}>
+                                <span style={{ fontSize: '1.7em', fontWeight: 'bold', color: '#4056A1' }}>3.28</span>
+                                <span style={{ fontSize: '0.85em', color: '#666' }}>Avg. Threat Index</span>
+                              </div>
+                            </div>
+                            
+                            <div style={{ flex: '1 1 300px' }}>
+                              <p style={{ marginTop: '0', marginBottom: '15px' }}>
+                                On a 5-point scale (1 = <strong>strongly disagree</strong> … 5 = <strong>strongly agree</strong>)
+                                the average threat index sits just above the midpoint.
+                              </p>
+                              
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                <div>
+                                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
+                                    <span><strong>High-threat zone</strong> (avg ≥ 4)</span>
+                                    <span><strong>24%</strong></span>
+                                  </div>
+                                  <div style={{ width: '100%', height: '10px', backgroundColor: '#eee', borderRadius: '5px', overflow: 'hidden' }}>
+                                    <div style={{ width: '24%', height: '100%', backgroundColor: '#e57373' }}></div>
+                                  </div>
+                                </div>
+                                
+                                <div>
+                                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
+                                    <span><strong>Moderate, watch-and-see</strong> (2 &lt; avg &lt; 4)</span>
+                                    <span><strong>64%</strong></span>
+                                  </div>
+                                  <div style={{ width: '100%', height: '10px', backgroundColor: '#eee', borderRadius: '5px', overflow: 'hidden' }}>
+                                    <div style={{ width: '64%', height: '100%', backgroundColor: '#ffb74d' }}></div>
+                                  </div>
+                                </div>
+                                
+                                <div>
+                                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
+                                    <span><strong>Little or no threat</strong> (avg ≤ 2)</span>
+                                    <span><strong>11%</strong></span>
+                                  </div>
+                                  <div style={{ width: '100%', height: '10px', backgroundColor: '#eee', borderRadius: '5px', overflow: 'hidden' }}>
+                                    <div style={{ width: '11%', height: '100%', backgroundColor: '#81c784' }}></div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </section>
+
+                        {/* Item-by-item pulse */}
+                        <section style={{ marginBottom: '30px' }}>
+                          <h5 style={{ color: '#003d7c', marginTop: '25px', marginBottom: '15px' }}>Item-by-item pulse</h5>
+                          
+                          <div style={{ overflowX: 'auto', marginBottom: '5px' }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+                              <thead>
+                                <tr style={{ backgroundColor: '#4056A1', color: 'white' }}>
+                                  <th style={{ padding: '12px 15px', textAlign: 'left', border: '1px solid #ddd' }}>Threat statement (abridged)</th>
+                                  <th style={{ padding: '12px 15px', textAlign: 'center', border: '1px solid #ddd', width: '130px' }}>Mean</th>
+                                  <th style={{ padding: '12px 15px', textAlign: 'center', border: '1px solid #ddd', width: '150px' }}>% Agree / Strongly agree</th>
+                                  <th style={{ padding: '12px 15px', textAlign: 'center', border: '1px solid #ddd', width: '200px' }}>Level of concern</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                  <td style={{ padding: '12px 15px', border: '1px solid #ddd' }}>
+                                    Frequent AI use reduces thinking &amp; decision-making abilities
+                                  </td>
+                                  <td style={{ padding: '12px 15px', textAlign: 'center', border: '1px solid #ddd', fontWeight: 'bold' }}>3.57</td>
+                                  <td style={{ padding: '12px 15px', textAlign: 'center', border: '1px solid #ddd' }}>60%</td>
+                                  <td style={{ padding: '12px 15px', textAlign: 'center', border: '1px solid #ddd' }}>
+                                    <div style={{ width: '100%', height: '12px', backgroundColor: '#eee', borderRadius: '6px', overflow: 'hidden' }}>
+                                      <div style={{ width: '60%', height: '100%', backgroundColor: '#e57373' }}></div>
+                                    </div>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td style={{ padding: '12px 15px', border: '1px solid #ddd' }}>
+                                    Over-reliance can undermine instructor–student relationships
+                                  </td>
+                                  <td style={{ padding: '12px 15px', textAlign: 'center', border: '1px solid #ddd', fontWeight: 'bold' }}>3.35</td>
+                                  <td style={{ padding: '12px 15px', textAlign: 'center', border: '1px solid #ddd' }}>50%</td>
+                                  <td style={{ padding: '12px 15px', textAlign: 'center', border: '1px solid #ddd' }}>
+                                    <div style={{ width: '100%', height: '12px', backgroundColor: '#eee', borderRadius: '6px', overflow: 'hidden' }}>
+                                      <div style={{ width: '50%', height: '100%', backgroundColor: '#ffb74d' }}></div>
+                                    </div>
+                                  </td>
+                                </tr>
+                                <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                  <td style={{ padding: '12px 15px', border: '1px solid #ddd' }}>
+                                    Overuse may limit students' opportunities to reinforce values with peers
+                                  </td>
+                                  <td style={{ padding: '12px 15px', textAlign: 'center', border: '1px solid #ddd', fontWeight: 'bold' }}>3.29</td>
+                                  <td style={{ padding: '12px 15px', textAlign: 'center', border: '1px solid #ddd' }}>48%</td>
+                                  <td style={{ padding: '12px 15px', textAlign: 'center', border: '1px solid #ddd' }}>
+                                    <div style={{ width: '100%', height: '12px', backgroundColor: '#eee', borderRadius: '6px', overflow: 'hidden' }}>
+                                      <div style={{ width: '48%', height: '100%', backgroundColor: '#ffb74d' }}></div>
+                                    </div>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td style={{ padding: '12px 15px', border: '1px solid #ddd' }}>
+                                    AI could weaken the importance of students in learning
+                                  </td>
+                                  <td style={{ padding: '12px 15px', textAlign: 'center', border: '1px solid #ddd', fontWeight: 'bold' }}>3.16</td>
+                                  <td style={{ padding: '12px 15px', textAlign: 'center', border: '1px solid #ddd' }}>39%</td>
+                                  <td style={{ padding: '12px 15px', textAlign: 'center', border: '1px solid #ddd' }}>
+                                    <div style={{ width: '100%', height: '12px', backgroundColor: '#eee', borderRadius: '6px', overflow: 'hidden' }}>
+                                      <div style={{ width: '39%', height: '100%', backgroundColor: '#ffb74d' }}></div>
+                                    </div>
+                                  </td>
+                                </tr>
+                                <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                  <td style={{ padding: '12px 15px', border: '1px solid #ddd' }}>
+                                    AI use reduces face-to-face communication
+                                  </td>
+                                  <td style={{ padding: '12px 15px', textAlign: 'center', border: '1px solid #ddd', fontWeight: 'bold' }}>3.01</td>
+                                  <td style={{ padding: '12px 15px', textAlign: 'center', border: '1px solid #ddd' }}>36%</td>
+                                  <td style={{ padding: '12px 15px', textAlign: 'center', border: '1px solid #ddd' }}>
+                                    <div style={{ width: '100%', height: '12px', backgroundColor: '#eee', borderRadius: '6px', overflow: 'hidden' }}>
+                                      <div style={{ width: '36%', height: '100%', backgroundColor: '#ffb74d' }}></div>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                          <p style={{ fontSize: '0.9em', color: '#666', marginTop: '5px', textAlign: 'right' }}>
+                            Means computed on a 5-point scale; higher values indicate stronger sense of danger.
+                          </p>
+                        </section>
+
+                        {/* Qualitative themes */}
+                        <section style={{ marginBottom: '30px' }}>
+                          <h5 style={{ color: '#003d7c', marginTop: '25px', marginBottom: '15px' }}>What students say in their own words</h5>
+                          <p style={{ marginBottom: '15px' }}>
+                            <strong>358</strong> respondents elaborated on potential dangers. The chart below shows theme distribution from keyword coding:
+                          </p>
+                          
+                          <div style={{ 
+                            display: 'flex', 
+                            flexWrap: 'wrap', 
+                            gap: '20px', 
+                            marginBottom: '15px',
+                            alignItems: 'flex-start' 
+                          }}>
+                            <div style={{ 
+                              flex: '0 0 180px',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'center'
+                            }}>
+                              <div style={{ 
+                                width: '180px', 
+                                height: '180px', 
+                                position: 'relative',
+                                margin: '0 auto 15px'
+                              }}>
+                                {/* Pie chart visualization */}
+                                <div style={{
+                                  width: '100%',
+                                  height: '100%',
+                                  borderRadius: '50%',
+                                  background: 'conic-gradient(#e57373 0% 29%, #9575cd 29% 34%, #4fc3f7 34% 37%, #4db6ac 37% 40%, #aed581 40% 43%, #fff176 43% 45%, #e0e0e0 45% 100%)',
+                                  boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
+                                }}></div>
+                              </div>
+                              
+                              <div style={{ 
+                                display: 'flex', 
+                                flexDirection: 'column', 
+                                gap: '5px',
+                                fontSize: '0.85em',
+                                width: '100%'
+                              }}>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                  <div style={{ width: '12px', height: '12px', backgroundColor: '#e57373', marginRight: '5px', borderRadius: '2px' }}></div>
+                                  <span>Critical thinking loss (29%)</span>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                  <div style={{ width: '12px', height: '12px', backgroundColor: '#9575cd', marginRight: '5px', borderRadius: '2px' }}></div>
+                                  <span>Reduced interaction (5%)</span>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                  <div style={{ width: '12px', height: '12px', backgroundColor: '#4fc3f7', marginRight: '5px', borderRadius: '2px' }}></div>
+                                  <span>Misinformation (3%)</span>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                  <div style={{ width: '12px', height: '12px', backgroundColor: '#4db6ac', marginRight: '5px', borderRadius: '2px' }}></div>
+                                  <span>Academic integrity (3%)</span>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                  <div style={{ width: '12px', height: '12px', backgroundColor: '#aed581', marginRight: '5px', borderRadius: '2px' }}></div>
+                                  <span>Privacy concerns (3%)</span>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                  <div style={{ width: '12px', height: '12px', backgroundColor: '#fff176', marginRight: '5px', borderRadius: '2px' }}></div>
+                                  <span>Ethical/moral drift (2%)</span>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                  <div style={{ width: '12px', height: '12px', backgroundColor: '#e0e0e0', marginRight: '5px', borderRadius: '2px' }}></div>
+                                  <span>Other concerns (55%)</span>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div style={{ flex: '1 1 300px' }}>
+                              <div className="quote-card" style={{ marginBottom: '10px' }}>
+                                <p className="quote-text" style={{ margin: '0' }}><strong>Over-reliance &amp; erosion of critical thinking:</strong> "By constantly using AI, students may have fewer chances to think critically themselves."</p>
+                              </div>
+                              <div className="quote-card" style={{ marginBottom: '10px' }}>
+                                <p className="quote-text" style={{ margin: '0' }}><strong>Reduced human interaction:</strong> "Too much AI could cut down meaningful dialogue with lecturers."</p>
+                              </div>
+                              <div className="quote-card" style={{ marginBottom: '10px' }}>
+                                <p className="quote-text" style={{ margin: '0' }}><strong>Accuracy / misinformation:</strong> "AI might generate wrong answers and we wouldn't know."</p>
+                              </div>
+                              <div className="quote-card" style={{ marginBottom: '10px' }}>
+                                <p className="quote-text" style={{ margin: '0' }}><strong>Academic integrity &amp; plagiarism:</strong> "Easy to copy without learning."</p>
+                              </div>
+                              <div className="quote-card" style={{ marginBottom: '10px' }}>
+                                <p className="quote-text" style={{ margin: '0' }}><strong>Privacy / data security:</strong> "Unsure where my prompts go."</p>
+                              </div>
+                              <div className="quote-card" style={{ marginBottom: '10px' }}>
+                                <p className="quote-text" style={{ margin: '0' }}><strong>Ethical or moral drift / bias:</strong> "Hidden biases may shape our worldview."</p>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <p style={{ fontSize: '0.9em', color: '#666', marginTop: '5px', textAlign: 'center' }}>
+                            Note: Counts are conservative—one comment can belong to several themes.
+                          </p>
+                        </section>
+
+                        {/* Take-away */}
+                        <section>
+                          <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>Key takeaways for educators</h5>
+                          
+                          <div style={{ 
+                            display: 'flex', 
+                            flexWrap: 'wrap', 
+                            gap: '20px', 
+                            marginBottom: '25px' 
+                          }}>
+                            <div style={{ 
+                              flex: '1 1 300px', 
+                              padding: '20px', 
+                              backgroundColor: '#f5f8ff', 
+                              borderRadius: '8px',
+                              border: '1px solid #d0e0ff',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'center'
+                            }}>
+                              <div style={{ 
+                                width: '50px', 
+                                height: '50px', 
+                                borderRadius: '50%', 
+                                backgroundColor: '#f5f8ff',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginBottom: '15px',
+                                border: '2px solid #4056A1',
+                                fontSize: '1.5em',
+                                fontWeight: 'bold',
+                                color: '#4056A1'
+                              }}>1</div>
+                              <p style={{ margin: '0', textAlign: 'center' }}>
+                                Students do <em>not</em> view Generative-AI as an existential threat but recognize specific risks
+                              </p>
+                            </div>
+                            
+                            <div style={{ 
+                              flex: '1 1 300px', 
+                              padding: '20px', 
+                              backgroundColor: '#f5f8ff', 
+                              borderRadius: '8px',
+                              border: '1px solid #d0e0ff',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'center'
+                            }}>
+                              <div style={{ 
+                                width: '50px', 
+                                height: '50px', 
+                                borderRadius: '50%', 
+                                backgroundColor: '#f5f8ff',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginBottom: '15px',
+                                border: '2px solid #4056A1',
+                                fontSize: '1.5em',
+                                fontWeight: 'bold',
+                                color: '#4056A1'
+                              }}>2</div>
+                              <p style={{ margin: '0', textAlign: 'center' }}>
+                                Main concern is that AI automation could dull higher-order thinking abilities
+                              </p>
+                            </div>
+                            
+                            <div style={{ 
+                              flex: '1 1 300px', 
+                              padding: '20px', 
+                              backgroundColor: '#f5f8ff', 
+                              borderRadius: '8px',
+                              border: '1px solid #d0e0ff',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'center'
+                            }}>
+                              <div style={{ 
+                                width: '50px', 
+                                height: '50px', 
+                                borderRadius: '50%', 
+                                backgroundColor: '#f5f8ff',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginBottom: '15px',
+                                border: '2px solid #4056A1',
+                                fontSize: '1.5em',
+                                fontWeight: 'bold',
+                                color: '#4056A1'
+                              }}>3</div>
+                              <p style={{ margin: '0', textAlign: 'center' }}>
+                                Clear guidance, transparent AI limitations, and collaborative activities can mitigate concerns
+                              </p>
+                            </div>
+                          </div>
+                          
+                          <div style={{ 
+                            padding: '20px',
+                            backgroundColor: '#f5f8ff',
+                            borderRadius: '8px',
+                            border: '1px solid #d0e0ff'
+                          }}>
+                            <p style={{ margin: '0' }}>
+                              Students recognize specific risks in poorly guided AI use—especially the possibility 
+                              that automation could weaken critical thinking and impair academic relationships. 
+                              <strong> Educators can address these concerns through clear guidelines, critical 
+                              AI literacy, and designing collaborative activities</strong> that leverage AI while 
+                              preserving essential human elements of learning.
+                            </p>
+                          </div>
+                        </section>
+
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Student AI-enhanced Innovation Analysis */}
+                  <div className="analysis-card">
+                    <div className="analysis-card-header" onClick={() => toggleCollapsible('studentAIInnovation')}>
+                      <h3 className="analysis-card-title">AI-enhanced Innovation Analysis</h3>
+                      <span className="analysis-card-toggle-icon">
+                        {collapsibleStates.studentAIInnovation ? '−' : '+'}
+                      </span>
+                    </div>
+                    {collapsibleStates.studentAIInnovation && (
+                      <div className="analysis-card-collapsible-content">
+                        <h4 style={{ color: '#003d7c', marginBottom: '15px' }}>Snapshot of students' AI-enhanced innovation</h4>
+                        <p><em>("new or improved ways of designing and implementing tasks with AI") – N = 496 undergraduate & postgraduate respondents</em></p>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '25px', marginBottom: '15px' }}>Dimension	Key figures	What this tells us about AI-enhanced innovation</h5>
+                        
+                        <div style={{ overflowX: 'auto', marginBottom: '20px' }}>
+                          <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
+                            <thead>
+                              <tr style={{ backgroundColor: '#4056A1', color: 'white' }}>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Dimension</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Key figures</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>What this tells us about AI-enhanced innovation</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Adoption & integration</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>68% already use generative-AI in assignments</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>A clear majority are redesigning at least one phase of their learning workflow with AI support.</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Routes into AI</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>51% learnt tools by self-exploration;<br/>32% from peers;<br/>9% via formal courses</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Innovation is grassroots: students are experimenting first and formalising later.</td>
+                              </tr>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Confidence</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>5% very confident, 36% confident, 29% somewhat, 25% little, 3% not at all</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Enthusiasm is strong but uneven; one in four are still tentative.</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Experience</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>42% novice, 36% intermediate, 22% awareness / advanced</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Most are early-stage innovators who need scaffolding to progress.</td>
+                              </tr>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Ethical orientation</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>92% have been briefed on responsible use</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Innovation is taking place within recognised academic norms.</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Positive agreement on capability, behaviour & attitude items (33 Likert statements)</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>54 – 58% "agree/strongly agree"</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Just over half perceive themselves as able to leverage AI effectively and responsibly.</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>How students are redesigning and implementing tasks with AI</h5>
+                        <p>Themes derived from 650+ open-ended comments (ChatGPT, Gemini, Claude, Perplexity, Canva Magic Design, etc.):</p>
+                        
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '25px' }}>
+                          <div style={{ 
+                            flex: '1 1 450px', 
+                            padding: '15px', 
+                            backgroundColor: '#f0f7ff', 
+                            borderRadius: '8px',
+                            borderLeft: '4px solid #2196f3'
+                          }}>
+                            <h6 style={{ margin: '0 0 10px 0', color: '#1565c0' }}>Idea generation & brainstorming</h6>
+                            <p style={{ margin: '0', fontSize: '0.95em' }}>Breaking writer's block, proposing project or lesson ideas in seconds.</p>
+                          </div>
+                          
+                          <div style={{ 
+                            flex: '1 1 450px', 
+                            padding: '15px', 
+                            backgroundColor: '#f0f7ff', 
+                            borderRadius: '8px',
+                            borderLeft: '4px solid #2196f3'
+                          }}>
+                            <h6 style={{ margin: '0 0 10px 0', color: '#1565c0' }}>Drafting & rewriting</h6>
+                            <p style={{ margin: '0', fontSize: '0.95em' }}>Polishing language, fixing grammar, translating, re-phrasing for tone or grade level.</p>
+                          </div>
+                          
+                          <div style={{ 
+                            flex: '1 1 450px', 
+                            padding: '15px', 
+                            backgroundColor: '#f0f7ff', 
+                            borderRadius: '8px',
+                            borderLeft: '4px solid #2196f3'
+                          }}>
+                            <h6 style={{ margin: '0 0 10px 0', color: '#1565c0' }}>Summarising & condensing</h6>
+                            <p style={{ margin: '0', fontSize: '0.95em' }}>Turning lengthy readings into concise notes, slide decks and concept maps.</p>
+                          </div>
+                          
+                          <div style={{ 
+                            flex: '1 1 450px', 
+                            padding: '15px', 
+                            backgroundColor: '#f0f7ff', 
+                            borderRadius: '8px',
+                            borderLeft: '4px solid #2196f3'
+                          }}>
+                            <h6 style={{ margin: '0 0 10px 0', color: '#1565c0' }}>Rapid feedback loops</h6>
+                            <p style={{ margin: '0', fontSize: '0.95em' }}>Treating AI as an instant "advisor" that critiques answers, code or lesson plans, enabling quick iterate-refine cycles.</p>
+                          </div>
+                          
+                          <div style={{ 
+                            flex: '1 1 450px', 
+                            padding: '15px', 
+                            backgroundColor: '#f0f7ff', 
+                            borderRadius: '8px',
+                            borderLeft: '4px solid #2196f3'
+                          }}>
+                            <h6 style={{ margin: '0 0 10px 0', color: '#1565c0' }}>Personalised tutoring</h6>
+                            <p style={{ margin: '0', fontSize: '0.95em' }}>On-demand explanations, worked examples and quiz generation for self-directed learning.</p>
+                          </div>
+                          
+                          <div style={{ 
+                            flex: '1 1 450px', 
+                            padding: '15px', 
+                            backgroundColor: '#f0f7ff', 
+                            borderRadius: '8px',
+                            borderLeft: '4px solid #2196f3'
+                          }}>
+                            <h6 style={{ margin: '0 0 10px 0', color: '#1565c0' }}>Information organisation</h6>
+                            <p style={{ margin: '0', fontSize: '0.95em' }}>Outlining essays, categorising research, building study schedules.</p>
+                          </div>
+                          
+                          <div style={{ 
+                            flex: '1 1 450px', 
+                            padding: '15px', 
+                            backgroundColor: '#f0f7ff', 
+                            borderRadius: '8px',
+                            borderLeft: '4px solid #2196f3'
+                          }}>
+                            <h6 style={{ margin: '0 0 10px 0', color: '#1565c0' }}>Multimodal production</h6>
+                            <p style={{ margin: '0', fontSize: '0.95em' }}>Generating images, video scripts, code snippets, and interactive content to enrich assignments.</p>
+                          </div>
+                        </div>
+                        
+                        <div style={{ 
+                          padding: '15px',
+                          backgroundColor: '#f5f8ff',
+                          borderRadius: '6px',
+                          border: '1px solid #d0e0ff',
+                          marginBottom: '20px'
+                        }}>
+                          <p style={{ margin: '0' }}>These practices match the definition of AI-enhanced innovation because students are re-designing tasks (the what) and re-working implementation workflows (the how) to exploit generative capabilities that were previously impossible or time-prohibitive.</p>
+                        </div>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>Barriers & cautions voiced by students</h5>
+                        
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '25px' }}>
+                          <div style={{ 
+                            flex: '1 1 450px', 
+                            padding: '15px', 
+                            backgroundColor: '#fff8e1', 
+                            borderRadius: '8px',
+                            borderLeft: '4px solid #ff9800'
+                          }}>
+                            <h6 style={{ margin: '0 0 10px 0', color: '#e65100' }}>Accuracy & hallucination</h6>
+                            <p style={{ margin: '0', fontSize: '0.95em' }}>Concern about unreliable facts and missed citations.</p>
+                          </div>
+                          
+                          <div style={{ 
+                            flex: '1 1 450px', 
+                            padding: '15px', 
+                            backgroundColor: '#fff8e1', 
+                            borderRadius: '8px',
+                            borderLeft: '4px solid #ff9800'
+                          }}>
+                            <h6 style={{ margin: '0 0 10px 0', color: '#e65100' }}>Over-reliance</h6>
+                            <p style={{ margin: '0', fontSize: '0.95em' }}>Fear of diminished critical thinking and writing skills.</p>
+                          </div>
+                          
+                          <div style={{ 
+                            flex: '1 1 450px', 
+                            padding: '15px', 
+                            backgroundColor: '#fff8e1', 
+                            borderRadius: '8px',
+                            borderLeft: '4px solid #ff9800'
+                          }}>
+                            <h6 style={{ margin: '0 0 10px 0', color: '#e65100' }}>Access & paywalls</h6>
+                            <p style={{ margin: '0', fontSize: '0.95em' }}>Some tools locked behind subscriptions slow experimentation.</p>
+                          </div>
+                        </div>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>Implications for educators</h5>
+                        
+                        <div className="quote-card" style={{ marginBottom: '15px' }}>
+                          <div className="dimension-badge">Channel the grassroots energy</div>
+                          <p className="quote-text">Provide guided challenges that move learners from ad-hoc use to systematic design thinking with AI.</p>
+                        </div>
+                        
+                        <div className="quote-card" style={{ marginBottom: '15px' }}>
+                          <div className="dimension-badge">Build advanced competencies</div>
+                          <p className="quote-text">Target the 42% novices with micro-learning on prompt engineering, critiquing AI output, and multi-tool workflows.</p>
+                        </div>
+                        
+                        <div className="quote-card" style={{ marginBottom: '15px' }}>
+                          <div className="dimension-badge">Sustain ethical literacy</div>
+                          <p className="quote-text">Keep the 92% who have received ethics briefings up to date with emerging citation, attribution and data-privacy norms.</p>
+                        </div>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>Bottom line</h5>
+                        <div style={{ 
+                          padding: '15px',
+                          backgroundColor: '#f5f8ff',
+                          borderRadius: '6px',
+                          border: '1px solid #d0e0ff'
+                        }}>
+                          <p style={{ margin: '0' }}>The survey paints a picture of active, learner-led AI-enhanced innovation: students are already re-imagining how they design (ideate, structure, personalise) and implement (draft, iterate, produce) academic tasks with AI – but many still need structured support to turn experimentation into expert practice.</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              )}
-            </div>
-            
-            {/* Recommendations Content */}
-            <div className={`content-section ${activeTab === 'recommendations' ? 'active' : ''}`}>
-              <h2 className="section-heading">Recommendations & Next Steps</h2>
-              <div className="analysis-card">
-                <h3 className="analysis-card-title">Evidence-based Recommendations</h3>
-                <p>Recommendations will be populated soon.</p>
-              </div>
+              )}  
             </div>
           </main>
-          
-          <footer style={{
-            backgroundColor: '#f1f1f1',
-            padding: '30px',
-            textAlign: 'center',
-            marginTop: '50px'
-          }}>
-            <p>© 2024 Investigating GPT for Teaching and Learning | Nanyang Technological University, Singapore</p>
-          </footer>
         </div>
       );
     };
@@ -3503,7 +4654,7 @@
       console.log('Instructor Ethics Items chart function exists:', typeof window.createInstructorEthicsItemsChart_ChartJS === 'function');
       if (typeof window.createInstructorEthicsItemsChart_ChartJS === 'function') {
         window.createInstructorEthicsItemsChart_ChartJS('instructorEthicsItemsChartCanvas');
-        console.log('Instructor Ethics Items (ET1-ET4, Mean) radar chart (Chart.js) initialized by DOMContentLoaded');
+        console.log('Instructor Ethics Items radar chart (Chart.js) initialized by DOMContentLoaded');
       } else {
         console.error('Instructor Ethics Items chart function (Chart.js) not found (DOMContentLoaded)');
       }
@@ -3519,7 +4670,7 @@
       }
       
       // STUDENT SCHOOL CLASSIFICATION ETHICS RADAR CHART IS NOW INITIALIZED BY FindingsApp useEffect
-      console.log('Student school classification ethics chart (Chart.js) will be initialized by FindingsApp useEffect when student section is active.');
+      console.log('Student school ethics chart (Chart.js) will be initialized by FindingsApp useEffect when student section is active.');
       
       // Initialize readiness radar chart
       window.createReadinessRadarChart('readiness-radar-chart');
@@ -3537,7 +4688,7 @@
       if (container && typeof window.createSchoolClassificationRadarChart === 'function') {
         // Ensure not already initialized
         if (!container.querySelector('canvas') && !container.querySelector('svg')) {
-          console.log('Delayed initialization of school classification radar chart');
+          console.log('Delayed initialization of school radar chart');
           window.createSchoolClassificationRadarChart('school-classification-radar-chart');
         }
       }
@@ -3565,10 +4716,10 @@
       var finalInstructorContainer = document.getElementById('instructor-ethics-items-chart-container');
       if (finalInstructorContainer && typeof window.createInstructorEthicsItemsChart_ChartJS === 'function') {
         if (!finalInstructorContainer.querySelector('canvas#instructorEthicsItemsChartCanvas') || !finalInstructorContainer.querySelector('canvas#instructorEthicsItemsChartCanvas').chartInstance) {
-            console.log('Final attempt: creating Instructor Ethics Items (ET1-ET4, Mean) radar chart (Chart.js)');
+            console.log('Final attempt: creating Instructor Ethics Items radar chart (Chart.js)');
             window.createInstructorEthicsItemsChart_ChartJS('instructorEthicsItemsChartCanvas');
         } else {
-            console.log('Final attempt: Instructor Ethics Items (ET1-ET4, Mean) radar chart (Chart.js) already rendered or function missing.');
+            console.log('Final attempt: Instructor Ethics Items radar chart (Chart.js) already rendered or function missing.');
         }
       }
 
@@ -3584,7 +4735,7 @@
       }
 
       // STUDENT SCHOOL CLASSIFICATION ETHICS RADAR CHART IS NOW INITIALIZED BY FindingsApp useEffect
-      console.log('Final fallback: Student school classification ethics chart (Chart.js) should have been initialized by FindingsApp useEffect.');
+      console.log('Final fallback: Student school ethics chart (Chart.js) should have been initialized by FindingsApp useEffect.');
 
     }, 3000);
   </script>
@@ -3594,5 +4745,7 @@
   
   <!-- Script for the React Chatbot -->
   <script type="text/babel" src="./data/chatbot-embed.js"></script>
+  <div id="chatbot-container"></div>
+  <script src="data/chatbot-embed.js"></script>
 </body>
 </html> 
