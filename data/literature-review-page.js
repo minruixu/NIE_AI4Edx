@@ -53,6 +53,7 @@ const LiteratureReviewPage = () => {
   const [showQuickNav, setShowQuickNav] = React.useState(false);
   const [llmApiKey, setLlmApiKey] = React.useState(''); // New state for API Key
   const [isBotTyping, setIsBotTyping] = React.useState(false); // New state for typing indicator
+  const [quotedText, setQuotedText] = React.useState(null); // New state for quoted text
 
   // Load review from URL hash if present
   React.useEffect(() => {
@@ -99,6 +100,23 @@ const LiteratureReviewPage = () => {
       }
     }
   }, [selectedReview]);
+
+  // Add event listener for quoted text
+  React.useEffect(() => {
+    const handleTextQuoteSelected = (event) => {
+      const { quote } = event.detail;
+      if (quote && quote.trim()) {
+        setQuotedText(quote);
+        setIsChatVisible(true); // Open chatbot when text is quoted
+      }
+    };
+    
+    window.addEventListener('textQuoteSelected', handleTextQuoteSelected);
+    
+    return () => {
+      window.removeEventListener('textQuoteSelected', handleTextQuoteSelected);
+    };
+  }, []);
 
   const styles = {
     container: {
@@ -284,6 +302,33 @@ const LiteratureReviewPage = () => {
       padding: '10px 15px',
       borderTop: '1px solid #eaeaea',
       backgroundColor: 'white',
+    },
+    quotedTextContainer: {
+      backgroundColor: '#f0f7ff',
+      padding: '10px 15px',
+      borderRadius: '8px',
+      marginBottom: '10px',
+      border: '1px solid #d0e3ff',
+      position: 'relative',
+      fontSize: '14px'
+    },
+    quotedTextHeader: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: '5px'
+    },
+    quotedTextTitle: {
+      fontWeight: 'bold',
+      color: '#003d7c',
+      fontSize: '13px'
+    },
+    quotedTextContent: {
+      maxHeight: '80px',
+      overflowY: 'auto',
+      fontStyle: 'italic',
+      color: '#444',
+      padding: '0 5px'
     },
     messageInputContainerStyle: {
       display: 'flex',
@@ -600,9 +645,14 @@ const LiteratureReviewPage = () => {
 
   // Function to send message
   const handleSendMessage = () => {
-    if (userInput.trim() === '') return;
+    if (userInput.trim() === '' && !quotedText) return;
     
-    const currentUserMessage = { sender: 'user', text: userInput };
+    // Create message text - if there's a quote, include it with the user's input
+    const messageText = quotedText 
+      ? `Regarding this text: "${quotedText}"\n\n${userInput || "What are your thoughts on this?"}`
+      : userInput;
+    
+    const currentUserMessage = { sender: 'user', text: messageText };
     // Add user message to chat immediately
     setChatMessages(prevMessages => [...prevMessages, currentUserMessage]);
     
@@ -611,10 +661,16 @@ const LiteratureReviewPage = () => {
     const historyForAPI = [...chatMessages]; 
     
     // Process the user input to generate a response
-    handleChatbotResponse(userInput, historyForAPI);
+    handleChatbotResponse(messageText, historyForAPI);
     
-    // Clear input field
+    // Clear input field and quoted text
     setUserInput('');
+    setQuotedText(null);
+  };
+
+  // Function to handle clear quote button
+  const handleClearQuote = () => {
+    setQuotedText(null);
   };
 
   // Function to handle input key press (send on Enter)
@@ -921,13 +977,37 @@ const LiteratureReviewPage = () => {
               {isBotTyping && renderMessage({ isTypingIndicator: true }, chatMessages.length)}
             </div>
             <div style={styles.chatInputContainer}>
+              {/* Display quoted text above input if available */}
+              {quotedText && (
+                <div style={styles.quotedTextContainer}>
+                  <div style={styles.quotedTextHeader}>
+                    <span style={styles.quotedTextTitle}>Quoted Text:</span>
+                    <button 
+                      onClick={handleClearQuote}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        color: '#666',
+                        fontSize: '16px',
+                        padding: '0 5px'
+                      }}
+                    >
+                      ×
+                    </button>
+                  </div>
+                  <div style={styles.quotedTextContent}>
+                    "{quotedText}"
+                  </div>
+                </div>
+              )}
               <div style={styles.messageInputContainerStyle}>
                 <input
                   type="text"
                   value={userInput}
                   onChange={handleInputChange}
                   onKeyPress={handleKeyPress}
-                  placeholder="Type your message..."
+                  placeholder={quotedText ? "Ask about the quoted text..." : "Type your message..."}
                   aria-label="Chat message input"
                   style={{
                     flex: 1,
@@ -1079,5 +1159,128 @@ const LiteratureReviewPage = () => {
 // Render the Literature Review Page
 ReactDOM.render(
   React.createElement(LiteratureReviewPage, null),
+  document.getElementById('root')
+); 
+
+// Text selection and quote component
+const TextCitationSelector = () => {
+  const [isVisible, setIsVisible] = React.useState(false);
+  const [position, setPosition] = React.useState({ top: 0, left: 0 });
+  const [selectedText, setSelectedText] = React.useState('');
+  
+  React.useEffect(() => {
+    const handleTextSelection = () => {
+      const selection = window.getSelection();
+      const selectedText = selection.toString().trim();
+      
+      if (selectedText.length > 0) {
+        const range = selection.getRangeAt(0);
+        const rect = range.getBoundingClientRect();
+        
+        setSelectedText(selectedText);
+        setPosition({
+          top: rect.bottom + window.scrollY,
+          left: rect.left + rect.width / 2 + window.scrollX,
+        });
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+    
+    document.addEventListener('mouseup', handleTextSelection);
+    document.addEventListener('touchend', handleTextSelection);
+    
+    return () => {
+      document.removeEventListener('mouseup', handleTextSelection);
+      document.removeEventListener('touchend', handleTextSelection);
+    };
+  }, []);
+  
+  // Handle quote button click
+  const handleQuoteClick = (e) => {
+    e.preventDefault();
+    setIsVisible(false);
+    
+    // Dispatch a custom event to notify the chatbot about the selected quote
+    window.dispatchEvent(
+      new CustomEvent('textQuoteSelected', { 
+        detail: { quote: selectedText } 
+      })
+    );
+  };
+  
+  return React.createElement(
+    React.Fragment,
+    null,
+    isVisible && React.createElement(
+      'div',
+      {
+        style: {
+          position: 'absolute',
+          top: `${position.top}px`,
+          left: `${position.left}px`,
+          transform: 'translateX(-50%)',
+          backgroundColor: '#003d7c',
+          color: 'white',
+          padding: '8px 12px',
+          borderRadius: '4px',
+          boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+          zIndex: 1000,
+          display: 'flex',
+          gap: '8px',
+          fontSize: '14px',
+          cursor: 'pointer',
+          animation: 'fadeIn 0.2s ease',
+        }
+      },
+      React.createElement(
+        'button',
+        {
+          onClick: handleQuoteClick,
+          style: {
+            background: 'none',
+            border: 'none',
+            color: 'white',
+            padding: '0',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+            fontSize: '14px',
+          }
+        },
+        React.createElement(
+          'span',
+          { style: { fontSize: '16px' } },
+          '💬'
+        ),
+        ' Quote'
+      )
+    ),
+    React.createElement(
+      'style',
+      {
+        dangerouslySetInnerHTML: {
+          __html: `
+            @keyframes fadeIn {
+              from { opacity: 0; }
+              to { opacity: 1; }
+            }
+          `
+        }
+      }
+    )
+  );
+};
+
+// Render the Literature Review Page with TextCitationSelector
+ReactDOM.render(
+  React.createElement(
+    React.Fragment,
+    null,
+    React.createElement(LiteratureReviewPage, null),
+    React.createElement(TextCitationSelector, null)
+  ),
   document.getElementById('root')
 ); 

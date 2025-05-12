@@ -362,6 +362,107 @@
   
   <!-- Load the findings page component -->
   <script type="text/babel">
+    // Text selection and quote component
+    const TextCitationSelector = () => {
+      const [isVisible, setIsVisible] = React.useState(false);
+      const [position, setPosition] = React.useState({ top: 0, left: 0 });
+      const [selectedText, setSelectedText] = React.useState('');
+      
+      React.useEffect(() => {
+        const handleTextSelection = () => {
+          const selection = window.getSelection();
+          const selectedText = selection.toString().trim();
+          
+          if (selectedText.length > 0) {
+            const range = selection.getRangeAt(0);
+            const rect = range.getBoundingClientRect();
+            
+            setSelectedText(selectedText);
+            setPosition({
+              top: rect.bottom + window.scrollY,
+              left: rect.left + rect.width / 2 + window.scrollX,
+            });
+            setIsVisible(true);
+          } else {
+            setIsVisible(false);
+          }
+        };
+        
+        document.addEventListener('mouseup', handleTextSelection);
+        document.addEventListener('touchend', handleTextSelection);
+        
+        return () => {
+          document.removeEventListener('mouseup', handleTextSelection);
+          document.removeEventListener('touchend', handleTextSelection);
+        };
+      }, []);
+      
+      // Handle quote button click
+      const handleQuoteClick = (e) => {
+        e.preventDefault();
+        setIsVisible(false);
+        
+        // Dispatch a custom event to notify the chatbot about the selected quote
+        window.dispatchEvent(
+          new CustomEvent('textQuoteSelected', { 
+            detail: { quote: selectedText } 
+          })
+        );
+      };
+      
+      return (
+        <>
+          {isVisible && (
+            <div
+              style={{
+                position: 'absolute',
+                top: `${position.top}px`,
+                left: `${position.left}px`,
+                transform: 'translateX(-50%)',
+                backgroundColor: '#003d7c',
+                color: 'white',
+                padding: '8px 12px',
+                borderRadius: '4px',
+                boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+                zIndex: 1000,
+                display: 'flex',
+                gap: '8px',
+                fontSize: '14px',
+                cursor: 'pointer',
+                animation: 'fadeIn 0.2s ease',
+              }}
+            >
+              <button
+                onClick={handleQuoteClick}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'white',
+                  padding: '0',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  fontSize: '14px',
+                }}
+              >
+                <span style={{ fontSize: '16px' }}>💬</span> Quote
+              </button>
+            </div>
+          )}
+          
+          <style>
+            {`
+              @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+              }
+            `}
+          </style>
+        </>
+      );
+    };
+  
     // Main App Component
     const FindingsApp = () => {
       const [activeTab, setActiveTab] = React.useState('quantitative');
@@ -513,6 +614,7 @@
       
       return (
         <div>
+          <TextCitationSelector />
           <header style={{
             backgroundColor: 'white',
             boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
@@ -2793,7 +2895,7 @@
                               <tr style={{ backgroundColor: '#f9f9f9' }}>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Experience level</td>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Novice/Intermediate dominate (≈ 71%), but Advanced/Expert users exist in every school</td>
-                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Most are still "learning by doing," so innovative use-cases emerge unevenly and are often shared informally.</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Most are still "learning by doing," so innovative use-cases emerge unevenly and often shared informally.</td>
                               </tr>
                               <tr>
                                 <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Confidence</td>
