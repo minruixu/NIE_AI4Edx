@@ -75,6 +75,7 @@ const CaseStudiesPage = () => {
   const [userInput, setUserInput] = React.useState('');
   const [llmApiKey, setLlmApiKey] = React.useState('');
   const [isBotTyping, setIsBotTyping] = React.useState(false);
+  const [quotedText, setQuotedText] = React.useState(null);
   
   // Initialize word clouds after component mounts
   React.useEffect(() => {
@@ -356,6 +357,23 @@ const CaseStudiesPage = () => {
       return () => clearTimeout(timer);
     }
   }, [selectedCase]);
+  
+  // Add event listener for quoted text
+  React.useEffect(() => {
+    const handleTextQuoteSelected = (event) => {
+      const { quote } = event.detail;
+      if (quote && quote.trim()) {
+        setQuotedText(quote);
+        setShowChatbot(true); // Open chatbot when text is quoted
+      }
+    };
+    
+    window.addEventListener('textQuoteSelected', handleTextQuoteSelected);
+    
+    return () => {
+      window.removeEventListener('textQuoteSelected', handleTextQuoteSelected);
+    };
+  }, []);
   
   // Function to get more specific information about a case study
   const getCaseStudyDetails = (caseStudy) => {
@@ -710,10 +728,21 @@ const CaseStudiesPage = () => {
   // Function to handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (userInput.trim() === '') return;
+    if (userInput.trim() === '' && !quotedText) return;
+
+    // Create message text - if there's a quote, include it with the user's input
+    const messageText = quotedText 
+      ? `Regarding this text: "${quotedText}"\n\n${userInput || "What are your thoughts on this?"}`
+      : userInput;
     
-    handleChatbotResponse(userInput);
+    handleChatbotResponse(messageText);
     setUserInput('');
+    setQuotedText(null); // Clear quoted text after sending
+  };
+
+  // Add clear quote button handler
+  const handleClearQuote = () => {
+    setQuotedText(null);
   };
 
   // Define styles based on literature-review-page.js
@@ -722,7 +751,7 @@ const CaseStudiesPage = () => {
       maxWidth: '1200px',
       margin: '0 auto',
       padding: '20px',
-      fontFamily: 'Arial, sans-serif',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Unified font family
     },
     header: {
       backgroundColor: '#003d7c',
@@ -805,83 +834,88 @@ const CaseStudiesPage = () => {
       position: 'fixed',
       bottom: '30px',
       right: '30px',
-      width: '380px',
-      height: '520px',
+      width: '380px', // Matched lit review
+      height: '520px', // Matched lit review
       backgroundColor: 'white',
-      boxShadow: '0 5px 20px rgba(0,0,0,0.15)',
-      borderRadius: '16px',
+      boxShadow: '0 5px 20px rgba(0,0,0,0.15)', // Matched lit review
+      borderRadius: '16px', // Matched lit review
       zIndex: 1000,
       display: 'flex',
       flexDirection: 'column',
       overflow: 'hidden',
       transition: 'all 0.3s ease',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
     },
     chatHeader: {
       backgroundColor: '#003d7c',
-      backgroundImage: 'linear-gradient(135deg, #003d7c 0%, #0056b3 100%)',
-      color: '#fff',
-      padding: '15px 20px',
-      borderTopLeftRadius: '16px',
-      borderTopRightRadius: '16px',
+      backgroundImage: 'linear-gradient(135deg, #003d7c 0%, #0056b3 100%)', // Matched lit review
+      color: '#fff', // Matched lit review
+      padding: '15px 20px', // Matched lit review
+      borderTopLeftRadius: '16px', // Matched lit review
+      borderTopRightRadius: '16px', // Matched lit review
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+      boxShadow: '0 2px 5px rgba(0,0,0,0.1)', // Matched lit review
     },
     chatMessages: {
       flex: 1,
-      padding: '20px',
+      padding: '20px', // Matched lit review
       paddingBottom: '10px',
       marginBottom: '5px',
       overflowY: 'auto',
       display: 'flex',
       flexDirection: 'column',
-      gap: '8px',
-      backgroundColor: '#f8f9fa',
+      gap: '8px', // Matched lit review
+      backgroundColor: '#f8f9fa', // Matched lit review
     },
     userMessage: {
       margin: '5px 0',
-      padding: '12px 16px',
-      borderRadius: '18px',
-      backgroundColor: '#0056b3',
+      padding: '12px 16px', // Matched lit review
+      borderRadius: '18px', // Matched lit review
+      backgroundColor: '#0056b3', // Matched lit review
       color: 'white',
       alignSelf: 'flex-end',
       marginLeft: 'auto',
-      borderBottomRightRadius: '4px',
-      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+      borderBottomRightRadius: '4px', // Matched lit review
+      boxShadow: '0 2px 4px rgba(0,0,0,0.1)', // Matched lit review
       maxWidth: '80%',
       wordWrap: 'break-word',
-      fontWeight: '400',
+      fontWeight: '400', // Matched lit review
+      fontSize: '14px', // Added font size
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
     },
     botMessage: {
       margin: '5px 0',
-      padding: '12px 16px',
-      borderRadius: '18px',
-      backgroundColor: 'white',
+      padding: '12px 16px', // Matched lit review
+      borderRadius: '18px', // Matched lit review
+      backgroundColor: 'white', // Matched lit review
       color: '#333',
       alignSelf: 'flex-start',
       marginRight: 'auto',
-      borderBottomLeftRadius: '4px',
-      boxShadow: '0 2px 4px rgba(0,0,0,0.08)',
+      borderBottomLeftRadius: '4px', // Matched lit review
+      boxShadow: '0 2px 4px rgba(0,0,0,0.08)', // Matched lit review
       maxWidth: '80%',
       wordWrap: 'break-word',
-      fontWeight: '400',
+      fontWeight: '400', // Matched lit review
+      fontSize: '14px', // Added font size
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
     },
     typingIndicator: {
       display: 'flex',
       alignItems: 'center',
-      padding: '12px 16px',
-      backgroundColor: 'white',
-      borderRadius: '18px',
+      padding: '12px 16px', // Matched lit review
+      backgroundColor: 'white', // Matched lit review
+      borderRadius: '18px', // Matched lit review
       alignSelf: 'flex-start',
       marginRight: 'auto',
       width: 'fit-content',
-      boxShadow: '0 2px 4px rgba(0,0,0,0.08)',
+      boxShadow: '0 2px 4px rgba(0,0,0,0.08)', // Matched lit review
     },
     dot: {
-      width: '8px',
-      height: '8px',
-      backgroundColor: '#666',
+      width: '8px', // Matched lit review
+      height: '8px', // Matched lit review
+      backgroundColor: '#666', // Matched lit review
       borderRadius: '50%',
       margin: '0 2px',
       animation: 'bounce 1.4s infinite',
@@ -889,9 +923,9 @@ const CaseStudiesPage = () => {
     chatInputContainer: {
       display: 'flex',
       flexDirection: 'column',
-      padding: '10px 15px',
-      borderTop: '1px solid #eaeaea',
-      backgroundColor: 'white',
+      padding: '10px 15px', // Matched lit review
+      borderTop: '1px solid #eaeaea', // Matched lit review
+      backgroundColor: 'white', // Matched lit review
     },
     messageInputContainerStyle: {
       display: 'flex',
@@ -899,34 +933,37 @@ const CaseStudiesPage = () => {
     },
     chatInput: {
       flex: 1,
-      padding: '10px 15px',
+      padding: '12px 15px', // Matched lit review input padding
       border: '1px solid #ddd',
-      borderRadius: '40px',
+      borderRadius: '24px', // Matched lit review input radius
       marginRight: '10px',
-      marginBottom: '8px',
+      marginBottom: '15px', // Matched lit review input margin
       outline: 'none',
-      fontSize: '14px',
+      fontSize: '14px', // Matched lit review input font size
       backgroundColor: 'white',
       boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)',
       transition: 'all 0.2s ease',
-      height: '45px',
+      height: 'auto', // Allow height to adjust
+      minHeight: '45px', // Maintain minimum height
       boxSizing: 'border-box',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
     },
     chatSubmit: {
-      backgroundColor: '#0056b3',
-      backgroundImage: 'linear-gradient(135deg, #0056b3 0%, #003d7c 100%)',
+      backgroundColor: '#0056b3', // Matched lit review send button
+      backgroundImage: 'none', // Removed gradient
       color: 'white',
       border: 'none',
-      borderRadius: '40px',
-      padding: '10px 25px',
+      borderRadius: '24px', // Matched lit review send button radius
+      padding: '10px 18px', // Matched lit review send button padding
       cursor: 'pointer',
-      fontWeight: '500',
+      fontWeight: 'bold', // Matched lit review send button weight
       boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
       transition: 'all 0.2s ease',
       alignSelf: 'flex-start',
-      height: '45px',
-      marginBottom: '8px',
-      fontSize: '16px',
+      height: '45px', // Adjust if needed
+      marginBottom: '15px', // Match input margin
+      fontSize: '14px', // Match input font size
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
     },
     apiKeyInputContainer: {
       display: 'flex',
@@ -935,37 +972,40 @@ const CaseStudiesPage = () => {
     },
     apiKeyLabel: {
       marginRight: '10px',
-      fontSize: '0.9em',
+      fontSize: '13px', 
       color: '#555',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
     },
     apiKeyInput: {
       flex: 1,
       padding: '8px 12px',
       border: '1px solid #ddd',
       borderRadius: '5px',
-      fontSize: '0.9em',
+      fontSize: '13px', 
       backgroundColor: '#f8f9fa',
       boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)',
       transition: 'all 0.2s ease',
       height: '40px',
       boxSizing: 'border-box',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
     },
     buttonContainer: {
       display: 'flex',
       flexWrap: 'wrap',
-      gap: '8px',
+      gap: '8px', // Matched lit review
       marginTop: '8px',
     },
     primaryButton: {
-      padding: '10px 14px',
-      backgroundColor: '#0056b3',
+      padding: '10px 14px', // Matched lit review primary button
+      backgroundColor: '#0056b3', // Matched lit review primary button
       color: 'white',
       border: 'none',
-      borderRadius: '6px',
+      borderRadius: '6px', // Matched lit review primary button
       cursor: 'pointer',
-      fontSize: '13px',
-      fontWeight: 'bold',
+      fontSize: '13px', // Matched lit review primary button
+      fontWeight: 'bold', // Matched lit review primary button
       transition: 'background-color 0.2s, transform 0.2s, box-shadow 0.2s',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
     },
     primaryButtonHover: {
       backgroundColor: '#003d7c',
@@ -973,14 +1013,15 @@ const CaseStudiesPage = () => {
       boxShadow: '0 4px 8px rgba(0,60,124,0.2)',
     },
     secondaryButton: {
-      padding: '9px 13px',
-      backgroundColor: '#f0f0f0',
-      color: '#444',
+      padding: '9px 13px', // Matched lit review secondary button
+      backgroundColor: '#f0f0f0', // Matched lit review secondary button
+      color: '#444', // Matched lit review secondary button
       border: '1px solid #ddd',
-      borderRadius: '6px',
+      borderRadius: '6px', // Matched lit review secondary button
       cursor: 'pointer',
-      fontSize: '13px',
+      fontSize: '13px', // Matched lit review secondary button
       transition: 'background-color 0.2s, transform 0.2s, box-shadow 0.2s',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
     },
     secondaryButtonHover: {
       backgroundColor: '#e0e0e0',
@@ -991,25 +1032,83 @@ const CaseStudiesPage = () => {
       position: 'fixed',
       bottom: '30px',
       right: '30px',
-      width: '65px',
-      height: '65px',
-      backgroundColor: '#0056b3',
-      backgroundImage: 'linear-gradient(135deg, #003d7c 0%, #0056b3 100%)',
+      width: '65px', // Matched lit review FAB
+      height: '65px', // Matched lit review FAB
+      backgroundColor: '#0056b3', // Matched lit review FAB
+      backgroundImage: 'linear-gradient(135deg, #003d7c 0%, #0056b3 100%)', // Matched lit review FAB
       color: 'white',
       borderRadius: '50%',
       border: 'none',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      fontSize: '28px',
+      fontSize: '28px', // Matched lit review FAB
       cursor: 'pointer',
-      boxShadow: '0 4px 10px rgba(0,0,0,0.25)',
+      boxShadow: '0 4px 10px rgba(0,0,0,0.25)', // Matched lit review FAB
       zIndex: 100,
       transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
     },
     chatButtonFixedHover: {
       transform: 'scale(1.08) translateY(-3px)',
       boxShadow: '0 6px 15px rgba(0,0,0,0.3)',
+    },
+    chatHeaderTitle: { // Style for chat header title
+      margin: 0,
+      fontWeight: '500',
+      fontSize: '1.1rem',
+    },
+    chatHeaderCategory: { // Style for category badge in header
+      backgroundColor: '#e6f0ff', 
+      color: '#003d7c', 
+      padding: '3px 8px', 
+      borderRadius: '12px', 
+      fontSize: '11px', 
+      fontWeight: 'bold', 
+      marginLeft: '8px' 
+    },
+    quotedTextContainer: {
+      backgroundColor: '#f0f7ff',
+      padding: '10px 15px',
+      borderRadius: '8px',
+      marginBottom: '10px',
+      border: '1px solid #d0e3ff',
+      position: 'relative',
+      fontSize: '14px'
+    },
+    quotedTextHeader: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: '5px'
+    },
+    quotedTextTitle: {
+      fontWeight: 'bold',
+      color: '#003d7c',
+      fontSize: '13px'
+    },
+    quotedTextContent: {
+      maxHeight: '80px',
+      overflowY: 'auto',
+      fontStyle: 'italic',
+      color: '#444',
+      padding: '0 5px'
+    },
+    chatCloseButton: { // Style for close button
+      background: 'none',
+      border: 'none',
+      color: 'white',
+      fontSize: '18px', // Matched lit review
+      cursor: 'pointer',
+      padding: '5px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '28px',
+      height: '28px',
+      borderRadius: '50%',
+      transition: 'background-color 0.2s',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
     },
   };
 
@@ -1231,38 +1330,16 @@ const CaseStudiesPage = () => {
           <div style={styles.chatContainer}>
             <div style={styles.chatHeader}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <h3 style={{ margin: 0, fontWeight: '500', fontSize: '1.1rem' }}>Case Studies Assistant</h3>
+                <h3 style={styles.chatHeaderTitle}>Case Studies Assistant</h3>
                 {selectedCase && (
-                  <span style={{
-                    backgroundColor: '#e6f0ff', 
-                    color: '#003d7c', 
-                    padding: '3px 8px', 
-                    borderRadius: '12px', 
-                    fontSize: '11px', 
-                    fontWeight: 'bold', 
-                    marginLeft: '8px' 
-                  }}>
+                  <span style={styles.chatHeaderCategory}>
                     {selectedCase.category.toUpperCase()}
                   </span>
                 )}
               </div>
               <button
                 onClick={() => setShowChatbot(false)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: 'white',
-                  fontSize: '18px',
-                  cursor: 'pointer',
-                  padding: '5px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '28px',
-                  height: '28px',
-                  borderRadius: '50%',
-                  transition: 'background-color 0.2s',
-                }}
+                style={styles.chatCloseButton}
                 onMouseOver={(e) => {
                   e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.2)';
                 }}
@@ -1286,12 +1363,40 @@ const CaseStudiesPage = () => {
               {isBotTyping && renderMessage({ isTypingIndicator: true }, chatMessages.length)}
             </div>
             <div style={styles.chatInputContainer}>
+              {/* Display quoted text above input if available */}
+              {quotedText && (
+                <div style={styles.quotedTextContainer}>
+                  <div style={styles.quotedTextHeader}>
+                    <span style={styles.quotedTextTitle}>Quoted Text:</span>
+                    <button 
+                      onClick={handleClearQuote}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        color: '#666',
+                        fontSize: '16px',
+                        padding: '0 5px'
+                      }}
+                    >
+                      ×
+                    </button>
+                  </div>
+                  <div style={styles.quotedTextContent}>
+                    "{quotedText}"
+                  </div>
+                </div>
+              )}
               <div style={styles.messageInputContainerStyle}>
                 <input
                   type="text"
-                  placeholder={selectedCase 
-                    ? 'Ask about this or any other case study...' 
-                    : 'Ask about our case studies...'}
+                  placeholder={
+                    quotedText 
+                      ? 'Ask about the quoted text...' 
+                      : (selectedCase 
+                          ? 'Ask about this or any other case study...' 
+                          : 'Ask about our case studies...')
+                  }
                   value={userInput}
                   onChange={e => setUserInput(e.target.value)}
                   style={styles.chatInput}
@@ -1384,3 +1489,126 @@ const CaseStudiesPage = () => {
 
 // Render the component
 ReactDOM.render(React.createElement(CaseStudiesPage, null), document.getElementById('root')); 
+
+// Text selection and quote component
+const TextCitationSelector = () => {
+  const [isVisible, setIsVisible] = React.useState(false);
+  const [position, setPosition] = React.useState({ top: 0, left: 0 });
+  const [selectedText, setSelectedText] = React.useState('');
+  
+  React.useEffect(() => {
+    const handleTextSelection = () => {
+      const selection = window.getSelection();
+      const selectedText = selection.toString().trim();
+      
+      if (selectedText.length > 0) {
+        const range = selection.getRangeAt(0);
+        const rect = range.getBoundingClientRect();
+        
+        setSelectedText(selectedText);
+        setPosition({
+          top: rect.bottom + window.scrollY,
+          left: rect.left + rect.width / 2 + window.scrollX,
+        });
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+    
+    document.addEventListener('mouseup', handleTextSelection);
+    document.addEventListener('touchend', handleTextSelection);
+    
+    return () => {
+      document.removeEventListener('mouseup', handleTextSelection);
+      document.removeEventListener('touchend', handleTextSelection);
+    };
+  }, []);
+  
+  // Handle quote button click
+  const handleQuoteClick = (e) => {
+    e.preventDefault();
+    setIsVisible(false);
+    
+    // Dispatch a custom event to notify the chatbot about the selected quote
+    window.dispatchEvent(
+      new CustomEvent('textQuoteSelected', { 
+        detail: { quote: selectedText } 
+      })
+    );
+  };
+  
+  return React.createElement(
+    React.Fragment,
+    null,
+    isVisible && React.createElement(
+      'div',
+      {
+        style: {
+          position: 'absolute',
+          top: `${position.top}px`,
+          left: `${position.left}px`,
+          transform: 'translateX(-50%)',
+          backgroundColor: '#003d7c',
+          color: 'white',
+          padding: '8px 12px',
+          borderRadius: '4px',
+          boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+          zIndex: 1000,
+          display: 'flex',
+          gap: '8px',
+          fontSize: '14px',
+          cursor: 'pointer',
+          animation: 'fadeIn 0.2s ease',
+        }
+      },
+      React.createElement(
+        'button',
+        {
+          onClick: handleQuoteClick,
+          style: {
+            background: 'none',
+            border: 'none',
+            color: 'white',
+            padding: '0',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+            fontSize: '14px',
+          }
+        },
+        React.createElement(
+          'span',
+          { style: { fontSize: '16px' } },
+          '💬'
+        ),
+        ' Quote'
+      )
+    ),
+    React.createElement(
+      'style',
+      {
+        dangerouslySetInnerHTML: {
+          __html: `
+            @keyframes fadeIn {
+              from { opacity: 0; }
+              to { opacity: 1; }
+            }
+          `
+        }
+      }
+    )
+  );
+};
+
+// Render the case studies page with TextCitationSelector
+ReactDOM.render(
+  React.createElement(
+    React.Fragment,
+    null,
+    React.createElement(CaseStudiesPage, null),
+    React.createElement(TextCitationSelector, null)
+  ),
+  document.getElementById('root')
+); 

@@ -181,9 +181,10 @@ const styles = {
     position: 'fixed',
     bottom: '30px',
     right: '30px',
-    width: '60px', 
-    height: '60px',
-    backgroundColor: '#003d7c',
+    width: '65px',
+    height: '65px',
+    backgroundColor: '#0056b3',
+    backgroundImage: 'linear-gradient(135deg, #003d7c 0%, #0056b3 100%)',
     color: 'white',
     borderRadius: '50%',
     border: 'none',
@@ -192,87 +193,162 @@ const styles = {
     alignItems: 'center',
     fontSize: '28px',
     cursor: 'pointer',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-    zIndex: 1001,
-    transition: 'all 0.3s ease',
+    boxShadow: '0 4px 10px rgba(0,0,0,0.25)',
+    zIndex: 100,
+    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
   },
   dialogPopup: {
     position: 'fixed',
     bottom: '30px',
     right: '30px',
-    width: '350px',
-    height: '500px',
+    width: '380px',
+    height: '520px',
     backgroundColor: 'white',
-    boxShadow: '0 0 10px rgba(0,0,0,0.2)',
-    borderRadius: '10px',
-    zIndex: 1002,
+    boxShadow: '0 5px 20px rgba(0,0,0,0.15)',
+    borderRadius: '16px',
+    zIndex: 1000,
     display: 'flex',
     flexDirection: 'column',
     overflow: 'hidden',
+    transition: 'all 0.3s ease',
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
   },
   dialogHeader: {
     backgroundColor: '#003d7c',
-    color: 'white',
-    padding: '10px 15px',
-    borderTopLeftRadius: '10px',
-    borderTopRightRadius: '10px',
+    backgroundImage: 'linear-gradient(135deg, #003d7c 0%, #0056b3 100%)',
+    color: '#fff',
+    padding: '15px 20px',
+    borderTopLeftRadius: '16px',
+    borderTopRightRadius: '16px',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
+    boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
   },
   dialogMessages: {
     flex: 1,
-    padding: '15px',
+    padding: '20px',
+    paddingBottom: '10px',
+    marginBottom: '5px',
     overflowY: 'auto',
     display: 'flex',
     flexDirection: 'column',
-    gap: '10px',
+    gap: '8px',
+    backgroundColor: '#f8f9fa',
   },
   userMessage: {
-    alignSelf: 'flex-end',
-    backgroundColor: '#003d7c',
-    color: 'white',
-    padding: '10px 15px',
+    margin: '5px 0',
+    padding: '12px 16px',
     borderRadius: '18px',
-    borderBottomRightRadius: '3px',
+    backgroundColor: '#0056b3',
+    color: 'white',
+    alignSelf: 'flex-end',
+    marginLeft: 'auto',
+    borderBottomRightRadius: '4px',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
     maxWidth: '80%',
     wordWrap: 'break-word',
+    fontWeight: '400',
+    fontSize: '14px',
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
   },
   botMessage: {
-    alignSelf: 'flex-start',
-    backgroundColor: '#f1f1f1',
-    color: '#333',
-    padding: '10px 15px',
+    margin: '5px 0',
+    padding: '12px 16px',
     borderRadius: '18px',
-    borderBottomLeftRadius: '3px',
+    backgroundColor: 'white',
+    color: '#333',
+    alignSelf: 'flex-start',
+    marginRight: 'auto',
+    borderBottomLeftRadius: '4px',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.08)',
     maxWidth: '80%',
     wordWrap: 'break-word',
+    fontWeight: '400',
+    fontSize: '14px',
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
   },
   dialogInputContainer: {
     display: 'flex',
-    alignItems: 'center',
-    padding: '10px',
-    borderTop: '1px solid #eee',
+    flexDirection: 'column',
+    padding: '10px 15px',
+    borderTop: '1px solid #eaeaea',
+    backgroundColor: 'white',
+  },
+  messageInputWrapper: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    marginBottom: '10px',
   },
   dialogInput: {
     flex: 1,
-    padding: '10px',
+    padding: '12px 15px',
     border: '1px solid #ddd',
-    borderRadius: '20px',
+    borderRadius: '24px',
     marginRight: '10px',
     outline: 'none',
+    fontSize: '14px',
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+    height: 'auto',
+    minHeight: '45px',
+    boxSizing: 'border-box',
   },
   dialogSendButton: {
-    backgroundColor: '#003d7c',
+    backgroundColor: '#0056b3',
     color: 'white',
     border: 'none',
-    borderRadius: '20px',
-    padding: '10px 15px',
+    borderRadius: '24px',
+    padding: '10px 18px',
     cursor: 'pointer',
     fontSize: '14px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+    fontWeight: 'bold',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+    transition: 'all 0.2s ease',
+    height: '45px',
+  },
+  dialogCloseButton: {
+    background: 'none',
+    border: 'none',
+    color: 'white',
+    fontSize: '18px',
+    cursor: 'pointer',
+    padding: '5px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '28px',
+    height: '28px',
+    borderRadius: '50%',
+    transition: 'background-color 0.2s',
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+  },
+  apiKeyContainer: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  apiKeyLabel: {
+    marginRight: '10px',
+    fontSize: '13px',
+    color: '#555',
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+  },
+  apiKeyInput: {
+    flex: 1,
+    padding: '8px 12px',
+    border: '1px solid #ddd',
+    borderRadius: '5px',
+    fontSize: '13px',
+    backgroundColor: '#f8f9fa',
+    boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)',
+    transition: 'all 0.2s ease',
+    height: '40px',
+    boxSizing: 'border-box',
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
   },
 };
 
@@ -710,15 +786,9 @@ const Dialog = ({ isOpen, onClose }) => {
   return (
     <div style={styles.dialogPopup}>
       <div style={styles.dialogHeader}>
-        <h3 style={{ margin: 0 }}>Findings Assistant</h3>
+        <h3 style={{ margin: 0, fontSize: '1.1rem' }}>Findings Assistant</h3>
         <button 
-          style={{
-            background: 'none',
-            border: 'none',
-            color: 'white',
-            fontSize: '20px',
-            cursor: 'pointer',
-          }}
+          style={styles.dialogCloseButton}
           onClick={onClose}
         >
           ×
@@ -730,6 +800,7 @@ const Dialog = ({ isOpen, onClose }) => {
           <div 
             key={index} 
             style={msg.sender === 'user' ? styles.userMessage : styles.botMessage}
+            fontSize='14px'
           >
             {msg.text}
           </div>
@@ -738,20 +809,33 @@ const Dialog = ({ isOpen, onClose }) => {
       </div>
       
       <div style={styles.dialogInputContainer}>
-        <input
-          type="text"
-          value={inputValue}
-          onChange={handleInputChange}
-          onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(e)}
-          placeholder="Type your question..."
-          style={styles.dialogInput}
-        />
-        <button
-          onClick={handleSendMessage}
-          style={styles.dialogSendButton}
-        >
-          ➤
-        </button>
+        <div style={styles.messageInputWrapper}>
+          <input
+            type="text"
+            style={styles.dialogInput}
+            value={inputValue}
+            onChange={handleInputChange}
+            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(e)}
+            placeholder="Ask about the findings..."
+          />
+          <button 
+            style={styles.dialogSendButton} 
+            onClick={handleSendMessage}
+          >
+            Send
+          </button>
+        </div>
+        <div style={styles.apiKeyContainer}>
+          <label htmlFor="apiKeyInputFindings" style={styles.apiKeyLabel}>API Key:</label>
+          <input
+            id="apiKeyInputFindings"
+            type="password"
+            style={styles.apiKeyInput}
+            value={llmApiKey}
+            onChange={handleApiKeyChange}
+            placeholder="Enter OpenAI API Key"
+          />
+        </div>
       </div>
     </div>
   );
@@ -759,7 +843,18 @@ const Dialog = ({ isOpen, onClose }) => {
 
 // Floating Action Button Component
 const FloatingButton = ({ onClick }) => (
-  <button style={styles.fab} onClick={onClick}>
+  <button 
+    style={styles.fab}
+    onClick={onClick}
+    onMouseOver={(e) => {
+      e.currentTarget.style.transform = 'scale(1.08) translateY(-3px)';
+      e.currentTarget.style.boxShadow = '0 6px 15px rgba(0,0,0,0.3)';
+    }}
+    onMouseOut={(e) => {
+      e.currentTarget.style.transform = 'scale(1)';
+      e.currentTarget.style.boxShadow = styles.fab.boxShadow;
+    }}
+  >
     💬
   </button>
 );

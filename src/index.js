@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import caseStudies from './data/case-studies.js';
 import createWordCloudViewer from './data/case-wordcloud.js';
+import TextCitationSelector from './data/TextCitationSelector.js';
 
 // Import images for slideshow
 import img1 from './figs/IMG_20250220_145552_00_003-min.jpg';
@@ -2295,6 +2296,7 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
   const dialogRef = React.useRef(null); // Reference to the dialog element
   const [hasShownPostPageInteraction, setHasShownPostPageInteraction] = useState(false); // Track if post-page interaction occurred
   const [visible, setVisible] = useState(false);
+  const [quotedText, setQuotedText] = useState(null); // Add state for quoted text
 
   // Animate dialog open
   useEffect(() => {
@@ -2318,6 +2320,24 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
       setTimeout(() => setVisible(false), 300);
     }
   }, [isOpen]);
+
+  // Add event listener for quoted text
+  useEffect(() => {
+    const handleTextQuoteSelected = (event) => {
+      const { quote } = event.detail;
+      if (quote && quote.trim()) {
+        setQuotedText(quote);
+        // Remove this line as setIsDialogOpen is not available in this component
+        // setIsDialogOpen(true);
+      }
+    };
+    
+    window.addEventListener('textQuoteSelected', handleTextQuoteSelected);
+    
+    return () => {
+      window.removeEventListener('textQuoteSelected', handleTextQuoteSelected);
+    };
+  }, []);
 
   // Auto-scroll to bottom when messages update
   React.useEffect(() => {
@@ -2841,17 +2861,20 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
   const handleSendMessage = async (e) => {
     e.preventDefault();
     
-    if (inputValue.trim() === '') return;
+    if (inputValue.trim() === '' && !quotedText) return;
 
-    const userMessage = { text: inputValue, sender: 'user' };
-    // Add user message to state immediately for responsiveness
-    // Use the functional update form of setState to ensure we have the latest messages array
+    // Create message text - if there's a quote, include it with the user's input
+    const messageText = quotedText 
+      ? `Regarding this text: "${quotedText}"\n\n${inputValue || "What are your thoughts on this?"}`
+      : inputValue;
+    
+    const userMessage = { text: messageText, sender: 'user' };
     setMessages(prevMessages => [...prevMessages, userMessage]); 
     storeMessage(userMessage); // Log user message
     
-    const currentInput = inputValue; // Capture current input before clearing
     setInputValue(''); // Clear input field
-
+    setQuotedText(null); // Clear quoted text after sending
+    
     // Check for API key
     if (!llmApiKey) {
       setBotTyping(true);
@@ -2867,13 +2890,10 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
     setBotTyping(true);
 
     try {
-      // Pass the current messages state (excluding the latest user message because it's already in `userMessage` object)
-      // The `getOpenAIResponse` function expects history *before* the current user input, which it adds itself.
-      const chatHistoryForAPI = [...messages]; // Capture snapshot of messages *before* adding the new one
+      // Pass the current messages state
+      const chatHistoryForAPI = [...messages]; 
       
-      // The previous method of obtaining historyForAPI via a setMessages callback was removed.
-
-      const botResponseText = await getOpenAIResponse(currentInput, chatHistoryForAPI);
+      const botResponseText = await getOpenAIResponse(messageText, chatHistoryForAPI);
       const botMessage = { text: botResponseText, sender: 'bot' };
       setMessages(prevMessages => [...prevMessages, botMessage]);
       storeMessage(botMessage);
@@ -3034,89 +3054,93 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
       position: 'fixed',
       bottom: '30px',
       right: '30px',
-      width: '380px',
-      height: '520px',
+      width: '380px', // Matched lit review
+      height: '520px', // Matched lit review
       backgroundColor: 'white',
-      boxShadow: '0 5px 20px rgba(0,0,0,0.15)',
-      borderRadius: '16px',
+      boxShadow: '0 5px 20px rgba(0,0,0,0.15)', // Matched lit review
+      borderRadius: '16px', // Matched lit review
       zIndex: 1000,
       display: 'flex',
       flexDirection: 'column',
       overflow: 'hidden',
       transition: 'all 0.3s ease',
-      // opacity: 0,
-      // transform: 'translateY(30px)',
-      // pointerEvents: isOpen ? 'auto' : 'none',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
     },
     dialogHeader: {
       backgroundColor: '#003d7c',
-      backgroundImage: 'linear-gradient(135deg, #003d7c 0%, #0056b3 100%)',
-      color: '#fff',
-      padding: '15px 20px',
-      borderTopLeftRadius: '16px',
-      borderTopRightRadius: '16px',
+      backgroundImage: 'linear-gradient(135deg, #003d7c 0%, #0056b3 100%)', // Matched lit review
+      color: '#fff', // Matched lit review
+      padding: '15px 20px', // Matched lit review
+      borderTopLeftRadius: '16px', // Matched lit review
+      borderTopRightRadius: '16px', // Matched lit review
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+      boxShadow: '0 2px 5px rgba(0,0,0,0.1)', // Matched lit review
     },
     dialogMessages: {
       flex: 1,
-      padding: '20px',
+      padding: '20px', // Matched lit review
       paddingBottom: '10px',
       marginBottom: '5px',
       overflowY: 'auto',
       display: 'flex',
       flexDirection: 'column',
-      gap: '8px',
-      backgroundColor: '#f8f9fa',
+      gap: '8px', // Matched lit review
+      backgroundColor: '#f8f9fa', // Matched lit review
     },
     userMessage: {
       margin: '5px 0',
-      padding: '12px 16px',
-      borderRadius: '18px',
-      backgroundColor: '#0056b3',
+      padding: '12px 16px', // Matched lit review
+      borderRadius: '18px', // Matched lit review
+      backgroundColor: '#0056b3', // Matched lit review
       color: 'white',
       alignSelf: 'flex-end',
       marginLeft: 'auto',
-      borderBottomRightRadius: '4px',
-      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+      borderBottomRightRadius: '4px', // Matched lit review
+      boxShadow: '0 2px 4px rgba(0,0,0,0.1)', // Matched lit review
       maxWidth: '80%',
       wordWrap: 'break-word',
-      fontWeight: '400',
+      fontWeight: '400', // Matched lit review
       animation: 'fadeInRight 0.3s ease',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', 
+      fontSize: '14px', 
     },
     botMessage: {
       margin: '5px 0',
-      padding: '12px 16px',
-      borderRadius: '18px',
-      backgroundColor: 'white',
+      padding: '12px 16px', // Matched lit review
+      borderRadius: '18px', // Matched lit review
+      backgroundColor: 'white', // Matched lit review
       color: '#333',
       alignSelf: 'flex-start',
       marginRight: 'auto',
-      borderBottomLeftRadius: '4px',
-      boxShadow: '0 2px 4px rgba(0,0,0,0.08)',
+      borderBottomLeftRadius: '4px', // Matched lit review
+      boxShadow: '0 2px 4px rgba(0,0,0,0.08)', // Matched lit review
       maxWidth: '80%',
       wordWrap: 'break-word',
-      fontWeight: '400',
+      fontWeight: '400', // Matched lit review
       animation: 'fadeInLeft 0.3s ease',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', 
+      fontSize: '14px', 
     },
     typingIndicator: {
       display: 'flex',
       alignItems: 'center',
-      padding: '12px 16px',
-      backgroundColor: 'white',
-      borderRadius: '18px',
+      padding: '12px 16px', // Matched lit review
+      backgroundColor: 'white', // Matched lit review
+      borderRadius: '18px', // Matched lit review
       alignSelf: 'flex-start',
       marginRight: 'auto',
       width: 'fit-content',
-      boxShadow: '0 2px 4px rgba(0,0,0,0.08)',
+      boxShadow: '0 2px 4px rgba(0,0,0,0.08)', // Matched lit review
       animation: 'fadeIn 0.3s ease',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', 
+      fontSize: '14px', 
     },
     dot: {
-      width: '8px',
-      height: '8px',
-      backgroundColor: '#666',
+      width: '8px', // Matched lit review
+      height: '8px', // Matched lit review
+      backgroundColor: '#666', // Matched lit review
       borderRadius: '50%',
       margin: '0 2px',
       animation: 'bounce 1.4s infinite',
@@ -3124,9 +3148,9 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
     dialogInputContainer: {
       display: 'flex',
       flexDirection: 'column',
-      padding: '10px 15px',
-      borderTop: '1px solid #eaeaea',
-      backgroundColor: 'white',
+      padding: '10px 15px', // Matched lit review
+      borderTop: '1px solid #eaeaea', // Matched lit review
+      backgroundColor: 'white', // Matched lit review
     },
     messageInputContainerStyle: {
       display: 'flex',
@@ -3134,34 +3158,37 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
     },
     dialogInput: {
       flex: 1,
-      padding: '10px 15px',
+      padding: '12px 15px', // Matched lit review input padding
       border: '1px solid #ddd',
-      borderRadius: '40px',
+      borderRadius: '24px', // Matched lit review input radius
       marginRight: '10px',
-      marginBottom: '8px',
+      marginBottom: '15px', // Matched lit review input margin
       outline: 'none',
-      fontSize: '14px',
+      fontSize: '14px', // Matched lit review input font size
       backgroundColor: 'white',
       boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)',
       transition: 'all 0.2s ease',
-      height: '45px',
+      height: 'auto', // Allow height to adjust
+      minHeight: '45px', // Maintain minimum height
       boxSizing: 'border-box',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', 
     },
     sendButton: {
-      backgroundColor: '#0056b3',
-      backgroundImage: 'linear-gradient(135deg, #0056b3 0%, #003d7c 100%)',
+      backgroundColor: '#0056b3', // Matched lit review send button
+      backgroundImage: 'none', // Remove gradient if lit review doesn't have it
       color: 'white',
       border: 'none',
-      borderRadius: '40px',
-      padding: '10px 25px',
+      borderRadius: '24px', // Matched lit review send button radius
+      padding: '10px 18px', // Matched lit review send button padding
       cursor: 'pointer',
-      fontWeight: '500',
+      fontWeight: 'bold', // Matched lit review send button weight
       boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
       transition: 'all 0.2s ease',
       alignSelf: 'flex-start',
-      height: '45px',
-      marginBottom: '8px',
-      fontSize: '16px',
+      height: '45px', // Adjust if needed, match input height
+      marginBottom: '15px', // Match input margin
+      fontSize: '14px', // Match input font size
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', 
     },
     apiKeyContainer: {
       display: 'flex',
@@ -3170,39 +3197,74 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
     },
     apiKeyLabel: {
       marginRight: '10px',
-      fontSize: '0.9em',
+      fontSize: '13px', 
       color: '#555',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', 
     },
     apiKeyInput: {
       flex: 1,
       padding: '8px 12px',
       border: '1px solid #ddd',
       borderRadius: '5px',
-      fontSize: '0.9em',
+      fontSize: '13px', 
       backgroundColor: '#f8f9fa',
       boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)',
       transition: 'all 0.2s ease',
       height: '40px',
       boxSizing: 'border-box',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', 
     },
+    // Style for buttons displayed within the bot message area
     botButton: {
-      padding: '10px 14px',
-      backgroundColor: '#0056b3',
+      padding: '10px 14px', // Matched lit review primary button
+      backgroundColor: '#0056b3', // Matched lit review primary button
       color: 'white',
       border: 'none',
-      borderRadius: '6px',
+      borderRadius: '6px', // Matched lit review primary button
       cursor: 'pointer',
-      fontSize: '13px',
-      fontWeight: 'bold',
+      fontSize: '13px', // Matched lit review primary button
+      fontWeight: 'bold', // Matched lit review primary button
       transition: 'background-color 0.2s, transform 0.2s, box-shadow 0.2s',
-      margin: '0 0 8px 0',
+      margin: '0 0 8px 0', // Keep existing margin if needed
       alignSelf: 'flex-start',
       marginRight: 'auto',
       animation: 'fadeIn 0.3s ease',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', 
+    },
+    // Added style for quick reply buttons (below input)
+    quickReplyButton: {
+      padding: '10px 16px',
+      backgroundColor: '#0056b3', // Default blue, specific colors applied inline
+      color: 'white',
+      border: 'none',
+      borderRadius: '20px', // Pill shape like lit review quick replies (if any)
+      cursor: 'pointer',
+      fontSize: '14px', // Unified size
+      fontWeight: '500',
+      boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+      transition: 'all 0.2s ease',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+    },
+    // Added style for close button
+    closeButton: {
+      background: 'none',
+      border: 'none',
+      color: 'white',
+      fontSize: '18px', // Matched lit review
+      cursor: 'pointer',
+      padding: '5px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '28px',
+      height: '28px',
+      borderRadius: '50%',
+      transition: 'background-color 0.2s',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
     },
   };
 
-  // Star rating styles
+  // Star rating styles (Keep as is, likely specific to this chatbot)
   const starContainerStyle = {
     display: 'flex',
     justifyContent: 'center',
@@ -3223,6 +3285,11 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
     transform: 'scale(1.2)'
   };
 
+  // Add clear quote button handler
+  const handleClearQuote = () => {
+    setQuotedText(null);
+  };
+
   return (
     <div 
       style={dialogStyles.dialogPopup} 
@@ -3236,13 +3303,7 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
           NTU GenAI Research Portal Assistant
         </h3>
         <button 
-          style={{
-            background: 'none',
-            border: 'none',
-            color: 'white',
-            fontSize: '20px',
-            cursor: 'pointer',
-          }}
+          style={dialogStyles.closeButton} // Apply unified close button style
           onClick={handleClose} 
           title="Close Dialog"
           aria-label="Close dialog"
@@ -3419,13 +3480,57 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
           {/* Input form - Only show when a role has been selected */}
           {userRole && (
             <div style={dialogStyles.dialogInputContainer}>
+              {/* Display quoted text above input if available */}
+              {quotedText && (
+                <div style={{
+                  backgroundColor: '#f0f7ff',
+                  padding: '10px 15px',
+                  borderRadius: '8px',
+                  marginBottom: '10px',
+                  border: '1px solid #d0e3ff',
+                  position: 'relative',
+                  fontSize: '14px'
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: '5px'
+                  }}>
+                    <span style={{ fontWeight: 'bold', color: '#003d7c', fontSize: '13px' }}>Quoted Text:</span>
+                    <button 
+                      onClick={handleClearQuote}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        color: '#666',
+                        fontSize: '16px',
+                        padding: '0 5px'
+                      }}
+                    >
+                      ×
+                    </button>
+                  </div>
+                  <div style={{ 
+                    maxHeight: '80px', 
+                    overflowY: 'auto',
+                    fontStyle: 'italic',
+                    color: '#444',
+                    padding: '0 5px'
+                  }}>
+                    "{quotedText}"
+                  </div>
+                </div>
+              )}
+              
               <div style={dialogStyles.messageInputContainerStyle}> {/* Container for message input */}
                 <input
                   type="text"
                   value={inputValue}
                   onChange={handleInputChange}
                   onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(e)}
-                  placeholder="Type your message..."
+                  placeholder={quotedText ? "Ask about the quoted text..." : "Type your message..."}
                   aria-label="Chat message input"
                   style={dialogStyles.dialogInput}
                 />
@@ -3564,6 +3669,255 @@ class ErrorBoundary extends React.Component {
   }
 }
 
+// Add text selection functionality
+const TextSelector = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const [position, setPosition] = useState({ top: 0, left: 0 });
+  const [selectedText, setSelectedText] = useState('');
+  const [isCitationDialogOpen, setIsCitationDialogOpen] = useState(false);
+  
+  useEffect(() => {
+    const handleTextSelection = () => {
+      const selection = window.getSelection();
+      const selectedText = selection.toString().trim();
+      
+      if (selectedText.length > 0) {
+        const range = selection.getRangeAt(0);
+        const rect = range.getBoundingClientRect();
+        
+        setSelectedText(selectedText);
+        setPosition({
+          top: rect.bottom + window.scrollY,
+          left: rect.left + rect.width / 2 + window.scrollX,
+        });
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+    
+    document.addEventListener('mouseup', handleTextSelection);
+    document.addEventListener('touchend', handleTextSelection);
+    
+    return () => {
+      document.removeEventListener('mouseup', handleTextSelection);
+      document.removeEventListener('touchend', handleTextSelection);
+    };
+  }, []);
+  
+  const handleCiteClick = (e) => {
+    e.preventDefault();
+    setIsVisible(false);
+    setIsCitationDialogOpen(true);
+  };
+  
+  const handleCloseDialog = () => {
+    setIsCitationDialogOpen(false);
+  };
+  
+  const handleCopyClick = (format) => {
+    const pageTitle = document.title || 'NTU GenAI Research Portal';
+    const url = window.location.href;
+    const currentDate = new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    
+    let citationText = '';
+    
+    if (format === 'apa') {
+      citationText = `NTU GenAI Research Portal. (${new Date().getFullYear()}). ${pageTitle}. Retrieved ${currentDate}, from ${url}`;
+    } else if (format === 'mla') {
+      citationText = `"${selectedText}" ${pageTitle}, NTU GenAI Research Portal, ${new Date().getFullYear()}, ${url}. Accessed ${currentDate}.`;
+    } else if (format === 'chicago') {
+      citationText = `NTU GenAI Research Portal. "${selectedText}" ${pageTitle}. Accessed ${currentDate}. ${url}.`;
+    } else {
+      // Direct quote format
+      citationText = `"${selectedText}" - NTU GenAI Research Portal, ${pageTitle}`;
+    }
+    
+    navigator.clipboard.writeText(citationText)
+      .then(() => {
+        alert('Citation copied to clipboard!');
+        setIsCitationDialogOpen(false);
+      })
+      .catch(err => {
+        console.error('Failed to copy citation: ', err);
+        alert('Failed to copy citation. Please try again or copy manually.');
+      });
+  };
+  
+  return (
+    <>
+      {isVisible && (
+        <div
+          style={{
+            position: 'absolute',
+            top: `${position.top}px`,
+            left: `${position.left}px`,
+            transform: 'translateX(-50%)',
+            backgroundColor: '#003d7c',
+            color: 'white',
+            padding: '8px 12px',
+            borderRadius: '4px',
+            boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+            zIndex: 1000,
+            display: 'flex',
+            gap: '8px',
+            fontSize: '14px',
+            cursor: 'pointer',
+            animation: 'fadeIn 0.2s ease',
+          }}
+        >
+          <button
+            onClick={handleCiteClick}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'white',
+              padding: '0',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              fontSize: '14px',
+            }}
+          >
+            <span style={{ fontSize: '16px' }}>📝</span> Cite
+          </button>
+        </div>
+      )}
+      
+      {isCitationDialogOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1010,
+            animation: 'fadeIn 0.3s ease',
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '8px',
+              padding: '20px',
+              maxWidth: '500px',
+              width: '90%',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '15px',
+              }}
+            >
+              <h2 style={{ margin: 0, fontSize: '1.3rem', color: '#003d7c' }}>Citation Options</h2>
+              <button
+                onClick={handleCloseDialog}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '1.5rem',
+                  cursor: 'pointer',
+                  color: '#666',
+                }}
+              >
+                ×
+              </button>
+            </div>
+            
+            <div
+              style={{
+                padding: '15px',
+                backgroundColor: '#f5f5f5',
+                borderRadius: '6px',
+                marginBottom: '20px',
+              }}
+            >
+              <p style={{ margin: '0 0 10px 0', fontWeight: 'bold' }}>Selected Text:</p>
+              <p style={{ margin: 0, fontStyle: 'italic' }}>"{selectedText}"</p>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <p style={{ margin: '0 0 5px 0', fontWeight: 'bold' }}>Choose a citation format:</p>
+              <button
+                onClick={() => handleCopyClick('apa')}
+                style={{
+                  padding: '10px 15px',
+                  backgroundColor: '#003d7c',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                }}
+              >
+                APA Format
+              </button>
+              <button
+                onClick={() => handleCopyClick('mla')}
+                style={{
+                  padding: '10px 15px',
+                  backgroundColor: '#003d7c',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                }}
+              >
+                MLA Format
+              </button>
+              <button
+                onClick={() => handleCopyClick('chicago')}
+                style={{
+                  padding: '10px 15px',
+                  backgroundColor: '#003d7c',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                }}
+              >
+                Chicago Format
+              </button>
+              <button
+                onClick={() => handleCopyClick('direct')}
+                style={{
+                  padding: '10px 15px',
+                  backgroundColor: '#003d7c',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                }}
+              >
+                Direct Quote
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
 // Main App Component
 const App = () => {
   // Use simple state with default values, no reliance on browser APIs
@@ -3625,11 +3979,18 @@ const App = () => {
       }, 15000); // Show after 15 seconds of browsing
     };
     
+    // Listen for text quote selected events
+    const handleTextQuoteSelected = () => {
+      setIsDialogOpen(true);
+    };
+    
     window.addEventListener('pageNavigated', handlePageNavigation);
+    window.addEventListener('textQuoteSelected', handleTextQuoteSelected);
     
     // Clean up
     return () => {
       window.removeEventListener('pageNavigated', handlePageNavigation);
+      window.removeEventListener('textQuoteSelected', handleTextQuoteSelected);
       
       // Store final session data on unmount
       UserExperienceDB.storeSession({
@@ -3671,6 +4032,7 @@ const App = () => {
         llmApiKey={llmApiKey} // Pass API key state
         setLlmApiKey={setLlmApiKey} // Pass API key setter
       />}
+      <TextCitationSelector />
     </ErrorBoundary>
   );
 };

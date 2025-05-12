@@ -39,7 +39,8 @@ class Dialog extends React.Component {
       ],
       typingIndicator: false,
       llmApiKey: localStorage.getItem('nie_llm_api_key') || '',
-      messagesEndRef: React.createRef()
+      messagesEndRef: React.createRef(),
+      quotedText: null // Add state for quoted text
     };
   }
 
@@ -48,6 +49,37 @@ class Dialog extends React.Component {
     if (this.state.messagesEndRef.current) {
       this.state.messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
+  }
+  
+  componentDidMount() {
+    // Add listener for text quote events
+    window.addEventListener('textQuoteSelected', this.handleTextQuoteSelected);
+    
+    // Make the component visible when text is quoted
+    if (this.props.onOpen && typeof this.props.onOpen === 'function') {
+      window.addEventListener('textQuoteSelected', this.props.onOpen);
+    }
+  }
+  
+  componentWillUnmount() {
+    // Clean up event listeners
+    window.removeEventListener('textQuoteSelected', this.handleTextQuoteSelected);
+    
+    if (this.props.onOpen && typeof this.props.onOpen === 'function') {
+      window.removeEventListener('textQuoteSelected', this.props.onOpen);
+    }
+  }
+  
+  // Handle text quote selection event
+  handleTextQuoteSelected = (event) => {
+    if (event.detail && event.detail.quote) {
+      this.setState({ quotedText: event.detail.quote });
+    }
+  }
+  
+  // Clear quoted text
+  handleClearQuote = () => {
+    this.setState({ quotedText: null });
   }
 
   addMessage = (message) => {
@@ -183,11 +215,16 @@ class Dialog extends React.Component {
 
   handleSendMessage = async (e) => {
     e.preventDefault();
-    if (this.state.inputValue.trim() === '') return;
+    if (this.state.inputValue.trim() === '' && !this.state.quotedText) return;
     
+    // Create message text - if there's a quote, include it with the user's input
     const userText = this.state.inputValue;
-    this.addMessage({ text: userText, sender: 'user' });
-    this.setState({ inputValue: '', typingIndicator: true });
+    const messageText = this.state.quotedText 
+      ? `Regarding this text: "${this.state.quotedText}"\n\n${userText || "What are your thoughts on this?"}`
+      : userText;
+    
+    this.addMessage({ text: messageText, sender: 'user' });
+    this.setState({ inputValue: '', quotedText: null, typingIndicator: true }); // Clear quoted text
     
     // Check for API key first
     if (!this.state.llmApiKey) {
@@ -262,44 +299,45 @@ class Dialog extends React.Component {
     const styles = {
       dialogContainer: {
         position: 'fixed',
-        bottom: '30px', // Changed from 100px
-        right: '30px', // Consistent
-        width: '380px', // Changed from 350px
-        height: '520px', // Changed from 500px
+        bottom: '30px', 
+        right: '30px', 
+        width: '380px', // Matched lit review
+        height: '520px', // Matched lit review
         backgroundColor: 'white',
-        boxShadow: '0 5px 20px rgba(0,0,0,0.15)', // Enhanced shadow
-        borderRadius: '16px', // New, more rounded
+        boxShadow: '0 5px 20px rgba(0,0,0,0.15)', // Matched lit review
+        borderRadius: '16px', // Matched lit review
         zIndex: 1000,
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
-        transition: 'all 0.3s ease', // Added transition
-        animation: 'dialogFadeIn 0.3s ease', // Added animation
+        transition: 'all 0.3s ease', 
+        animation: 'dialogFadeIn 0.3s ease',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
       },
       header: {
         backgroundColor: '#003d7c',
-        backgroundImage: 'linear-gradient(135deg, #003d7c 0%, #0056b3 100%)', // Gradient background
-        color: '#fff', // Changed to white for better contrast
-        padding: '15px 20px', // Increased padding
-        borderTopLeftRadius: '16px', // Match container
-        borderTopRightRadius: '16px', // Match container
+        backgroundImage: 'linear-gradient(135deg, #003d7c 0%, #0056b3 100%)', // Matched lit review
+        color: '#fff', 
+        padding: '15px 20px', // Matched lit review
+        borderTopLeftRadius: '16px', // Matched lit review
+        borderTopRightRadius: '16px', // Matched lit review
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        boxShadow: '0 2px 5px rgba(0,0,0,0.1)', // Added shadow
+        boxShadow: '0 2px 5px rgba(0,0,0,0.1)', // Matched lit review
       },
       headerTitle: { 
         margin: 0,
-        fontSize: '1.1rem', // Adjusted size
-        fontWeight: '500', // Adjusted weight
+        fontSize: '1.1rem', 
+        fontWeight: '500', 
       },
       closeButton: {
         background: 'none',
         border: 'none',
         color: 'white',
-        fontSize: '18px', // Consistent size
+        fontSize: '18px', // Matched lit review
         cursor: 'pointer',
-        padding: '5px', // Added for better click area
+        padding: '5px', 
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -307,146 +345,155 @@ class Dialog extends React.Component {
         height: '28px',
         borderRadius: '50%',
         transition: 'background-color 0.2s',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', 
       },
       messagesContainer: {
         flex: 1,
-        padding: '20px', // Increased padding
+        padding: '20px', // Matched lit review
         paddingBottom: '10px',
         marginBottom: '5px',
         overflowY: 'auto',
         display: 'flex',
         flexDirection: 'column',
-        gap: '8px',
-        backgroundColor: '#f8f9fa', // Light background for messages area
+        gap: '8px', // Matched lit review
+        backgroundColor: '#f8f9fa', // Matched lit review
       },
       inputContainer: {
         display: 'flex',
         flexDirection: 'column',
-        padding: '10px 15px', // Adjusted padding
-        borderTop: '1px solid #eaeaea', // Lighter border
-        backgroundColor: 'white',
+        padding: '10px 15px', // Matched lit review
+        borderTop: '1px solid #eaeaea', // Matched lit review
+        backgroundColor: 'white', // Matched lit review
       },
       messageInputContainer: { // Contains input and send button
         display: 'flex',
-        alignItems: 'flex-start', // Align items to the start for multiline input
-        // marginBottom: '10px', // Removed, spacing handled by chatInput and sendButton
+        alignItems: 'flex-start', 
       },
       messageInput: {
         flex: 1,
-        padding: '10px 15px',
+        padding: '12px 15px', // Matched lit review input padding
         border: '1px solid #ddd',
-        borderRadius: '40px', // Pill shape
+        borderRadius: '24px', // Matched lit review input radius
         marginRight: '10px',
-        marginBottom: '8px',
+        marginBottom: '15px', // Matched lit review input margin
         outline: 'none',
-        fontSize: '14px',
+        fontSize: '14px', // Matched lit review input font size
         backgroundColor: 'white',
         boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)',
         transition: 'all 0.2s ease',
-        height: '45px',
+        height: 'auto', // Allow height to adjust
+        minHeight: '45px', // Maintain minimum height
         boxSizing: 'border-box',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
       },
       sendButton: {
-        backgroundColor: '#0056b3',
-        backgroundImage: 'linear-gradient(135deg, #0056b3 0%, #003d7c 100%)',
+        backgroundColor: '#0056b3', // Matched lit review send button
+        backgroundImage: 'none', // Removed gradient
         color: 'white',
         border: 'none',
-        borderRadius: '40px', // Pill shape
-        padding: '10px 25px', // Adjusted padding
+        borderRadius: '24px', // Matched lit review send button radius
+        padding: '10px 18px', // Matched lit review send button padding
         cursor: 'pointer',
-        fontWeight: '500',
+        fontWeight: 'bold', // Matched lit review send button weight
         boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
         transition: 'all 0.2s ease',
         alignSelf: 'flex-start',
-        height: '45px',
-        marginBottom: '8px',
-        fontSize: '16px',
+        height: '45px', // Adjust if needed
+        marginBottom: '15px', // Match input margin
+        fontSize: '14px', // Match input font size
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', 
       },
       apiKeyContainer: {
         display: 'flex',
         alignItems: 'center',
-        marginBottom: '5px', // Added margin
+        marginBottom: '5px', 
       },
       apiKeyLabel: {
         marginRight: '10px',
-        fontSize: '0.9em',
+        fontSize: '13px', 
         color: '#555',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
       },
       apiKeyInput: {
         flex: 1,
         padding: '8px 12px',
         border: '1px solid #ddd',
         borderRadius: '5px',
-        fontSize: '0.9em',
+        fontSize: '13px', 
         backgroundColor: '#f8f9fa',
         boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)',
         transition: 'all 0.2s ease',
         height: '40px',
         boxSizing: 'border-box',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
       },
       userMessage: {
         margin: '5px 0',
-        padding: '12px 16px',
-        borderRadius: '18px',
-        backgroundColor: '#0056b3',
+        padding: '12px 16px', // Matched lit review
+        borderRadius: '18px', // Matched lit review
+        backgroundColor: '#0056b3', // Matched lit review
         color: 'white',
         alignSelf: 'flex-end',
         marginLeft: 'auto',
-        borderBottomRightRadius: '4px',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+        borderBottomRightRadius: '4px', // Matched lit review
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)', // Matched lit review
         maxWidth: '80%',
         wordWrap: 'break-word',
-        fontWeight: '400',
+        fontWeight: '400', // Matched lit review
+        fontSize: '14px', 
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
       },
       botMessage: {
         margin: '5px 0',
-        padding: '12px 16px',
-        borderRadius: '18px',
-        backgroundColor: 'white',
+        padding: '12px 16px', // Matched lit review
+        borderRadius: '18px', // Matched lit review
+        backgroundColor: 'white', // Matched lit review
         color: '#333',
         alignSelf: 'flex-start',
         marginRight: 'auto',
-        borderBottomLeftRadius: '4px',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.08)',
+        borderBottomLeftRadius: '4px', // Matched lit review
+        boxShadow: '0 2px 4px rgba(0,0,0,0.08)', // Matched lit review
         maxWidth: '80%',
         wordWrap: 'break-word',
-        fontWeight: '400',
+        fontWeight: '400', // Matched lit review
+        fontSize: '14px', 
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
       },
       buttonsContainer: {
         display: 'flex',
-        flexWrap: 'wrap', // Allow buttons to wrap
-        gap: '8px',
+        flexWrap: 'wrap', 
+        gap: '8px', // Matched lit review
         marginTop: '8px',
-        // alignSelf: 'flex-start', // Removed to allow centering if only one button row
       },
       primaryButton: {
-        padding: '10px 14px',
-        backgroundColor: '#0056b3',
+        padding: '10px 14px', // Matched lit review primary button
+        backgroundColor: '#0056b3', // Matched lit review primary button
         color: 'white',
         border: 'none',
-        borderRadius: '6px',
+        borderRadius: '6px', // Matched lit review primary button
         cursor: 'pointer',
-        fontSize: '13px',
-        fontWeight: 'bold',
+        fontSize: '13px', // Matched lit review primary button
+        fontWeight: 'bold', // Matched lit review primary button
         transition: 'background-color 0.2s, transform 0.2s, box-shadow 0.2s',
-        // Removed flex properties to be more general for buttons
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', 
       },
-      primaryButtonHover: { // For JS hover effects
+      primaryButtonHover: { 
         backgroundColor: '#003d7c',
         transform: 'translateY(-2px)',
         boxShadow: '0 4px 8px rgba(0,60,124,0.2)',
       },
       secondaryButton: {
-        padding: '9px 13px',
-        backgroundColor: '#f0f0f0',
-        color: '#444',
+        padding: '9px 13px', // Matched lit review secondary button
+        backgroundColor: '#f0f0f0', // Matched lit review secondary button
+        color: '#444', // Matched lit review secondary button
         border: '1px solid #ddd',
-        borderRadius: '6px',
+        borderRadius: '6px', // Matched lit review secondary button
         cursor: 'pointer',
-        fontSize: '13px',
+        fontSize: '13px', // Matched lit review secondary button
         transition: 'background-color 0.2s, transform 0.2s, box-shadow 0.2s',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', 
       },
-      secondaryButtonHover: { // For JS hover effects
+      secondaryButtonHover: { 
         backgroundColor: '#e0e0e0',
         transform: 'translateY(-2px)',
         boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
@@ -454,21 +501,46 @@ class Dialog extends React.Component {
       typingIndicator: {
         display: 'flex',
         alignItems: 'center',
-        padding: '12px 16px',
-        backgroundColor: 'white',
-        borderRadius: '18px',
+        padding: '12px 16px', // Matched lit review
+        backgroundColor: 'white', // Matched lit review
+        borderRadius: '18px', // Matched lit review
         alignSelf: 'flex-start',
         marginRight: 'auto',
         width: 'fit-content',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.08)',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.08)', // Matched lit review
       },
       typingDot: {
-        width: '8px',
-        height: '8px',
-        backgroundColor: '#666',
+        width: '8px', // Matched lit review
+        height: '8px', // Matched lit review
+        backgroundColor: '#666', // Matched lit review
         borderRadius: '50%',
         margin: '0 2px',
         animation: 'bounce 1.4s infinite',
+      },
+      quotedTextContainer: {
+        backgroundColor: '#f0f7ff',
+        padding: '10px 15px',
+        borderRadius: '8px',
+        marginBottom: '10px',
+        border: '1px solid #d0e3ff',
+        position: 'relative',
+        fontSize: '14px'
+      },
+      quotedTextHeader: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '5px'
+      },
+      quotedTextTitle: {
+        fontWeight: 'bold',
+        color: '#003d7c',
+        fontSize: '13px'
+      },
+      quotedTextContent: {
+        maxHeight: '80px',
+        overflowY: 'auto',
+        lineHeight: '1.4'
       },
     };
     
@@ -520,7 +592,8 @@ class Dialog extends React.Component {
                 onClick: this.props.onClose,
                 onMouseOver: (e) => { e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.2)'; },
                 onMouseOut: (e) => { e.currentTarget.style.backgroundColor = 'transparent'; },
-                'aria-label': 'Close dialog'
+                'aria-label': 'Close dialog',
+                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
               },
               '×'
             )
@@ -619,6 +692,42 @@ class Dialog extends React.Component {
           'div',
           { key: 'input', style: styles.inputContainer },
           [
+            // Display quoted text above input if available
+            this.state.quotedText && React.createElement(
+              'div',
+              { key: 'quoted-text', style: styles.quotedTextContainer },
+              [
+                React.createElement(
+                  'div',
+                  { key: 'quoted-header', style: styles.quotedTextHeader },
+                  [
+                    React.createElement('span', { key: 'title', style: styles.quotedTextTitle }, 'Quoted Text:'),
+                    React.createElement(
+                      'button',
+                      {
+                        key: 'clear',
+                        onClick: this.handleClearQuote,
+                        style: {
+                          background: 'none',
+                          border: 'none',
+                          cursor: 'pointer',
+                          color: '#666',
+                          fontSize: '16px',
+                          padding: '0 5px'
+                        }
+                      },
+                      '×'
+                    )
+                  ]
+                ),
+                React.createElement(
+                  'div',
+                  { key: 'quoted-content', style: styles.quotedTextContent },
+                  this.state.quotedText
+                )
+              ]
+            ),
+            
             // Message Input
             React.createElement(
               'div',
@@ -632,7 +741,9 @@ class Dialog extends React.Component {
                     value: this.state.inputValue,
                     onChange: this.handleInputChange,
                     onKeyPress: (e) => e.key === 'Enter' && this.handleSendMessage(e),
-                    placeholder: 'Type your message...',
+                    placeholder: this.state.quotedText 
+                      ? 'Ask about the quoted text...' 
+                      : 'Type your message...',
                     'aria-label': 'Chat message input',
                     style: styles.messageInput, // Applied
                     onFocus: (e) => { // Added focus style
@@ -659,9 +770,9 @@ class Dialog extends React.Component {
                         e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
                     },
                     onMouseOut: (e) => { // Added mouseout style
-                        e.currentTarget.style.backgroundColor = '#0056b3'; // Or original backgroundImage if preferred
+                        e.currentTarget.style.backgroundColor = styles.sendButton.backgroundColor; // Revert to original color
                         e.currentTarget.style.transform = 'translateY(0)';
-                        e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                        e.currentTarget.style.boxShadow = styles.sendButton.boxShadow;
                     }
                   },
                   'Send'
@@ -691,7 +802,7 @@ class Dialog extends React.Component {
                     },
                     onBlur: (e) => { // Added blur style
                         e.currentTarget.style.borderColor = '#ddd';
-                        e.currentTarget.style.boxShadow = 'inset 0 1px 3px rgba(0,0,0,0.05)';
+                        e.currentTarget.style.boxShadow = styles.apiKeyInput.boxShadow;
                     }
                   }
                 )
@@ -748,6 +859,7 @@ class ChatbotApp extends React.Component {
       boxShadow: '0 4px 10px rgba(0,0,0,0.25)',
       zIndex: 100,
       transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
     };
     
     if (!window.unifiedChatbot || !window.unifiedChatbot.FloatingButton) {
@@ -796,7 +908,8 @@ class ChatbotApp extends React.Component {
           {
             key: 'dialog',
             isOpen: this.state.isDialogOpen,
-            onClose: this.closeDialog
+            onClose: this.closeDialog,
+            onOpen: this.openDialog
           }
         )
       ]
@@ -874,6 +987,7 @@ const loadUnifiedChatbot = () => {
             boxShadow: '0 4px 10px rgba(0,0,0,0.25)',
             zIndex: 100,
             transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
           },
           onMouseOver: (e) => {
             e.currentTarget.style.transform = 'scale(1.08) translateY(-3px)';
