@@ -857,45 +857,34 @@ class ChatbotApp extends React.Component {
       fontSize: '28px',
       cursor: 'pointer',
       boxShadow: '0 4px 10px rgba(0,0,0,0.25)',
-      zIndex: 9999,
+      zIndex: 100,
       transition: 'transform 0.2s ease, box-shadow 0.2s ease',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
-    };
-    
-    const containerStyle = {
-      position: 'fixed',
-      bottom: 0,
-      right: 0,
-      zIndex: 9999
     };
     
     if (!window.unifiedChatbot || !window.unifiedChatbot.FloatingButton) {
       console.error('Unified chatbot components not available');
       return React.createElement(
-        'div',
-        { style: containerStyle },
-        React.createElement(
-          'button',
-          { 
-            onClick: this.openDialog,
-            style: floatingButtonStyle,
-            onMouseOver: (e) => {
-              e.currentTarget.style.transform = 'scale(1.08) translateY(-3px)';
-              e.currentTarget.style.boxShadow = '0 6px 15px rgba(0,0,0,0.3)';
-            },
-            onMouseOut: (e) => {
-              e.currentTarget.style.transform = 'scale(1)';
-              e.currentTarget.style.boxShadow = '0 4px 10px rgba(0,0,0,0.25)';
-            }
+        'button',
+        { 
+          onClick: this.openDialog,
+          style: floatingButtonStyle,
+          onMouseOver: (e) => {
+            e.currentTarget.style.transform = 'scale(1.08) translateY(-3px)';
+            e.currentTarget.style.boxShadow = '0 6px 15px rgba(0,0,0,0.3)';
           },
-          '💬'
-        )
+          onMouseOut: (e) => {
+            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.boxShadow = '0 4px 10px rgba(0,0,0,0.25)';
+          }
+        },
+        '💬'
       );
     }
     
     return React.createElement(
       'div',
-      { style: containerStyle },
+      null,
       [
         React.createElement(
           'button',
@@ -930,7 +919,6 @@ class ChatbotApp extends React.Component {
 
 // Function to render the chatbot app
 const renderChatbotApp = () => {
-  console.log('Rendering chatbot app...');
   const container = document.getElementById('chatbot-container');
   if (container) {
     console.log('Rendering chatbot in existing container');
@@ -939,8 +927,6 @@ const renderChatbotApp = () => {
     console.log('Creating container for chatbot');
     const newContainer = document.createElement('div');
     newContainer.id = 'chatbot-container';
-    newContainer.style.position = 'absolute';
-    newContainer.style.zIndex = '9999';
     document.body.appendChild(newContainer);
     ReactDOM.render(React.createElement(ChatbotApp), newContainer);
   }
@@ -948,7 +934,6 @@ const renderChatbotApp = () => {
 
 // Load unified chatbot script if needed, then render
 const loadUnifiedChatbot = () => {
-  console.log('Starting loadUnifiedChatbot function...');
   if (window.unifiedChatbot) {
     console.log('Unified chatbot already loaded, rendering app');
     renderChatbotApp();
@@ -1000,7 +985,7 @@ const loadUnifiedChatbot = () => {
             fontSize: '28px',
             cursor: 'pointer',
             boxShadow: '0 4px 10px rgba(0,0,0,0.25)',
-            zIndex: 9999,
+            zIndex: 100,
             transition: 'transform 0.2s ease, box-shadow 0.2s ease',
             fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
           },
@@ -1028,14 +1013,3 @@ document.addEventListener('DOMContentLoaded', loadUnifiedChatbot);
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
   loadUnifiedChatbot();
 } 
-
-// Add a fallback initialization after a delay
-setTimeout(() => {
-  console.log('Fallback chatbot initialization after timeout');
-  // Check if chatbot container exists and has children
-  const container = document.getElementById('chatbot-container');
-  if (!container || (container && !container.children.length)) {
-    console.log('Chatbot not initialized yet, trying again...');
-    loadUnifiedChatbot();
-  }
-}, 3000); 
