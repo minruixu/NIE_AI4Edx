@@ -922,7 +922,12 @@ const renderChatbotApp = () => {
   const container = document.getElementById('chatbot-container');
   if (container) {
     console.log('Rendering chatbot in existing container');
-    ReactDOM.render(React.createElement(ChatbotApp), container);
+    // Check if the container is already populated to avoid re-rendering
+    if (container.childNodes.length === 0 || 
+        (container.childNodes.length === 1 && container.querySelector('#chatbot-fallback-btn'))) {
+      // If there's only the fallback button, we can replace it
+      ReactDOM.render(React.createElement(ChatbotApp), container);
+    }
   } else {
     console.log('Creating container for chatbot');
     const newContainer = document.createElement('div');
@@ -932,8 +937,46 @@ const renderChatbotApp = () => {
   }
 };
 
+// Setup a global handler for the fallback button
+window.chatbotFallbackClick = function() {
+  console.log('Fallback button clicked');
+  // Create a simple dialog or try to re-render the chatbot
+  const chatbotApp = window.chatbotAppInstance;
+  if (chatbotApp && chatbotApp.openDialog) {
+    chatbotApp.openDialog();
+  } else {
+    // Try to initialize the chatbot again
+    loadUnifiedChatbot();
+    // Create a simple alert if all else fails
+    setTimeout(() => {
+      const chatbotApp = window.chatbotAppInstance;
+      if (!chatbotApp || !chatbotApp.openDialog) {
+        alert('The chatbot is currently unavailable. Please try refreshing the page.');
+      }
+    }, 1000);
+  }
+};
+
 // Load unified chatbot script if needed, then render
 const loadUnifiedChatbot = () => {
+  // Add event listener for visibility changes
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      // Re-render the chatbot when the page becomes visible again
+      setTimeout(renderChatbotApp, 500);
+    }
+  });
+
+  // Store the instance globally for the fallback button
+  const originalRender = ReactDOM.render;
+  ReactDOM.render = function(element, container, callback) {
+    const result = originalRender(element, container, callback);
+    if (element.type === ChatbotApp) {
+      window.chatbotAppInstance = element._owner.stateNode;
+    }
+    return result;
+  };
+
   if (window.unifiedChatbot) {
     console.log('Unified chatbot already loaded, rendering app');
     renderChatbotApp();
