@@ -8,10 +8,48 @@ const navigateFindingsPage = (tab, section) => {
   }));
 };
 
+// Safe storage helper function
+const safeStorage = {
+  // In-memory fallback when browser storage is unavailable
+  memoryStore: {},
+  
+  getItem: (key, defaultValue = '') => {
+    try {
+      return localStorage.getItem(key) || defaultValue;
+    } catch (error) {
+      try {
+        return sessionStorage.getItem(key) || defaultValue;
+      } catch (innerError) {
+        console.error('Both localStorage and sessionStorage failed:', innerError);
+        return safeStorage.memoryStore[key] || defaultValue;
+      }
+    }
+  },
+  
+  setItem: (key, value) => {
+    try {
+      localStorage.setItem(key, value);
+    } catch (error) {
+      console.error('localStorage access error:', error);
+      try {
+        sessionStorage.setItem(key, value);
+      } catch (innerError) {
+        console.error('sessionStorage access error:', innerError);
+        // Fall back to in-memory storage
+        safeStorage.memoryStore[key] = value;
+      }
+    }
+  }
+};
+
 // Dialog Component with unified components and LLM integration
 class Dialog extends React.Component {
   constructor(props) {
     super(props);
+    
+    // Safe localStorage access using helper
+    const savedApiKey = safeStorage.getItem('nie_llm_api_key', '');
+    
     this.state = {
       inputValue: '',
       messages: [
@@ -38,7 +76,7 @@ class Dialog extends React.Component {
         }
       ],
       typingIndicator: false,
-      llmApiKey: localStorage.getItem('nie_llm_api_key') || '',
+      llmApiKey: savedApiKey,
       messagesEndRef: React.createRef(),
       quotedText: null, // Add state for quoted text
       hasError: false,  // Add error state for error boundary
@@ -172,7 +210,9 @@ class Dialog extends React.Component {
   handleApiKeyChange = (e) => {
     const apiKey = e.target.value;
     this.setState({ llmApiKey: apiKey });
-    localStorage.setItem('nie_llm_api_key', apiKey);
+    
+    // Safely store in localStorage
+    safeStorage.setItem('nie_llm_api_key', apiKey);
   }
 
   getOpenAIResponse = async (userInput, chatHistory) => {
@@ -244,7 +284,7 @@ class Dialog extends React.Component {
       setTimeout(() => {
         this.setState({ typingIndicator: false });
         this.addMessage({ 
-          text: 'Please enter your OpenAI API Key in the field below to enable AI responses.', 
+          text: 'Please enter your OpenAI API Key in the field below to enable AI responses. Your key will be stored in your browser only, not on our servers. It may be lost when using private browsing modes.', 
           sender: 'bot' 
         });
       }, 500);
