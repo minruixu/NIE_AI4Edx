@@ -719,7 +719,7 @@ const MainContent = () => {
       {/* Who We Are Collapsible Section Box */}
       <div style={styles.collapsibleSectionBox}>
         <h2 id="who-we-are" onClick={toggleWhoWeAre} style={styles.collapsibleHeading}>
-          Who we are <span style={{ marginLeft: 'auto' }}>{isWhoWeAreOpen ? '▲' : '▼'}</span>
+          About The Project <span style={{ marginLeft: 'auto' }}>{isWhoWeAreOpen ? '▲' : '▼'}</span>
         </h2>
         {isWhoWeAreOpen && (
           <div style={styles.collapsibleContent}>
@@ -745,17 +745,17 @@ reshaping educational practices.
               <br></br>
               Our research focuses on understanding instructor and student perceptions of GPT as a pedagogical tool in university teaching and learning. We survey their readiness, ethical concerns, and experiences across diverse disciplines including Humanities, Science, Mathematics, Engineering, Art and Music. By identifying current knowledge application gaps and ethical considerations, we aim to develop practical use cases that support faculty professional development and enhance curriculum resources in the evolving AI landscape.
             </p>
-            <p>
+            {/* <p>
               This study surveys the instructor and student perceptions of Generative Pre-trained Transformer (GPT) and its applications in higher education teaching and learning. The findings aim to serve as an input to identify the current knowledge application gaps and the ethical concerns. Three research questions are:
             </p>
             <ul>
               <li>What are the instructors' and students' perceptions of their readiness to use GPT in teaching and learning?</li>
               <li>What are the instructors' and students' ethical concerns of adopting GPT for teaching and learning in NIE and NTU?</li>
               <li>What are the instructors' and students' current reported GPT related practices that pose as (a) threats? and (b) benefits to themselves in the context of teaching and learning?</li>
-            </ul>
-            <p>
+            </ul> */}
+            {/* <p>
               A modified 31-item AI survey (five-point Likert Scale) will be administered separately to the instructors and students to gain an insight into their perceptions on their AI-readiness, threats, innovations, teaching and learning satisfactions in the university. The modified AI survey was obtained and adapted from Wang, Li, Tan, Yang and Lei (2023). Following the collection of the quantitative and qualitative data from 1000 participants (500 instructors and 500 students). Descriptive statistics and inferential statistics will be calculated to answer the research questions. Qualitative data from the open-ended section of the survey will be coded and developed into use cases. The deliverables will include:
-            </p>
+            </p> */}
           </div>
         )}
       </div>
