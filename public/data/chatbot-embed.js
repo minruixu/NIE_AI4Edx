@@ -40,8 +40,21 @@ class Dialog extends React.Component {
       typingIndicator: false,
       llmApiKey: localStorage.getItem('nie_llm_api_key') || '',
       messagesEndRef: React.createRef(),
-      quotedText: null // Add state for quoted text
+      quotedText: null, // Add state for quoted text
+      hasError: false,  // Add error state for error boundary
+      errorMessage: ''  // Store error messages
     };
+  }
+
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI
+    return { hasError: true, errorMessage: error.message };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    // Log the error to console for debugging
+    console.error("Dialog component error:", error);
+    console.error("Error info:", errorInfo);
   }
 
   componentDidUpdate() {
@@ -294,6 +307,58 @@ class Dialog extends React.Component {
 
   render() {
     if (!this.props.isOpen) return null;
+    
+    // If there's an error, show error fallback UI
+    if (this.state.hasError) {
+      return React.createElement(
+        'div',
+        { 
+          style: {
+            position: 'fixed',
+            bottom: '30px', 
+            right: '30px', 
+            width: '380px',
+            padding: '20px',
+            backgroundColor: 'white',
+            boxShadow: '0 5px 20px rgba(0,0,0,0.15)',
+            borderRadius: '16px',
+            zIndex: 1000,
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif'
+          }
+        },
+        [
+          React.createElement(
+            'h3',
+            { style: { color: '#e74c3c' } },
+            'Something went wrong'
+          ),
+          React.createElement(
+            'p',
+            null,
+            this.state.errorMessage || 'An error occurred in the chatbot dialog.'
+          ),
+          React.createElement(
+            'button',
+            { 
+              style: {
+                backgroundColor: '#0056b3',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                padding: '8px 16px',
+                cursor: 'pointer',
+                marginTop: '10px'
+              },
+              onClick: () => {
+                this.setState({ hasError: false, errorMessage: '' });
+                this.props.onClose();
+              }
+            },
+            'Close'
+          )
+        ]
+      );
+    }
     
     // Dialog container styles based on literature-review-page.js
     const styles = {
@@ -826,8 +891,21 @@ class ChatbotApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isDialogOpen: false
+      isDialogOpen: false,
+      hasError: false,
+      errorMessage: ''
     };
+  }
+
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI
+    return { hasError: true, errorMessage: error.message };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    // Log the error to the console
+    console.error("ChatbotApp component error:", error);
+    console.error("Error info:", errorInfo);
   }
 
   openDialog = () => {
@@ -838,7 +916,58 @@ class ChatbotApp extends React.Component {
     this.setState({ isDialogOpen: false });
   }
 
+  resetError = () => {
+    this.setState({ hasError: false, errorMessage: '' });
+  }
+
   render() {
+    // Error fallback UI
+    if (this.state.hasError) {
+      return React.createElement(
+        'div',
+        {
+          style: {
+            position: 'fixed',
+            bottom: '30px',
+            right: '30px',
+            padding: '15px',
+            backgroundColor: 'white',
+            boxShadow: '0 4px 10px rgba(0,0,0,0.25)',
+            borderRadius: '8px',
+            zIndex: 100,
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif'
+          }
+        },
+        [
+          React.createElement(
+            'h3',
+            { style: { color: '#e74c3c', margin: '0 0 10px 0' } },
+            'Chatbot Error'
+          ),
+          React.createElement(
+            'p',
+            { style: { margin: '0 0 15px 0' } },
+            this.state.errorMessage || 'An error occurred in the chatbot application.'
+          ),
+          React.createElement(
+            'button',
+            {
+              onClick: this.resetError,
+              style: {
+                backgroundColor: '#0056b3',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                padding: '8px 16px',
+                cursor: 'pointer'
+              }
+            },
+            'Reset'
+          )
+        ]
+      );
+    }
+    
     // Floating button styles from literature-review-page.js
     const floatingButtonStyle = {
       position: 'fixed',
