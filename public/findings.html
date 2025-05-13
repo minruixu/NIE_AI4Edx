@@ -12,9 +12,6 @@
   <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   
-  <!-- Load Chatbot Script -->
-  <script type="text/babel" src="./data/chatbot-embed.js"></script>
-  
   <style>
     body {
       margin: 0;
@@ -3215,6 +3212,475 @@
                       </div>
                     )}
                   </div>
+                      </div>
+                    )}
+                    {activeSection === 'students' && (
+                <div>
+                  <h2 className="section-heading">Student Qualitative Analysis</h2>
+                  
+                  {/* Student Cognitive Analysis */}
+                  <div className="analysis-card">
+                    <div className="analysis-card-header" onClick={() => toggleCollapsible('studentCognitive')}>
+                      <h3 className="analysis-card-title">Cognitive Analysis</h3>
+                      <span className="analysis-card-toggle-icon">
+                        {collapsibleStates.studentCognitive ? '−' : '+'}
+                      </span>
+                    </div>
+                    {collapsibleStates.studentCognitive && (
+                      <div className="analysis-card-collapsible-content">
+                        <h4 style={{ color: '#003d7c', marginBottom: '15px' }}>Cognition-focused summary of the 496 student survey responses</h4>
+                        <p><em>(using cognition as "the mental processes of acquiring knowledge and understanding")</em></p>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '25px', marginBottom: '15px' }}>1. How students acquire knowledge with Generative-AI tools</h5>
+                        
+                        <div style={{ overflowX: 'auto', marginBottom: '20px' }}>
+                          <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
+                            <thead>
+                              <tr style={{ backgroundColor: '#4056A1', color: 'white' }}>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Cognitive action</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>What the data show</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Locating & retrieving information</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>8 in 10 respondents say they use ChatGPT, Gemini or similar tools to "look up knowledge points", clarify concepts or get step-by-step explanations. Typical phrasing: "I feel very convenient … it explains the principles and gives me the answers."</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Idea generation & schema building</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Students frequently describe AI as a "brainstorm partner" that helps them form initial ideas or outlines which they later refine.</td>
+                              </tr>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Adaptive explanation & scaffolding</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Many value AI's ability to tailor difficulty ("AI tools aid in learning and discover queries and ideas…") and to supply multimodal materials (videos, visualisations).</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Feedback for self-regulation</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Just over 60% rate items such as "Based on the real-time feedback provided by Generative-AI I can improve my next learning step" at 4 or 5 on a 5-point scale, signalling that AI is already part of their metacognitive loop.</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>2. How well students believe they understand AI itself</h5>
+                        
+                        <div style={{ overflowX: 'auto', marginBottom: '20px' }}>
+                          <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
+                            <thead>
+                              <tr style={{ backgroundColor: '#4056A1', color: 'white' }}>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Indicator of understanding (CO1-CO5 scale)</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>Mean (1–5)</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>% rating 4 – 5</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>New role of a learner in an AI era</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.51</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>54%</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Balancing being a student & using AI</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.66</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>61%</td>
+                              </tr>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>How generative models are trained</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.37</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>47%</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Distinguishing different AI tools</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.24</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>42%</td>
+                              </tr>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Importance of security, evaluation, ethics</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.64</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>64%</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        
+                        <div style={{ 
+                          padding: '15px',
+                          backgroundColor: '#f5f8ff',
+                          borderRadius: '6px',
+                          border: '1px solid #d0e0ff',
+                          marginBottom: '20px'
+                        }}>
+                          <p style={{ margin: '0' }}><strong>Interpretation:</strong> Students' conceptual grasp of what AI is and why its ethical use matters is solid-to-moderate, but fewer feel confident explaining how the models work.</p>
+                        </div>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>3. Cognitive abilities students attribute to themselves when using AI</h5>
+                        
+                        <p>On the AB1-AB6 items (effective integration, problem-solving, collaboration, etc.) the overall mean is 3.47/5. Roughly half (48 – 63%) score themselves "high" (4–5), suggesting they feel reasonably capable of weaving AI output into their own reasoning, but still see room to grow—especially for collaborative knowledge construction (only 47% high on AB6).</p>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>4. Metacognitive concerns & emerging themes (open-ended answers)</h5>
+                        
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '25px' }}>
+                          <div style={{ 
+                            flex: '1 1 450px', 
+                            padding: '15px', 
+                            backgroundColor: '#f0f7ff', 
+                            borderRadius: '8px',
+                            borderLeft: '4px solid #2196f3'
+                          }}>
+                            <h6 style={{ margin: '0 0 10px 0', color: '#1565c0' }}>Positive cognitive impact</h6>
+                            <p style={{ margin: '0', fontSize: '0.95em' }}>
+                              "Helps me organise my thoughts," "makes abstract concepts clearer," "boosts creativity."<br/>
+                              Time–efficiency and confidence are repeatedly mentioned.
+                            </p>
+                          </div>
+                          
+                          <div style={{ 
+                            flex: '1 1 450px', 
+                            padding: '15px', 
+                            backgroundColor: '#fff8e1', 
+                            borderRadius: '8px',
+                            borderLeft: '4px solid #ff9800'
+                          }}>
+                            <h6 style={{ margin: '0 0 10px 0', color: '#e65100' }}>Watch-outs for healthy cognition</h6>
+                            <ul style={{ paddingLeft: '20px', margin: '0' }}>
+                              <li>Risk of over-reliance ("Afraid I can't learn independently without AI").</li>
+                              <li>Need for source validation & truthfulness ("have to check authenticity of resources").</li>
+                              <li>Fear of stunted higher-order thinking if AI provides ready-made answers.</li>
+                            </ul>
+                          </div>
+                          </div>
+                          
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>5. Implications for teaching & support</h5>
+                        
+                        <div className="quote-card" style={{ marginBottom: '15px' }}>
+                          <div className="dimension-badge">Deepen model literacy</div>
+                          <p className="quote-text">More than half still feel unsure about how generative models actually work; demystifying training data and biases will strengthen critical understanding.</p>
+                        </div>
+                        
+                        <div className="quote-card" style={{ marginBottom: '15px' }}>
+                          <div className="dimension-badge">Train evaluative strategies</div>
+                          <p className="quote-text">Embed activities where learners must compare AI output with disciplinary standards or primary sources.</p>
+                        </div>
+                        
+                        <div className="quote-card" style={{ marginBottom: '15px' }}>
+                          <div className="dimension-badge">Foster reflective prompts</div>
+                          <p className="quote-text">Guide students to ask AI why and how answers are formed, turning the tool into a metacognitive coach rather than an answer machine.</p>
+                        </div>
+                        
+                        <div className="quote-card" style={{ marginBottom: '15px' }}>
+                          <div className="dimension-badge">Build collaborative cognition</div>
+                          <p className="quote-text">Design group tasks where AI aids joint problem-solving, addressing lower confidence in that area.</p>
+                        </div>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>Bottom line</h5>
+                          <div style={{ 
+                            padding: '15px', 
+                          backgroundColor: '#f5f8ff',
+                          borderRadius: '6px',
+                          border: '1px solid #d0e0ff'
+                        }}>
+                          <p style={{ margin: '0' }}>Students already treat generative AI as a cognitive extender—a fast, flexible way to acquire knowledge and scaffold understanding. Their self-ratings and comments show solid confidence in using AI for idea formation and iterative learning, yet a clear recognition that genuine understanding still demands human critical thinking, reflection and collaboration.</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Student Ability Analysis */}
+                  <div className="analysis-card">
+                    <div className="analysis-card-header" onClick={() => toggleCollapsible('studentAbility')}>
+                      <h3 className="analysis-card-title">Ability Analysis</h3>
+                      <span className="analysis-card-toggle-icon">
+                        {collapsibleStates.studentAbility ? '−' : '+'}
+                      </span>
+                    </div>
+                    {collapsibleStates.studentAbility && (
+                      <div className="analysis-card-collapsible-content">
+                        <h4 style={{ color: '#003d7c', marginBottom: '15px' }}>Summary of Students' Ability</h4>
+                        <p><em>(interpreting "ability" strictly as their capacity to perform tasks with Generative-AI tools, based on items AB1-AB6, N ≈ 406)</em></p>
+                        
+                        <div style={{ overflowX: 'auto', marginBottom: '20px' }}>
+                          <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
+                            <thead>
+                              <tr style={{ backgroundColor: '#4056A1', color: 'white' }}>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Aspect of task-performance (AB item)</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>Mean (1-5)</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>What this tells us</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AB5 – Optimising & reorganising learning with Gen-AI</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.62</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Students feel most able to streamline their own study workflow.</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AB4 – Using real-time AI feedback to improve next steps</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.61</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>They are comfortable turning AI feedback into concrete action.</td>
+                              </tr>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AB3 – Problem-solving with Gen-AI</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.51</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Over half believe they can enlist AI to tackle learning hurdles.</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AB1 – Integrating Gen-AI into routine study tasks</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.41</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Day-to-day integration is solid but leaves room to grow.</td>
+                              </tr>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AB2 – Transferring AI-supported skills to new contexts</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.35</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Students are less certain about adapting AI use across subjects.</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AB6 – Collaborating with peers using Gen-AI</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.34</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Collective task work with AI is their weakest area.</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>Overall capacity</h5>
+                        <p>Average Ability score: 3.47 / 5 – a moderate-to-high level.</p>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '25px', marginBottom: '15px' }}>Distribution:</h5>
+                        
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', marginBottom: '25px' }}>
+                          <div style={{ 
+                            flex: '1 1 200px', 
+                            padding: '15px', 
+                            backgroundColor: '#e3f2fd', 
+                            borderRadius: '8px',
+                            border: '1px solid #bbdefb'
+                          }}>
+                            <h6 style={{ margin: '0 0 10px 0', color: '#1565c0', fontWeight: 'bold' }}>High ability ( {'>'} 3.5 )</h6>
+                            <p style={{ margin: '0', fontSize: '1.8em', fontWeight: 'bold', color: '#1565c0' }}>~ 50%</p>
+                            <p style={{ margin: '5px 0 0 0', fontSize: '0.9em' }}>of students</p>
+                          </div>
+                          
+                          <div style={{ 
+                            flex: '1 1 200px', 
+                            padding: '15px', 
+                            backgroundColor: '#fff8e1', 
+                            borderRadius: '8px',
+                            border: '1px solid #ffecb3'
+                          }}>
+                            <h6 style={{ margin: '0 0 10px 0', color: '#ff8f00', fontWeight: 'bold' }}>Moderate ( 2.5–3.5 )</h6>
+                            <p style={{ margin: '0', fontSize: '1.8em', fontWeight: 'bold', color: '#ff8f00' }}>~ 38%</p>
+                            <p style={{ margin: '5px 0 0 0', fontSize: '0.9em' }}>of students</p>
+                          </div>
+                          
+                          <div style={{ 
+                            flex: '1 1 200px', 
+                            padding: '15px', 
+                            backgroundColor: '#fbe9e7', 
+                            borderRadius: '8px',
+                            border: '1px solid #ffccbc'
+                          }}>
+                            <h6 style={{ margin: '0 0 10px 0', color: '#d84315', fontWeight: 'bold' }}>Low (&lt; 3)</h6>
+                            <p style={{ margin: '0', fontSize: '1.8em', fontWeight: 'bold', color: '#d84315' }}>~ 12%</p>
+                            <p style={{ margin: '5px 0 0 0', fontSize: '0.9em' }}>of students</p>
+                          </div>
+                          </div>
+                          
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>What this means</h5>
+                        
+                        <ul style={{ paddingLeft: '25px', marginBottom: '20px' }}>
+                          <li style={{ marginBottom: '10px' }}>Half the cohort already feels confident performing a broad set of AI-supported tasks.</li>
+                          <li style={{ marginBottom: '10px' }}>Task-specific strengths centre on using AI feedback and restructuring their own learning processes.</li>
+                          <li>Growth areas are (i) applying AI skills in unfamiliar situations and (ii) leveraging AI for peer collaboration—suggesting that scaffolded cross-disciplinary projects and group-oriented AI activities could raise overall ability.</li>
+                        </ul>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>In short</h5>
+                        <div style={{ 
+                          padding: '15px',
+                          backgroundColor: '#f5f8ff',
+                          borderRadius: '6px',
+                          border: '1px solid #d0e0ff'
+                        }}>
+                          <p style={{ margin: '0' }}>Students generally have the capacity to perform AI-assisted learning tasks, but targeted support on transfer and teamwork would help the remaining half move from moderate toward high ability.</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Student Vision Analysis */}
+                  <div className="analysis-card">
+                    <div className="analysis-card-header" onClick={() => toggleCollapsible('studentVision')}>
+                      <h3 className="analysis-card-title">Vision Analysis</h3>
+                      <span className="analysis-card-toggle-icon">
+                        {collapsibleStates.studentVision ? '−' : '+'}
+                      </span>
+                    </div>
+                    {collapsibleStates.studentVision && (
+                      <div className="analysis-card-collapsible-content">
+                        <h4 style={{ color: '#003d7c', marginBottom: '15px' }}>Snapshot of Students' Vision</h4>
+                        <p><em>(defined here as the ability to visualise future possibility)</em></p>
+                        
+                        <div style={{ overflowX: 'auto', marginBottom: '20px' }}>
+                          <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
+                            <thead>
+                              <tr style={{ backgroundColor: '#4056A1', color: 'white' }}>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Vision indicator (AT-items)</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>% who Agree / Strongly Agree</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>Mean ± SD on 1-5 scale</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>What this tells us about their "future lens"</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AT21 – "I would use AI to summarise & analyse learning materials."</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>72%</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.86 ± 1.02</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>They readily picture AI automating the heavy lifting of digesting content.</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AT19 – "I would use AI as educational resources."</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>65%</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.74 ± 1.04</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>They see AI turning into a go-to knowledge base.</td>
+                              </tr>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AT22 – "I will keep using AI to reach my learning goals."</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>66%</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.75 ± 1.02</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Persistence: most imagine AI as a long-term companion.</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AT16 – "I will follow AI improvements."</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>66%</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.73 ± 1.05</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>They expect to track—and perhaps ride—the AI innovation wave.</td>
+                              </tr>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AT14 – "AI supports lifelong learning."</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>65%</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.71 ± 1.03</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>They connect AI with continuous, future-oriented growth.</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AT17 – "I'd tell friends about AI benefits."</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>61%</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.66 ± 1.04</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Vision spills over into advocacy—seeing AI shaping peers' futures too.</td>
+                              </tr>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AT20 – "I'd use AI for practice & exam prep."</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>53%</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.49 ± 1.14</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Half foresee AI drilling them for future assessments.</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AT18 – "I'd use AI as a tutor."</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>50%</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.38 ± 1.19</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Tutor role is imaginable but not yet mainstream.</td>
+                              </tr>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>AT15 – "AI improves higher-order skills (creativity, evaluation)."</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>48%</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>3.34 ± 1.16</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Harder to picture AI boosting advanced thinking—vision here is still fuzzy.</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        
+                        <div style={{ 
+                          padding: '15px',
+                          backgroundColor: '#e8f4f8',
+                          borderRadius: '6px',
+                          border: '1px solid #b3e0e8',
+                          marginBottom: '20px'
+                        }}>
+                          <p style={{ margin: '0' }}><strong>Overall "Vision" index</strong> (mean of AT14-22, n = 496): <strong>3.63 / 5</strong></p>
+                          <p style={{ margin: '10px 0 0 0' }}>→ On a five-point Likert scale, students lean clearly positive—they can see AI playing a beneficial role in their learning futures, though not without reservations.</p>
+                        </div>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>What the numbers are saying in plain English</h5>
+                        
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '25px' }}>
+                          <div style={{ 
+                            flex: '1 1 450px', 
+                            padding: '15px', 
+                            backgroundColor: '#f0f7ff', 
+                            borderRadius: '8px',
+                            borderLeft: '4px solid #2196f3'
+                          }}>
+                            <h6 style={{ margin: '0 0 10px 0', color: '#1565c0', fontWeight: 'bold' }}>High-clarity futures</h6>
+                            <ul style={{ paddingLeft: '20px', margin: '0' }}>
+                              <li style={{ marginBottom: '10px' }}><strong>Material comprehension & resource hub</strong> are the clearest imagined use-cases. Students very easily picture AI tools that condense readings, surface key points, and act as an always-on library.</li>
+                              <li><strong>Continuous self-development</strong> resonates: roughly two-thirds link AI to lifelong learning, staying current with upgrades, and persisting toward goals.</li>
+                            </ul>
+                          </div>
+                          
+                          <div style={{ 
+                            flex: '1 1 450px', 
+                            padding: '15px', 
+                            backgroundColor: '#fff8e1', 
+                            borderRadius: '8px',
+                            borderLeft: '4px solid #ff9800'
+                          }}>
+                            <h6 style={{ margin: '0 0 10px 0', color: '#e65100', fontWeight: 'bold' }}>Still-forming pictures</h6>
+                            <ul style={{ paddingLeft: '20px', margin: '0' }}>
+                              <li style={{ marginBottom: '10px' }}><strong>Higher-order cognitive gains</strong> are harder to visualise. Under half believe AI will truly stretch creativity or evaluation skills—suggesting uncertainty about AI as a co-creator or critical-thinking partner.</li>
+                              <li><strong>AI-as-tutor</strong> gets only tentative support; many may still prefer human guidance or are unsure how tutoring chatbots will evolve.</li>
+                            </ul>
+                          </div>
+                        </div>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>Qualitative echoes (open-ended comments, thematically coded)</h5>
+                        
+                        <div style={{ overflowX: 'auto', marginBottom: '20px' }}>
+                          <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
+                            <thead>
+                              <tr style={{ backgroundColor: '#4056A1', color: 'white' }}>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Theme</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Typical student voice</th>
+                                <th style={{ padding: '12px 15px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Visionary takeaway</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Efficiency & access</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', fontStyle: 'italic' }}>"It's like having a 24/7 study buddy that summarises 10 pages in seconds."</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>They foresee friction-free learning workflows.</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Personalised guidance</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', fontStyle: 'italic' }}>"I imagine AI tailoring practice questions to my weak spots."</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Clear mental picture of adaptive support.</td>
+                              </tr>
+                              <tr style={{ backgroundColor: '#f9f9f9' }}>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Career preparedness</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', fontStyle: 'italic' }}>"Knowing how to harness AI will be vital for my future job."</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Vision extends beyond campus to professional life.</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Ethical & dependency concerns</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd', fontStyle: 'italic' }}>"I worry we'll rely too much and lose critical thinking."</td>
+                                <td style={{ padding: '12px 15px', borderBottom: '1px solid #ddd' }}>Their vision includes cautionary boundaries.</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        
+                        <h5 style={{ color: '#003d7c', marginTop: '30px', marginBottom: '15px' }}>Bottom line</h5>
+                        <div style={{ 
+                          padding: '15px',
+                          backgroundColor: '#f5f8ff',
+                          borderRadius: '6px',
+                          border: '1px solid #d0e0ff',
+                          marginBottom: '20px'
+                        }}>
+                          <p style={{ margin: '0 0 15px 0' }}>Students can already picture multiple concrete, forward-looking scenarios where generative-AI tools enhance their learning journey—especially for digesting information and supporting lifelong growth. The brightest future snapshots revolve around automation of routine academic tasks and continuous access to knowledge. Blurrier areas—AI's role in cultivating creativity, deep evaluation, or replacing human tutors—represent opportunities for educators to scaffold experiences that make those possibilities more vivid and credible.</p>
+                          <p style={{ margin: '0', fontWeight: '500' }}>In short, their collective Vision is promising yet pragmatic: they see AI as a valuable partner in the learning future, but they're still exploring how far that partnership can go.</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
 
                   {/* Student Ethics Analysis */}
                   <div className="analysis-card">
@@ -4380,115 +4846,22 @@
   </script>
 
   <!-- Container for the React Chatbot -->
-  <div id="chatbot-container" style="position: fixed; bottom: 0; right: 0; z-index: 9999;"></div>
+  <div id="chatbot-container"></div>
   
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
-    }
-    
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    
-    h1 {
-      text-align: center;
-      margin-bottom: 30px;
-      color: #003d7c;
-    }
-    
-    .content-section {
-      display: none;
-      padding: 20px;
-      background-color: #f9f9f9;
-      border-radius: 8px;
-      margin-bottom: 20px;
-    }
-    
-    .content-section.active {
-      display: block;
-    }
-    
-    .secondary-nav {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 20px;
-    }
-    
-    .secondary-nav button {
-      padding: 10px 20px;
-      background-color: #003d7c;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    
-    .secondary-nav button:hover {
-      background-color: #002d5c;
-    }
-    
-    .analysis-card {
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      margin-bottom: 20px;
-    }
-    
-    .analysis-card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px;
-      background-color: #003d7c;
-      color: #fff;
-      cursor: pointer;
-    }
-    
-    .analysis-card-title {
-      margin: 0;
-      font-size: 1.2em;
-    }
-    
-    .analysis-card-toggle-icon {
-      font-size: 1.5em;
-    }
-    
-    .analysis-card-collapsible-content {
-      padding: 15px;
-    }
-    
-    .quote-card {
-      background-color: #f5f8ff;
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 15px;
-      border-left: 4px solid #003d7c;
-    }
-    
-    .dimension-badge {
-      background-color: #003d7c;
-      color: #fff;
-      padding: 5px 10px;
-      border-radius: 4px;
-      margin-bottom: 10px;
-    }
-    
-    .quote-text {
-      margin: 0;
-    }
-    
-    .analysis-card-header:hover {
-      background-color: #002d5c;
-    }
-  </style>
+  <!-- Script for the React Chatbot -->
+  <script type="text/babel" src="./data/chatbot-embed.js"></script>
+  
+  <!-- Debug script for chatbot -->
+  <script>
+    console.log('Findings page loaded');
+    setTimeout(() => {
+      console.log('Checking chatbot status:');
+      console.log('- Unified chatbot object exists:', !!window.unifiedChatbot);
+      if (window.unifiedChatbot) {
+        console.log('- Available components:', Object.keys(window.unifiedChatbot).join(', '));
+      }
+      console.log('- Chatbot container exists:', !!document.getElementById('chatbot-container'));
+    }, 2000);
+  </script>
 </body>
-</html>
+</html> 
