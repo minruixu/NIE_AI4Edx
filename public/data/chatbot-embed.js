@@ -8,48 +8,10 @@ const navigateFindingsPage = (tab, section) => {
   }));
 };
 
-// Safe storage helper function
-const safeStorage = {
-  // In-memory fallback when browser storage is unavailable
-  memoryStore: {},
-  
-  getItem: (key, defaultValue = '') => {
-    try {
-      return localStorage.getItem(key) || defaultValue;
-    } catch (error) {
-      try {
-        return sessionStorage.getItem(key) || defaultValue;
-      } catch (innerError) {
-        console.error('Both localStorage and sessionStorage failed:', innerError);
-        return safeStorage.memoryStore[key] || defaultValue;
-      }
-    }
-  },
-  
-  setItem: (key, value) => {
-    try {
-      localStorage.setItem(key, value);
-    } catch (error) {
-      console.error('localStorage access error:', error);
-      try {
-        sessionStorage.setItem(key, value);
-      } catch (innerError) {
-        console.error('sessionStorage access error:', innerError);
-        // Fall back to in-memory storage
-        safeStorage.memoryStore[key] = value;
-      }
-    }
-  }
-};
-
 // Dialog Component with unified components and LLM integration
 class Dialog extends React.Component {
   constructor(props) {
     super(props);
-    
-    // Safe localStorage access using helper
-    const savedApiKey = safeStorage.getItem('nie_llm_api_key', '');
-    
     this.state = {
       inputValue: '',
       messages: [
@@ -76,23 +38,10 @@ class Dialog extends React.Component {
         }
       ],
       typingIndicator: false,
-      llmApiKey: savedApiKey,
+      llmApiKey: localStorage.getItem('nie_llm_api_key') || '',
       messagesEndRef: React.createRef(),
-      quotedText: null, // Add state for quoted text
-      hasError: false,  // Add error state for error boundary
-      errorMessage: ''  // Store error messages
+      quotedText: null // Add state for quoted text
     };
-  }
-
-  static getDerivedStateFromError(error) {
-    // Update state so the next render will show the fallback UI
-    return { hasError: true, errorMessage: error.message };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    // Log the error to console for debugging
-    console.error("Dialog component error:", error);
-    console.error("Error info:", errorInfo);
   }
 
   componentDidUpdate() {
@@ -210,9 +159,7 @@ class Dialog extends React.Component {
   handleApiKeyChange = (e) => {
     const apiKey = e.target.value;
     this.setState({ llmApiKey: apiKey });
-    
-    // Safely store in localStorage
-    safeStorage.setItem('nie_llm_api_key', apiKey);
+    localStorage.setItem('nie_llm_api_key', apiKey);
   }
 
   getOpenAIResponse = async (userInput, chatHistory) => {
@@ -284,7 +231,7 @@ class Dialog extends React.Component {
       setTimeout(() => {
         this.setState({ typingIndicator: false });
         this.addMessage({ 
-          text: 'Please enter your OpenAI API Key in the field below to enable AI responses. Your key will be stored in your browser only, not on our servers. It may be lost when using private browsing modes.', 
+          text: 'Please enter your OpenAI API Key in the field below to enable AI responses.', 
           sender: 'bot' 
         });
       }, 500);
@@ -347,58 +294,6 @@ class Dialog extends React.Component {
 
   render() {
     if (!this.props.isOpen) return null;
-    
-    // If there's an error, show error fallback UI
-    if (this.state.hasError) {
-      return React.createElement(
-        'div',
-        { 
-          style: {
-            position: 'fixed',
-            bottom: '30px', 
-            right: '30px', 
-            width: '380px',
-            padding: '20px',
-            backgroundColor: 'white',
-            boxShadow: '0 5px 20px rgba(0,0,0,0.15)',
-            borderRadius: '16px',
-            zIndex: 1000,
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif'
-          }
-        },
-        [
-          React.createElement(
-            'h3',
-            { style: { color: '#e74c3c' } },
-            'Something went wrong'
-          ),
-          React.createElement(
-            'p',
-            null,
-            this.state.errorMessage || 'An error occurred in the chatbot dialog.'
-          ),
-          React.createElement(
-            'button',
-            { 
-              style: {
-                backgroundColor: '#0056b3',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                padding: '8px 16px',
-                cursor: 'pointer',
-                marginTop: '10px'
-              },
-              onClick: () => {
-                this.setState({ hasError: false, errorMessage: '' });
-                this.props.onClose();
-              }
-            },
-            'Close'
-          )
-        ]
-      );
-    }
     
     // Dialog container styles based on literature-review-page.js
     const styles = {
@@ -931,21 +826,8 @@ class ChatbotApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isDialogOpen: false,
-      hasError: false,
-      errorMessage: ''
+      isDialogOpen: false
     };
-  }
-
-  static getDerivedStateFromError(error) {
-    // Update state so the next render will show the fallback UI
-    return { hasError: true, errorMessage: error.message };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    // Log the error to the console
-    console.error("ChatbotApp component error:", error);
-    console.error("Error info:", errorInfo);
   }
 
   openDialog = () => {
@@ -956,58 +838,7 @@ class ChatbotApp extends React.Component {
     this.setState({ isDialogOpen: false });
   }
 
-  resetError = () => {
-    this.setState({ hasError: false, errorMessage: '' });
-  }
-
   render() {
-    // Error fallback UI
-    if (this.state.hasError) {
-      return React.createElement(
-        'div',
-        {
-          style: {
-            position: 'fixed',
-            bottom: '30px',
-            right: '30px',
-            padding: '15px',
-            backgroundColor: 'white',
-            boxShadow: '0 4px 10px rgba(0,0,0,0.25)',
-            borderRadius: '8px',
-            zIndex: 100,
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif'
-          }
-        },
-        [
-          React.createElement(
-            'h3',
-            { style: { color: '#e74c3c', margin: '0 0 10px 0' } },
-            'Chatbot Error'
-          ),
-          React.createElement(
-            'p',
-            { style: { margin: '0 0 15px 0' } },
-            this.state.errorMessage || 'An error occurred in the chatbot application.'
-          ),
-          React.createElement(
-            'button',
-            {
-              onClick: this.resetError,
-              style: {
-                backgroundColor: '#0056b3',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                padding: '8px 16px',
-                cursor: 'pointer'
-              }
-            },
-            'Reset'
-          )
-        ]
-      );
-    }
-    
     // Floating button styles from literature-review-page.js
     const floatingButtonStyle = {
       position: 'fixed',
