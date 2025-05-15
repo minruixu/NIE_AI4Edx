@@ -259,37 +259,235 @@ const styles = {
     cursor: 'pointer',
     userSelect: 'none',
     margin: 0,
-    padding: '20px', // More padding
+    padding: '20px 25px', // Increased padding
     display: 'flex',
-    justifyContent: 'space-between', // Position arrow to the right
+    justifyContent: 'space-between',
     alignItems: 'center',
-    transition: 'background-color 0.2s ease', // Smooth background transition
+    transition: 'background-color 0.3s ease, padding 0.3s ease', // Smoother transitions
     fontWeight: '600', // Bolder font for headings
+    borderBottom: '1px solid transparent', // Prepare for border animation
     '&:hover': {
       backgroundColor: '#f5f5f5', // Light grey on hover
+      paddingLeft: '30px', // Subtle indent on hover
+      borderBottomColor: '#003d7c', // Accent border on hover
     },
     '&:after': {
       content: 'attr(data-arrow)', // Dynamic arrow content from data attribute
-      fontSize: '0.8em',
-      marginLeft: '10px',
+      fontSize: '1.2em', // Larger arrow
+      marginLeft: '15px',
+      transition: 'transform 0.3s ease',
     }
   },
   collapsibleSectionBox: {
     backgroundColor: '#ffffff', // White background
     border: '1px solid #eaeaea', // Lighter border
-    borderRadius: '8px',
-    marginBottom: '25px', // More spacing between sections
+    borderRadius: '10px', // Slightly more rounded corners
+    marginBottom: '30px', // More spacing between sections
     overflow: 'hidden',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.05)', // Very subtle shadow
-    transition: 'box-shadow 0.2s ease', // Smooth shadow transition
+    boxShadow: '0 3px 6px rgba(0,0,0,0.05)', // Refined subtle shadow
+    transition: 'box-shadow 0.3s ease, border-color 0.3s ease', // Smooth shadow transition
     '&:hover': {
-      boxShadow: '0 4px 8px rgba(0,0,0,0.1)', // Enhanced shadow on hover
+      boxShadow: '0 6px 12px rgba(0,0,0,0.12)', // Enhanced shadow on hover
+      borderColor: '#003d7c', // Highlight border on hover
     }
   },
   collapsibleContent: {
-    padding: '0 20px 20px 20px', // More padding
-    lineHeight: '1.6', // Improved line height for readability
+    padding: '0 25px 25px 25px', // Adjusted padding, more bottom padding
+    lineHeight: '1.7', // Improved line height for readability
+    backgroundColor: '#fdfdfd', // Slight off-white for content area
+    borderTop: '1px dashed #eee', // Subtle separator from heading
   },
+  // Add a new style for H3 within collapsible content
+  collapsibleContentH3: {
+    color: '#003d7c',
+    fontSize: '1.2em',
+    marginTop: '25px',
+    marginBottom: '10px',
+    paddingBottom: '5px',
+    borderBottom: '2px solid #0056b3', // Accent border for H3
+  },
+  // Styles for Findings Section
+  findingsContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '20px',
+  },
+  findingsCard: {
+    backgroundColor: '#f9f9f9',
+    border: '1px solid #e0e0e0',
+    borderRadius: '8px',
+    padding: '0px 20px 20px', // Changed from '20px'
+    boxShadow: '0 2px 5px rgba(0,0,0,0.05)',
+  },
+  findingsCardTitle: {
+    fontSize: '1.1em',
+    color: '#003d7c',
+    marginBottom: '5px',
+    borderBottom: '1px solid #ddd',
+    paddingBottom: '10px',
+  },
+  findingsList: {
+    listStyle: 'disc',
+    marginLeft: '20px',
+    paddingLeft: '10px',
+  },
+  findingsListItem: {
+    marginBottom: '8px',
+    lineHeight: '1.6',
+  },
+  findingsKeyMetric: {
+    fontWeight: 'bold',
+    color: '#0056b3',
+  },
+  findingsSubSection: { // For Instructor/Student blocks
+    marginBottom: '20px',
+    padding: '15px',
+    backgroundColor: '#ffffff',
+    borderRadius: '6px',
+    border: '1px solid #e8e8e8',
+  },
+  findingsSubSectionTitle: {
+    fontSize: '1.05em',
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: '10px',
+  },
+  // Style for Featured Case Study Cards
+  caseStudyCard: {
+    width: 'calc(25% - 20px)', // Adjusted for gap
+    minWidth: '280px', // Slightly larger minWidth
+    border: '1px solid #ddd',
+    borderRadius: '10px', // More rounded
+    padding: '20px',
+    boxShadow: '0 4px 8px rgba(0,0,0,0.08)', // Slightly more pronounced shadow
+    cursor: 'pointer',
+    transition: 'transform 0.3s ease, box-shadow 0.3s ease', // Smoother transition
+    backgroundColor: '#fdfdfd',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between', // Ensure footer is at the bottom
+    '&:hover': {
+      transform: 'translateY(-8px) scale(1.02)', // More noticeable hover effect
+      boxShadow: '0 8px 16px rgba(0,0,0,0.12)',
+    }
+  },
+  caseStudyCardCategory: {
+    display: 'inline-block',
+    padding: '4px 10px',
+    borderRadius: '15px', // Pill shape
+    fontSize: '0.85em',
+    marginBottom: '12px',
+    fontWeight: '500',
+  },
+  caseStudyCardTitle: {
+    color: '#003d7c',
+    marginTop: 0,
+    marginBottom: '10px',
+    fontSize: '1.15em', // Slightly larger title
+  },
+  caseStudyCardSummary: {
+    color: '#555',
+    flex: 1,
+    fontSize: '0.95em',
+    lineHeight: '1.6',
+    marginBottom: '15px',
+  },
+  caseStudyReadMoreLink: {
+    display: 'inline-block',
+    marginTop: 'auto', // Push to bottom if card heights vary
+    padding: '8px 15px',
+    backgroundColor: '#003d7c',
+    color: 'white',
+    textDecoration: 'none',
+    borderRadius: '5px',
+    fontWeight: 'bold',
+    fontSize: '0.9em',
+    textAlign: 'center',
+    transition: 'background-color 0.2s ease, transform 0.2s ease',
+    '&:hover': {
+      backgroundColor: '#0056b3',
+      transform: 'scale(1.05)',
+    }
+  },
+  // Style for Detailed Case Study View
+  caseStudyDetailView: {
+    display: 'none', 
+    marginTop: '30px',
+    backgroundColor: '#ffffff',
+    padding: '25px',
+    border: '1px solid #e0e0e0',
+    borderRadius: '10px',
+    boxShadow: '0 5px 15px rgba(0,0,0,0.08)',
+  },
+  caseStudyDetailTitle: {
+    color: '#003d7c',
+    marginBottom: '15px',
+    fontSize: '1.5em',
+    borderBottom: '2px solid #0056b3',
+    paddingBottom: '10px',
+  },
+  caseStudyDetailSummary: {
+    fontSize: '1.15em',
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: '15px',
+    lineHeight: '1.5',
+  },
+  caseStudyDetailContent: {
+    backgroundColor: '#f9f9f9', 
+    padding: '20px', 
+    borderRadius: '8px',
+    marginTop: '15px',
+    lineHeight: '1.7',
+    color: '#444',
+    border: '1px solid #eee',
+  },
+  // Styles for Resources Section
+  resourcesGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', // Responsive grid
+    gap: '25px',
+  },
+  resourceColumn: {
+    // Styles for each column if needed, for now, direct styling on h3 and ul
+  },
+  resourceCategoryTitle: {
+    // This is now covered by collapsibleContentH3, but keeping for clarity
+    // For specific overrides for resource titles if needed:
+    // color: '#003d7c', (example for teaching)
+    // borderBottomColor: '#0056b3', (example for teaching)
+  },
+  resourceList: {
+    listStyle: 'none',
+    padding: 0,
+    margin: 0,
+  },
+  resourceListItem: {
+    marginBottom: '12px',
+  },
+  resourceLink: {
+    display: 'block',
+    padding: '12px 15px',
+    backgroundColor: '#f9f9f9',
+    color: '#333',
+    textDecoration: 'none',
+    borderRadius: '6px',
+    border: '1px solid #e0e0e0',
+    transition: 'all 0.2s ease-in-out',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+    fontWeight: '500',
+    '&:hover': {
+      backgroundColor: '#e9eff5', // Lighter blue hover
+      borderColor: '#0056b3',
+      color: '#003d7c',
+      transform: 'translateY(-2px)',
+      boxShadow: '0 4px 8px rgba(0,0,0,0.08)',
+    }
+  },
+  resourceLinkStrong: {
+    fontWeight: '600',
+    color: '#003d7c', // Keep strong text prominent
+  }
 };
 
 // Apply body styles globally (alternative to index.css)
@@ -435,9 +633,9 @@ const Header = () => {
               borderRadius: '8px',
               marginTop: '5px',
             }}>
-              <a href="#lit-rq1" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>RQ1: Readiness (Main Page)</a>
-              <a href="#lit-rq2" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>RQ2: Ethics (Main Page)</a>
-              <a href="#lit-rq3" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>RQ3: Practices (Main Page)</a>
+              <a href="#lit-rq1" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Readiness (Main Page)</a>
+              <a href="#lit-rq2" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Ethics (Main Page)</a>
+              <a href="#lit-rq3" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Practices (Main Page)</a>
               <a href="#" style={styles.dropdownLink} onClick={(e) => {e.preventDefault(); window.location.href = `${process.env.PUBLIC_URL}/literature-review.html`;}} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Detailed Literature Review Page</a>
             </div>
           )}
@@ -643,6 +841,49 @@ const MainContent = () => {
     setIsCaseStudiesOpen(!isCaseStudiesOpen);
   };
 
+  // Helper function to update arrow state
+  const updateArrowState = (elementId, isOpen) => {
+    const element = document.getElementById(elementId);
+    if (element) {
+      // This uses the ::after pseudo-element, which is controlled by CSS based on data-arrow.
+      // The 'content' will be set by CSS based on data-arrow.
+      // To trigger a visual change in the arrow (e.g. if we used a transform on a span), we'd do it here.
+      // For now, the CSS handles the ▲/▼ change based on 'data-arrow'.
+      // If the arrow was a real span, we might do:
+      // const arrowSpan = element.querySelector('.arrow-span'); // Assuming a class for the arrow
+      // if (arrowSpan) arrowSpan.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+    }
+  };
+  
+  // Update useEffect to call updateArrowState
+  useEffect(() => {
+    updateArrowState('who-we-are', isWhoWeAreOpen);
+  }, [isWhoWeAreOpen]);
+
+  useEffect(() => {
+    updateArrowState('research-focus', isResearchFocusOpen);
+  }, [isResearchFocusOpen]);
+
+  useEffect(() => {
+    updateArrowState('literature-review', isLiteratureReviewOpen);
+  }, [isLiteratureReviewOpen]);
+
+  useEffect(() => {
+    updateArrowState('methods', isMethodsOpen);
+  }, [isMethodsOpen]);
+
+  useEffect(() => {
+    updateArrowState('findings', isFindingsOpenSection);
+  }, [isFindingsOpenSection]);
+  
+  useEffect(() => {
+    updateArrowState('case-studies', isCaseStudiesOpen);
+  }, [isCaseStudiesOpen]);
+
+  useEffect(() => {
+    updateArrowState('resources', isResourcesOpen);
+  }, [isResourcesOpen]);
+
   return (
     <main style={styles.main}>
       <h1 style={styles.pageTitle}>Investigating GPT for Enhancing Teaching and Learning: User Readiness and Strategies</h1>
@@ -718,8 +959,13 @@ const MainContent = () => {
 
       {/* Who We Are Collapsible Section Box */}
       <div style={styles.collapsibleSectionBox}>
-        <h2 id="who-we-are" onClick={toggleWhoWeAre} style={styles.collapsibleHeading}>
-          About The Project <span style={{ marginLeft: 'auto' }}>{isWhoWeAreOpen ? '▲' : '▼'}</span>
+        <h2 
+          id="who-we-are" 
+          onClick={toggleWhoWeAre} 
+          style={styles.collapsibleHeading}
+          data-arrow={isWhoWeAreOpen ? '▲' : '▼'} // Use data-arrow
+        >
+          About The Project {/* Remove explicit span for arrow */}
         </h2>
         {isWhoWeAreOpen && (
           <div style={styles.collapsibleContent}>
@@ -762,16 +1008,21 @@ reshaping educational practices.
 
       {/* Research Focus Collapsible Section Box */}
       <div style={styles.collapsibleSectionBox}>
-        <h2 id="research-focus" onClick={toggleResearchFocus} style={styles.collapsibleHeading}>
-           Research Focus <span style={{ marginLeft: 'auto' }}>{isResearchFocusOpen ? '▲' : '▼'}</span>
+        <h2 
+          id="research-focus" 
+          onClick={toggleResearchFocus} 
+          style={styles.collapsibleHeading}
+          data-arrow={isResearchFocusOpen ? '▲' : '▼'} // Use data-arrow
+        >
+           Research Focus {/* Remove explicit span for arrow */}
         </h2>
         {isResearchFocusOpen && (
           <div style={styles.collapsibleContent}>
             {/* Add IDs to paragraphs */}
-            <h3 id="research-aims">Aims</h3>
+            <h3 id="research-aims" style={styles.collapsibleContentH3}>Aims</h3>
             <p>This project explores the instructors' and students' perceptions of GPT as a pedagogical tool in university teaching and learning. The findings aim to clarify the role of GPT in teaching and learning and then use the survey findings as an input to identify the current knowledge application gaps and the ethical concerns. Such ground up findings will be developed into use cases for faculty professional development and for teaching and learning curriculum resources.</p>
 
-            <h3 id="research-problems">Problems</h3>
+            <h3 id="research-problems" style={styles.collapsibleContentH3}>Problems</h3>
             <p>Instructors and students are faced with the reality that AI generative tools (also called GPT) will be increasingly present in everyday lives. The fast development of AI models (e.g., GPT-3, GPT-4) have already accomplished learning tasks such as translation, solving mathematics problems, generate stories and coding. However, currently, as instructors explore the applications of AI tools in education, there has yet to have a widely unified guideline articulated regarding the use of AI generative tools in student assessment. In the current landscape, the instructors' rationale for using AI tools for effective teaching and students' use of AI tools for meaningful learning have yet to be articulated clearly.</p>
 
             <p>By Investigation the perceptions of both instructors and students, the administrators can support the instructors and students in charting the professional development needs and learning needs for the instructors and students respectively in the current AI landscape. The perceptual information, the cases faced in integrating AI tools into teaching would serve as useful resources for faculty professional development (PD) and student learning. For example,</p>
@@ -780,7 +1031,7 @@ reshaping educational practices.
               <li>infuse appropriate GPT use (AI tools) through discussion forum in lesson designs</li>
             </ul>
 
-            <h3 id="research-questions">Research Questions</h3>
+            <h3 id="research-questions" style={styles.collapsibleContentH3}>Research Questions</h3>
             <ul>
               <li>What are the instructors' and students' perceptions of their readiness to use GPT in teaching and learning?</li>
               <li>What are the instructors' and students' ethical concerns for adopting GPT in NTU and NIE?</li>
@@ -792,19 +1043,24 @@ reshaping educational practices.
 
       {/* Literature Review Collapsible Section Box */}
       <div style={styles.collapsibleSectionBox}>
-        <h2 id="literature-review" onClick={toggleLiteratureReview} style={styles.collapsibleHeading}>
-           Literature Review <span style={{ marginLeft: 'auto' }}>{isLiteratureReviewOpen ? '▲' : '▼'}</span>
+        <h2 
+          id="literature-review" 
+          onClick={toggleLiteratureReview} 
+          style={styles.collapsibleHeading}
+          data-arrow={isLiteratureReviewOpen ? '▲' : '▼'} // Use data-arrow
+        >
+           Literature Review {/* Remove explicit span for arrow */}
         </h2>
         {isLiteratureReviewOpen && (
           <div style={styles.collapsibleContent}>
             {/* Add IDs to h3 headings */}
-            <h3 id="lit-rq1">RQ1: Readiness</h3>
+            <h3 id="lit-rq1" style={styles.collapsibleContentH3}>Readiness</h3>
             <p>Research reveals varying levels of readiness among faculty and students regarding GPT adoption. Studies by Sanders & Mukhari (2024) highlight that successful integration requires robust institutional support, training opportunities, and reliable infrastructure. Demographic factors, teaching modalities, generational differences, and cross-cultural backgrounds significantly influence attitudes toward AI adoption. Wang et al. (2023) emphasize that AI readiness is distinct from general technological competence and requires specific preparation.</p>
             
-            <h3 id="lit-rq2">RQ2: Ethics</h3>
+            <h3 id="lit-rq2" style={styles.collapsibleContentH3}>Ethics</h3>
             <p>Studies identify diverse ethical concerns across academic disciplines. Perkins (2023) and Dehouche (2021) highlight risks of undetectable AI-generated plagiarism. Research by Chan (2023) and Kooli (2023) emphasizes the need for comprehensive ethical frameworks addressing data privacy, bias, transparency, and over-reliance. Both Miljkovic Krecar et al. (2024) and Biagini et al. (2024) reveal concerning gaps in AI literacy, with professors struggling to distinguish AI-generated content and students showing overconfidence despite limited AI knowledge.</p>
             
-            <h3 id="lit-rq3">RQ3: Practices</h3>
+            <h3 id="lit-rq3" style={styles.collapsibleContentH3}>Practices</h3>
             <p>Recent literature documents innovative educational applications alongside implementation challenges. Sonderegger (2022) demonstrated enhanced interactive learning through social robots with LLMs, while Bonner et al. (2023) highlighted language education applications. Frameworks like Su & Yang's (2023) "IDEE" model guide implementation. Pedagogical innovations include Dai's (2024) dual-contrast pedagogy for AI literacy and Van den Berg & du Plessis's (2023) approach to democratizing lesson planning. Implementation challenges documented by Perkins (2023) and Van Wyk (2024) emphasize the need for clear policies, ethical guidelines, and AI-resilient assessments.</p>
             
             <div style={{marginTop: '20px', textAlign: 'center'}}>
@@ -826,7 +1082,7 @@ reshaping educational practices.
                   window.location.href = `${process.env.PUBLIC_URL}/literature-review.html`;
                 }}
               >
-                Explore Complete Literature Review
+                Explore Further Literature Review
               </a>
             </div>
           </div>
@@ -835,18 +1091,23 @@ reshaping educational practices.
 
       {/* Methods Collapsible Section Box */}
       <div style={styles.collapsibleSectionBox}>
-        <h2 id="methods" onClick={toggleMethods} style={styles.collapsibleHeading}>
-           Methods <span style={{ marginLeft: 'auto' }}>{isMethodsOpen ? '▲' : '▼'}</span>
+        <h2 
+          id="methods" 
+          onClick={toggleMethods} 
+          style={styles.collapsibleHeading}
+          data-arrow={isMethodsOpen ? '▲' : '▼'} // Use data-arrow
+        >
+           Methods {/* Remove explicit span for arrow */}
         </h2>
         {isMethodsOpen && (
           <div style={styles.collapsibleContent}>
-            <h3 id="research-design">Research Design and Data Collection</h3>
+            <h3 id="research-design" style={styles.collapsibleContentH3}>Research Design and Data Collection</h3>
             <ul>
               <li>A modified 31-item AI survey (five-point Likert Scale) administered to instructors and students</li>
               <li>Survey adapted from Wang, Li, Tan, Yang and Lei (2023)</li>
             </ul>
 
-            <h3 id="participants">Participants</h3>
+            <h3 id="participants" style={styles.collapsibleContentH3}>Participants</h3>
             <ul>
               <li>Initial invitation: 500 students and 500 instructors</li>
               <li>Final participation after screening: 
@@ -857,7 +1118,7 @@ reshaping educational practices.
               </li>
             </ul>
 
-            <h3 id="data-analysis">Data Analysis</h3>
+            <h3 id="data-analysis" style={styles.collapsibleContentH3}>Data Analysis</h3>
             <ul>
               <li>Quantitative Analysis:
                 <ul>
@@ -879,53 +1140,62 @@ reshaping educational practices.
 
       {/* Findings Collapsible Section Box - Note: ID added for potential future linking */}
       <div style={styles.collapsibleSectionBox}>
-        <h2 id="findings" onClick={toggleFindingsSection} style={styles.collapsibleHeading}>
-           Findings <span style={{ marginLeft: 'auto' }}>{isFindingsOpenSection ? '▲' : '▼'}</span>
+        <h2 
+          id="findings" 
+          onClick={toggleFindingsSection} 
+          style={styles.collapsibleHeading}
+          data-arrow={isFindingsOpenSection ? '▲' : '▼'} // Use data-arrow
+        >
+           Findings {/* Remove explicit span for arrow */}
         </h2>
         {isFindingsOpenSection && (
           <div style={styles.collapsibleContent}>
-            <h3 id="quantitative">Quantitative Findings Overview</h3>
-            <p>Our quantitative analysis involved surveys with <strong>128 instructors</strong> and <strong>496 students</strong>. Key dimensions explored include Cognition, Ability, Vision, Ethics, Perceived Threats, and AI-Enhanced Innovation, all rated on a 1-5 scale.</p>
+            <h3 id="quantitative" style={styles.collapsibleContentH3}>Quantitative Findings Overview</h3>
+            <p>Our quantitative analysis involved surveys with <strong style={styles.findingsKeyMetric}>128 instructors</strong> and <strong style={styles.findingsKeyMetric}>496 students</strong>. Key dimensions explored include Cognition, Ability, Vision, Ethics, Perceived Threats, and AI-Enhanced Innovation, all rated on a 1-5 scale.</p>
             
-            <div style={{ marginTop: '15px', marginBottom: '20px' }}>
-              <h4>Instructors (N=128)</h4>
-              <ul>
-                <li><strong>Average Scores:</strong> Cognition (M=3.46), Ability (M=3.06), Vision (M=3.69), Ethics (M=3.72), Perceived Threats (M=2.96), AI-Enhanced Innovation (M=3.46).</li>
-                <li><strong>Correlations:</strong> Strong positive links between Cognition, Ability, and Vision. Perceived Threats generally correlated negatively with other readiness dimensions.</li>
-                <li><strong>Factor Analysis:</strong> Suggested a two-factor structure for readiness: general AI readiness and threat perception.</li>
-                <li><strong>Institutional Comparison (Ethics):</strong> All NTU and NIE lecturers showed high ethical awareness (M=3.72).</li>
-              </ul>
-            </div>
-            
-            <div style={{ marginTop: '15px', marginBottom: '20px' }}>
-              <h4>Students (N=496)</h4>
-              <ul>
-                <li><strong>Average Scores:</strong> Cognition (M=3.48), Ability (M=3.47), Vision (M=3.58), Ethics (M=3.70), Perceived Threats (M=3.28), AI-Enhanced Innovation (M=3.69).</li>
-                <li><strong>Correlations:</strong> Generally stronger correlations between dimensions compared to instructors. Perceived Threats also showed negative correlations.</li>
-                <li><strong>Factor Analysis:</strong> Indicated a more complex, potentially 7-dimension structure, with a strong general AI readiness factor.</li>
-                <li><strong>Institutional Comparison (Ethics):</strong> All NTU and NIE students showed high ethical awareness (M=3.70).</li>
-              </ul>
+            <div style={styles.findingsContainer}> {/* New container for cards */}
+              <div style={styles.findingsCard}> {/* Card for Instructors */}
+                <h4 style={styles.findingsCardTitle}>Instructors (N=128)</h4>
+                <ul style={styles.findingsList}>
+                  <li style={styles.findingsListItem}><strong>Average Scores:</strong> Cognition (M=<span style={styles.findingsKeyMetric}>3.46</span>), Ability (M=<span style={styles.findingsKeyMetric}>3.06</span>), Vision (M=<span style={styles.findingsKeyMetric}>3.69</span>), Ethics (M=<span style={styles.findingsKeyMetric}>3.72</span>), Perceived Threats (M=<span style={styles.findingsKeyMetric}>2.96</span>), AI-Enhanced Innovation (M=<span style={styles.findingsKeyMetric}>3.46</span>).</li>
+                  <li style={styles.findingsListItem}><strong>Correlations:</strong> Strong positive links between Cognition, Ability, and Vision. Perceived Threats generally correlated negatively with other readiness dimensions.</li>
+                  <li style={styles.findingsListItem}><strong>Factor Analysis:</strong> Suggested a two-factor structure for readiness: general AI readiness and threat perception.</li>
+                  <li style={styles.findingsListItem}><strong>Institutional Comparison (Ethics):</strong> All NTU and NIE lecturers showed high ethical awareness (M=<span style={styles.findingsKeyMetric}>3.72</span>).</li>
+                </ul>
+              </div>
+              
+              <div style={styles.findingsCard}> {/* Card for Students */}
+                <h4 style={styles.findingsCardTitle}>Students (N=496)</h4>
+                <ul style={styles.findingsList}>
+                  <li style={styles.findingsListItem}><strong>Average Scores:</strong> Cognition (M=<span style={styles.findingsKeyMetric}>3.48</span>), Ability (M=<span style={styles.findingsKeyMetric}>3.47</span>), Vision (M=<span style={styles.findingsKeyMetric}>3.58</span>), Ethics (M=<span style={styles.findingsKeyMetric}>3.70</span>), Perceived Threats (M=<span style={styles.findingsKeyMetric}>3.28</span>), AI-Enhanced Innovation (M=<span style={styles.findingsKeyMetric}>3.69</span>).</li>
+                  <li style={styles.findingsListItem}><strong>Correlations:</strong> Generally stronger correlations between dimensions compared to instructors. Perceived Threats also showed negative correlations.</li>
+                  <li style={styles.findingsListItem}><strong>Factor Analysis:</strong> Indicated a more complex, potentially 7-dimension structure, with a strong general AI readiness factor.</li>
+                  <li style={styles.findingsListItem}><strong>Institutional Comparison (Ethics):</strong> All NTU and NIE students showed high ethical awareness (M=<span style={styles.findingsKeyMetric}>3.70</span>).</li>
+                </ul>
+              </div>
             </div>
 
-            <h3 id="qualitative">Qualitative Findings Overview</h3>
+            <h3 id="qualitative" style={{...styles.collapsibleContentH3, marginTop: '30px'}}>Qualitative Findings Overview</h3>
             <p>Thematic analysis of open-ended responses provided deeper insights into user experiences and perspectives.</p>
             
-            <div style={{ marginTop: '15px', marginBottom: '20px' }}>
-              <h4>Instructors</h4>
-              <ul>
-                <li><strong>Cognition & Ability:</strong> Moderately knowledgeable, grasping AI's importance but often seeking more training for practical application and pedagogical redesign.</li>
-                <li><strong>Vision & Innovation:</strong> Positive outlook on AI's future role, though personal ideation for new AI uses is less developed. Innovation is often grassroots.</li>
-                <li><strong>Ethics & Threats:</strong> High awareness of ethical principles (especially data privacy), but less certainty in applying them. Concerns exist about cognitive/relational erosion due to AI, rather than job displacement.</li>
-              </ul>
-            </div>
-            
-            <div style={{ marginTop: '15px', marginBottom: '20px' }}>
-              <h4>Students</h4>
-              <ul>
-                <li><strong>Cognition & Ability:</strong> Actively use AI for learning tasks (info retrieval, brainstorming). Confident in using AI feedback but seek to improve skill transfer and collaborative AI use.</li>
-                <li><strong>Vision & Innovation:</strong> See AI as a long-term learning companion, especially for content comprehension and lifelong growth. Less clear on AI's role in boosting higher-order thinking.</li>
-                <li><strong>Ethics & Threats:</strong> Intuitive sense of right/wrong regarding plagiarism and privacy. Desire clearer guidelines for nuanced ethical situations. Main perceived threat is AI dulling critical thinking.</li>
-              </ul>
+            <div style={styles.findingsContainer}> {/* New container for cards */}
+              <div style={styles.findingsCard}> {/* Card for Instructors - Qualitative */}
+                <h4 style={styles.findingsCardTitle}>Instructors</h4>
+                <ul style={styles.findingsList}>
+                  <li style={styles.findingsListItem}><strong>Cognition & Ability:</strong> Moderately knowledgeable, grasping AI's importance but often seeking more training for practical application and pedagogical redesign.</li>
+                  <li style={styles.findingsListItem}><strong>Vision & Innovation:</strong> Positive outlook on AI's future role, though personal ideation for new AI uses is less developed. Innovation is often grassroots.</li>
+                  <li style={styles.findingsListItem}><strong>Ethics & Threats:</strong> High awareness of ethical principles (especially data privacy), but less certainty in applying them. Concerns exist about cognitive/relational erosion due to AI, rather than job displacement.</li>
+                </ul>
+              </div>
+              
+              <div style={styles.findingsCard}> {/* Card for Students - Qualitative */}
+                <h4 style={styles.findingsCardTitle}>Students</h4>
+                <ul style={styles.findingsList}>
+                  <li style={styles.findingsListItem}><strong>Cognition & Ability:</strong> Actively use AI for learning tasks (info retrieval, brainstorming). Confident in using AI feedback but seek to improve skill transfer and collaborative AI use.</li>
+                  <li style={styles.findingsListItem}><strong>Vision & Innovation:</strong> See AI as a long-term learning companion, especially for content comprehension and lifelong growth. Less clear on AI's role in boosting higher-order thinking.</li>
+                  <li style={styles.findingsListItem}><strong>Ethics & Threats:</strong> Intuitive sense of right/wrong regarding plagiarism and privacy. Desire clearer guidelines for nuanced ethical situations. Main perceived threat is AI dulling critical thinking.</li>
+                </ul>
+              </div>
             </div>
 
             {/* Add dedicated findings page link */}
@@ -967,8 +1237,13 @@ reshaping educational practices.
 
       {/* Case Studies Collapsible Section Box */}
       <div style={styles.collapsibleSectionBox}>
-        <h2 id="case-studies" onClick={toggleCaseStudies} style={styles.collapsibleHeading}>
-           Case Studies <span style={{ marginLeft: 'auto' }}>{isCaseStudiesOpen ? '▲' : '▼'}</span>
+        <h2 
+          id="case-studies" 
+          onClick={toggleCaseStudies} 
+          style={styles.collapsibleHeading}
+          data-arrow={isCaseStudiesOpen ? '▲' : '▼'} // Use data-arrow
+        >
+           Case Studies {/* Remove explicit span for arrow */}
         </h2>
         {isCaseStudiesOpen && (
           <div style={styles.collapsibleContent}>
@@ -1008,59 +1283,48 @@ reshaping educational practices.
             </div>
             
             <div id="browse-cases">
-              <h3>Featured Case Studies</h3>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', marginTop: '20px' }}>
-                {caseStudies.slice(0, 4).map(caseStudy => (
-                  <div key={caseStudy.id} style={{ 
-                    width: 'calc(25% - 15px)', 
-                    minWidth: '250px',
-                    border: '1px solid #ddd', 
-                    borderRadius: '8px',
-                    padding: '15px',
-                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                    cursor: 'pointer',
-                    transition: 'transform 0.2s',
-                    backgroundColor: '#f9f9f9',
-                    display: 'flex',
-                    flexDirection: 'column'
-                  }}
-                  onClick={() => {
-                    // Open case study detail in a modal or expand in place
-                    const caseElement = document.getElementById(`case-${caseStudy.id}`);
-                    if (caseElement) {
-                      const allCases = document.querySelectorAll('[id^="case-"]');
-                      allCases.forEach(el => {
-                        if (el.id !== `case-${caseStudy.id}`) {
-                          el.style.display = 'none';
+              <h3 style={styles.collapsibleContentH3}>Featured Case Studies</h3>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginTop: '20px', justifyContent: 'center' }}> {/* Added justifyContent */}
+                {caseStudies.slice(0, 3).map(caseStudy => ( // Changed from 4 to 3
+                  <div 
+                    key={caseStudy.id} 
+                    style={styles.caseStudyCard} // Applied new style
+                    onClick={() => {
+                      // Open case study detail in a modal or expand in place
+                      const caseElement = document.getElementById(`case-${caseStudy.id}`);
+                      if (caseElement) {
+                        const allCases = document.querySelectorAll('[id^="case-"]');
+                        allCases.forEach(el => {
+                          if (el.id !== `case-${caseStudy.id}`) {
+                            el.style.display = 'none';
+                          }
+                        });
+                        caseElement.style.display = 'block';
+                        caseElement.scrollIntoView({ behavior: 'smooth' });
+                        
+                        // Initialize word cloud if this case study has one
+                        if (caseStudy.hasWordCloud) {
+                          setTimeout(() => {
+                            createWordCloudViewer(`wordcloud-container-${caseStudy.id}`);
+                          }, 500);
                         }
-                      });
-                      caseElement.style.display = 'block';
-                      caseElement.scrollIntoView({ behavior: 'smooth' });
-                      
-                      // Initialize word cloud if this case study has one
-                      if (caseStudy.hasWordCloud) {
+                        
+                        // Trigger chatbot interaction after viewing a case
                         setTimeout(() => {
-                          createWordCloudViewer(`wordcloud-container-${caseStudy.id}`);
-                        }, 500);
+                          window.dispatchEvent(new CustomEvent('pageNavigated', { 
+                            detail: { 
+                              section: `case-study-${caseStudy.id}`,
+                              caseTitle: caseStudy.title
+                            } 
+                          }));
+                        }, 30000); // Show after 30 seconds of reading
                       }
-                      
-                      // Trigger chatbot interaction after viewing a case
-                      setTimeout(() => {
-                        window.dispatchEvent(new CustomEvent('pageNavigated', { 
-                          detail: { 
-                            section: `case-study-${caseStudy.id}`,
-                            caseTitle: caseStudy.title
-                          } 
-                        }));
-                      }, 30000); // Show after 30 seconds of reading
-                    }
-                  }}
-                  onMouseOver={e => e.currentTarget.style.transform = 'translateY(-5px)'}
-                  onMouseOut={e => e.currentTarget.style.transform = 'translateY(0)'}
+                    }}
+                    // Removed inline onMouseOver/Out, handled by CSS hover state in caseStudyCard
                   >
-                    <h4 style={{ color: '#003d7c', marginTop: 0 }}>{caseStudy.title}</h4>
-                    <div style={{ 
-                      display: 'inline-block',
+                    <h4 style={styles.caseStudyCardTitle}>{caseStudy.title}</h4>
+                    <div style={{
+                      ...styles.caseStudyCardCategory, // Applied new style
                       backgroundColor: caseStudy.category === 'Teaching' ? '#e6f7ff' : 
                                       caseStudy.category === 'Learning' ? '#f6ffed' :
                                       caseStudy.category === 'Assessment' ? '#fff7e6' :
@@ -1212,61 +1476,66 @@ reshaping educational practices.
 
       {/* Resources Collapsible Section Box */}
       <div style={styles.collapsibleSectionBox}>
-        <h2 id="resources" onClick={toggleResources} style={styles.collapsibleHeading}>
-           Resources <span style={{ marginLeft: 'auto' }}>{isResourcesOpen ? '▲' : '▼'}</span>
+        <h2 
+          id="resources" 
+          onClick={toggleResources} 
+          style={styles.collapsibleHeading}
+          data-arrow={isResourcesOpen ? '▲' : '▼'} // Use data-arrow
+        >
+           Resources {/* Remove explicit span for arrow */}
         </h2>
         {isResourcesOpen && (
           <div style={styles.collapsibleContent}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+            <div style={styles.resourcesGrid}> {/* Changed from inline style to styles.resourcesGrid */}
               {/* Left column - Tools for Teaching */}
-              <div>
-                <h3 id="instructor-tools" style={{ color: '#003d7c', borderBottom: '2px solid #003d7c', paddingBottom: '8px' }}>Tools for Teaching</h3>
-                <ul>
-                  <li><strong>Copilot</strong> - For course material development</li>
-                  <li><a href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer"><strong>ChatGPT</strong></a> - For creating assessments and activities</li>
-                  <li><strong>School AI</strong> - For personalized instruction</li>
-                  <li><strong>TeacherGAIA</strong> - For personalized learning design</li>
+              <div style={styles.resourceColumn}>
+                <h3 id="instructor-tools" style={{ ...styles.collapsibleContentH3, borderBottomColor: '#0056b3' }}>Tools for Teaching</h3>
+                <ul style={styles.resourceList}>
+                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Copilot</strong> - For course material development</a></li>
+                  <li style={styles.resourceListItem}><a href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>ChatGPT</strong> - For creating assessments and activities</a></li>
+                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>School AI</strong> - For personalized instruction</a></li>
+                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>TeacherGAIA</strong> - For personalized learning design</a></li>
                 </ul>
                 
-                <h3 id="ai-assessment" style={{ color: '#003d7c', borderBottom: '1px solid #003d7c', paddingBottom: '5px', marginTop: '20px' }}>AI for Assessment</h3>
-                <ul>
-                  <li><strong>Gradescope</strong> - Automated grading assistant</li>
-                  <li><strong>Turnitin</strong> - AI writing detection</li>
-                  <li><strong>Feedback Studio</strong> - Assessment feedback generation</li>
+                <h3 id="ai-assessment" style={{ ...styles.collapsibleContentH3, borderBottomColor: '#0056b3', fontSize: '1.1em', marginTop: '25px' }}>AI for Assessment</h3>
+                <ul style={styles.resourceList}>
+                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Gradescope</strong> - Automated grading assistant</a></li>
+                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Turnitin</strong> - AI writing detection</a></li>
+                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Feedback Studio</strong> - Assessment feedback generation</a></li>
                 </ul>
                 
-                <h3 id="teaching-activities" style={{ color: '#003d7c', borderBottom: '1px solid #003d7c', paddingBottom: '5px', marginTop: '20px' }}>Teaching Activities</h3>
-                <ul>
-                  <li><strong>Prompt engineering exercises</strong></li>
-                  <li><strong>Collaborative AI projects</strong></li>
-                  <li><strong>AI-enhanced lesson plans</strong></li>
+                <h3 id="teaching-activities" style={{ ...styles.collapsibleContentH3, borderBottomColor: '#0056b3', fontSize: '1.1em', marginTop: '25px' }}>Teaching Activities</h3>
+                <ul style={styles.resourceList}>
+                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Prompt engineering exercises</strong></a></li>
+                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Collaborative AI projects</strong></a></li>
+                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>AI-enhanced lesson plans</strong></a></li>
                 </ul>
               </div>
               
               {/* Right column - Tools for Learning */}
-              <div>
-                <h3 id="student-tools" style={{ color: '#e74c3c', borderBottom: '2px solid #e74c3c', paddingBottom: '8px' }}>Tools for Learning</h3>
-                <ul>
-                  <li><strong>Gemini</strong> - For brainstorming and research</li>
-                  <li><strong>Claude</strong> - For essay feedback and refinement</li>
-                  <li><strong>Perplexity.ai</strong> - For in-depth research with citations</li>
-                  <li><strong>Grammarly</strong> - For writing improvement</li>
-                  <li><strong>Edpuzzle</strong> - For interactive video learning</li>
-                  <li><strong>Google NotebookLM</strong> - For organizing research notes</li>
+              <div style={styles.resourceColumn}>
+                <h3 id="student-tools" style={{ ...styles.collapsibleContentH3, borderBottomColor: '#c0392b', color: '#e74c3c' }}>Tools for Learning</h3>
+                <ul style={styles.resourceList}>
+                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Gemini</strong> - For brainstorming and research</a></li>
+                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Claude</strong> - For essay feedback and refinement</a></li>
+                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Perplexity.ai</strong> - For in-depth research with citations</a></li>
+                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Grammarly</strong> - For writing improvement</a></li>
+                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Edpuzzle</strong> - For interactive video learning</a></li>
+                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Google NotebookLM</strong> - For organizing research notes</a></li>
                 </ul>
                 
-                <h3 id="learning-ai" style={{ color: '#e74c3c', borderBottom: '1px solid #e74c3c', paddingBottom: '5px', marginTop: '20px' }}>Learning with AI</h3>
-                <ul>
-                  <li><strong>Study companions</strong> - AI tutors for personalized learning</li>
-                  <li><strong>Explanation tools</strong> - For breaking down complex concepts</li>
-                  <li><strong>Practice generators</strong> - For creating custom exercises</li>
+                <h3 id="learning-ai" style={{ ...styles.collapsibleContentH3, borderBottomColor: '#c0392b', color: '#e74c3c', fontSize: '1.1em', marginTop: '25px' }}>Learning with AI</h3>
+                <ul style={styles.resourceList}>
+                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Study companions</strong> - AI tutors for personalized learning</a></li>
+                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Explanation tools</strong> - For breaking down complex concepts</a></li>
+                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Practice generators</strong> - For creating custom exercises</a></li>
                 </ul>
                 
-                <h3 id="student-research" style={{ color: '#e74c3c', borderBottom: '1px solid #e74c3c', paddingBottom: '5px', marginTop: '20px' }}>Research Materials</h3>
-                <ul>
-                  <li><strong>Citation generators</strong> - For academic references</li>
-                  <li><strong>Literature summarizers</strong> - For research papers</li>
-                  <li><strong>Data visualization tools</strong> - For presenting findings</li>
+                <h3 id="student-research" style={{ ...styles.collapsibleContentH3, borderBottomColor: '#c0392b', color: '#e74c3c', fontSize: '1.1em', marginTop: '25px' }}>Research Materials</h3>
+                <ul style={styles.resourceList}>
+                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Citation generators</strong> - For academic references</a></li>
+                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Literature summarizers</strong> - For research papers</a></li>
+                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Data visualization tools</strong> - For presenting findings</a></li>
                 </ul>
               </div>
             </div>
