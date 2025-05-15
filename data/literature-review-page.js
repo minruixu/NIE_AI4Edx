@@ -918,7 +918,7 @@ const LiteratureReviewPage = () => {
                       cursor: 'pointer',
                     }}
                   >
-                    Back to All Literature Reviews
+                    Back to Literature Reviews
                   </button>
                 </div>
               </div>
