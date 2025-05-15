@@ -259,24 +259,25 @@ const styles = {
     cursor: 'pointer',
     userSelect: 'none',
     margin: 0,
-    padding: '20px 25px', // Increased padding
+    padding: '20px 25px',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    transition: 'background-color 0.3s ease, padding 0.3s ease', // Smoother transitions
-    fontWeight: '600', // Bolder font for headings
-    borderBottom: '1px solid transparent', // Prepare for border animation
+    transition: 'background-color 0.3s ease, padding 0.3s ease',
+    fontWeight: '600',
+    borderBottom: '1px solid transparent',
     '&:hover': {
-      backgroundColor: '#f5f5f5', // Light grey on hover
-      paddingLeft: '30px', // Subtle indent on hover
-      borderBottomColor: '#003d7c', // Accent border on hover
+      backgroundColor: '#f5f5f5',
+      paddingLeft: '30px',
+      borderBottomColor: '#003d7c',
     },
-    '&:after': {
-      content: 'attr(data-arrow)', // Dynamic arrow content from data attribute
-      fontSize: '1.2em', // Larger arrow
-      marginLeft: '15px',
-      transition: 'transform 0.3s ease',
-    }
+  },
+  collapsibleArrow: { // New style for the arrow span
+    fontSize: '1.2em',
+    marginLeft: '15px',
+    transition: 'transform 0.3s ease',
+    display: 'inline-block', // Necessary for transform to work
+    lineHeight: '1', // Prevents extra space if font-size causes it
   },
   collapsibleSectionBox: {
     backgroundColor: '#ffffff', // White background
@@ -291,13 +292,28 @@ const styles = {
       borderColor: '#003d7c', // Highlight border on hover
     }
   },
-  collapsibleContent: {
-    padding: '0 25px 25px 25px', // Adjusted padding, more bottom padding
-    lineHeight: '1.7', // Improved line height for readability
+  collapsibleContent: { // Base style, always applied
+    overflow: 'hidden',
+    transition: 'max-height 0.35s ease-in-out, opacity 0.3s ease-in-out, padding-top 0.35s ease-in-out, padding-bottom 0.35s ease-in-out',
+    lineHeight: '1.7',
     backgroundColor: '#fdfdfd', // Slight off-white for content area
     borderTop: '1px dashed #eee', // Subtle separator from heading
+    // Note: paddingLeft and paddingRight can remain here as they don't animate with height
+    paddingLeft: '25px',
+    paddingRight: '25px',
   },
-  // Add a new style for H3 within collapsible content
+  collapsibleContentOpenState: { // Applied when open
+    maxHeight: '2500px', // Large enough value, adjust if specific content is taller
+    opacity: 1,
+    paddingTop: '20px', 
+    paddingBottom: '25px',
+  },
+  collapsibleContentClosedState: { // Applied when closed
+    maxHeight: '0px',
+    opacity: 0,
+    paddingTop: '0px',
+    paddingBottom: '0px',
+  },
   collapsibleContentH3: {
     color: '#003d7c',
     fontSize: '1.2em',
@@ -963,14 +979,18 @@ const MainContent = () => {
           id="who-we-are" 
           onClick={toggleWhoWeAre} 
           style={styles.collapsibleHeading}
-          data-arrow={isWhoWeAreOpen ? '▲' : '▼'} // Use data-arrow
         >
-          About The Project {/* Remove explicit span for arrow */}
+          About The Project 
+          <span style={{...styles.collapsibleArrow, transform: isWhoWeAreOpen ? 'rotate(90deg)' : 'rotate(0deg)'}}>❯</span>
         </h2>
-        {isWhoWeAreOpen && (
-          <div style={styles.collapsibleContent}>
-            <p>
-            We are a research team from the National Institute of
+        {/* Conditional styling for content animation */}
+        <div style={{
+          ...styles.collapsibleContent,
+          ...(isWhoWeAreOpen ? styles.collapsibleContentOpenState : styles.collapsibleContentClosedState)
+        }}>
+          {/* Content is always rendered for animation; visibility controlled by maxHeight/opacity */}
+          <p>
+          We are a research team from the National Institute of
 
 Education at Nanyang Technological University, exploring
 
@@ -987,23 +1007,11 @@ collaboration of Associate Professor Wang Qiyun, our project
 Readiness and Strategies" examines how AI technologies are
 
 reshaping educational practices.
-              <br></br>
-              <br></br>
-              Our research focuses on understanding instructor and student perceptions of GPT as a pedagogical tool in university teaching and learning. We survey their readiness, ethical concerns, and experiences across diverse disciplines including Humanities, Science, Mathematics, Engineering, Art and Music. By identifying current knowledge application gaps and ethical considerations, we aim to develop practical use cases that support faculty professional development and enhance curriculum resources in the evolving AI landscape.
-            </p>
-            {/* <p>
-              This study surveys the instructor and student perceptions of Generative Pre-trained Transformer (GPT) and its applications in higher education teaching and learning. The findings aim to serve as an input to identify the current knowledge application gaps and the ethical concerns. Three research questions are:
-            </p>
-            <ul>
-              <li>What are the instructors' and students' perceptions of their readiness to use GPT in teaching and learning?</li>
-              <li>What are the instructors' and students' ethical concerns of adopting GPT for teaching and learning in NIE and NTU?</li>
-              <li>What are the instructors' and students' current reported GPT related practices that pose as (a) threats? and (b) benefits to themselves in the context of teaching and learning?</li>
-            </ul> */}
-            {/* <p>
-              A modified 31-item AI survey (five-point Likert Scale) will be administered separately to the instructors and students to gain an insight into their perceptions on their AI-readiness, threats, innovations, teaching and learning satisfactions in the university. The modified AI survey was obtained and adapted from Wang, Li, Tan, Yang and Lei (2023). Following the collection of the quantitative and qualitative data from 1000 participants (500 instructors and 500 students). Descriptive statistics and inferential statistics will be calculated to answer the research questions. Qualitative data from the open-ended section of the survey will be coded and developed into use cases. The deliverables will include:
-            </p> */}
-          </div>
-        )}
+            <br></br>
+            <br></br>
+            Our research focuses on understanding instructor and student perceptions of GPT as a pedagogical tool in university teaching and learning. We survey their readiness, ethical concerns, and experiences across diverse disciplines including Humanities, Science, Mathematics, Engineering, Art and Music. By identifying current knowledge application gaps and ethical considerations, we aim to develop practical use cases that support faculty professional development and enhance curriculum resources in the evolving AI landscape.
+          </p>
+        </div>
       </div>
 
       {/* Research Focus Collapsible Section Box */}
@@ -1012,13 +1020,15 @@ reshaping educational practices.
           id="research-focus" 
           onClick={toggleResearchFocus} 
           style={styles.collapsibleHeading}
-          data-arrow={isResearchFocusOpen ? '▲' : '▼'} // Use data-arrow
         >
-           Research Focus {/* Remove explicit span for arrow */}
+           Research Focus 
+           <span style={{...styles.collapsibleArrow, transform: isResearchFocusOpen ? 'rotate(90deg)' : 'rotate(0deg)'}}>❯</span>
         </h2>
-        {isResearchFocusOpen && (
-          <div style={styles.collapsibleContent}>
-            {/* Add IDs to paragraphs */}
+        {/* Conditional styling for content animation */}
+        <div style={{
+          ...styles.collapsibleContent,
+          ...(isResearchFocusOpen ? styles.collapsibleContentOpenState : styles.collapsibleContentClosedState)
+        }}>
             <h3 id="research-aims" style={styles.collapsibleContentH3}>Aims</h3>
             <p>This project explores the instructors' and students' perceptions of GPT as a pedagogical tool in university teaching and learning. The findings aim to clarify the role of GPT in teaching and learning and then use the survey findings as an input to identify the current knowledge application gaps and the ethical concerns. Such ground up findings will be developed into use cases for faculty professional development and for teaching and learning curriculum resources.</p>
 
@@ -1037,8 +1047,7 @@ reshaping educational practices.
               <li>What are the instructors' and students' ethical concerns for adopting GPT in NTU and NIE?</li>
               <li>What are the instructors' and students' reported cases of using GPT that pose as (a) threats? (b) benefits to their teaching and learning?</li>
             </ul>
-          </div>
-        )}
+        </div>
       </div>
 
       {/* Literature Review Collapsible Section Box */}
@@ -1047,13 +1056,15 @@ reshaping educational practices.
           id="literature-review" 
           onClick={toggleLiteratureReview} 
           style={styles.collapsibleHeading}
-          data-arrow={isLiteratureReviewOpen ? '▲' : '▼'} // Use data-arrow
         >
-           Literature Review {/* Remove explicit span for arrow */}
+           Literature Review 
+           <span style={{...styles.collapsibleArrow, transform: isLiteratureReviewOpen ? 'rotate(90deg)' : 'rotate(0deg)'}}>❯</span>
         </h2>
-        {isLiteratureReviewOpen && (
-          <div style={styles.collapsibleContent}>
-            {/* Add IDs to h3 headings */}
+        {/* Conditional styling for content animation */}
+        <div style={{
+          ...styles.collapsibleContent,
+          ...(isLiteratureReviewOpen ? styles.collapsibleContentOpenState : styles.collapsibleContentClosedState)
+        }}>
             <h3 id="lit-rq1" style={styles.collapsibleContentH3}>Readiness</h3>
             <p>Research reveals varying levels of readiness among faculty and students regarding GPT adoption. Studies by Sanders & Mukhari (2024) highlight that successful integration requires robust institutional support, training opportunities, and reliable infrastructure. Demographic factors, teaching modalities, generational differences, and cross-cultural backgrounds significantly influence attitudes toward AI adoption. Wang et al. (2023) emphasize that AI readiness is distinct from general technological competence and requires specific preparation.</p>
             
@@ -1085,8 +1096,7 @@ reshaping educational practices.
                 Explore Further Literature Review
               </a>
             </div>
-          </div>
-        )}
+        </div>
       </div>
 
       {/* Methods Collapsible Section Box */}
@@ -1095,12 +1105,15 @@ reshaping educational practices.
           id="methods" 
           onClick={toggleMethods} 
           style={styles.collapsibleHeading}
-          data-arrow={isMethodsOpen ? '▲' : '▼'} // Use data-arrow
         >
-           Methods {/* Remove explicit span for arrow */}
+           Methods 
+           <span style={{...styles.collapsibleArrow, transform: isMethodsOpen ? 'rotate(90deg)' : 'rotate(0deg)'}}>❯</span>
         </h2>
-        {isMethodsOpen && (
-          <div style={styles.collapsibleContent}>
+        {/* Conditional styling for content animation */}
+        <div style={{
+          ...styles.collapsibleContent,
+          ...(isMethodsOpen ? styles.collapsibleContentOpenState : styles.collapsibleContentClosedState)
+        }}>
             <h3 id="research-design" style={styles.collapsibleContentH3}>Research Design and Data Collection</h3>
             <ul>
               <li>A modified 31-item AI survey (five-point Likert Scale) administered to instructors and students</li>
@@ -1134,8 +1147,7 @@ reshaping educational practices.
                 </ul>
               </li>
             </ul>
-          </div>
-        )}
+        </div>
       </div>
 
       {/* Findings Collapsible Section Box - Note: ID added for potential future linking */}
@@ -1144,12 +1156,15 @@ reshaping educational practices.
           id="findings" 
           onClick={toggleFindingsSection} 
           style={styles.collapsibleHeading}
-          data-arrow={isFindingsOpenSection ? '▲' : '▼'} // Use data-arrow
         >
-           Findings {/* Remove explicit span for arrow */}
+           Findings 
+           <span style={{...styles.collapsibleArrow, transform: isFindingsOpenSection ? 'rotate(90deg)' : 'rotate(0deg)'}}>❯</span>
         </h2>
-        {isFindingsOpenSection && (
-          <div style={styles.collapsibleContent}>
+        {/* Conditional styling for content animation */}
+        <div style={{
+          ...styles.collapsibleContent,
+          ...(isFindingsOpenSection ? styles.collapsibleContentOpenState : styles.collapsibleContentClosedState)
+        }}>
             <h3 id="quantitative" style={styles.collapsibleContentH3}>Quantitative Findings Overview</h3>
             <p>Our quantitative analysis involved surveys with <strong style={styles.findingsKeyMetric}>128 instructors</strong> and <strong style={styles.findingsKeyMetric}>496 students</strong>. Key dimensions explored include Cognition, Ability, Vision, Ethics, Perceived Threats, and AI-Enhanced Innovation, all rated on a 1-5 scale.</p>
             
@@ -1231,8 +1246,7 @@ reshaping educational practices.
                 Explore Complete Findings
               </a>
             </div>
-          </div>
-        )}
+        </div>
       </div>
 
       {/* Case Studies Collapsible Section Box */}
@@ -1241,12 +1255,15 @@ reshaping educational practices.
           id="case-studies" 
           onClick={toggleCaseStudies} 
           style={styles.collapsibleHeading}
-          data-arrow={isCaseStudiesOpen ? '▲' : '▼'} // Use data-arrow
         >
-           Case Studies {/* Remove explicit span for arrow */}
+           Case Studies 
+           <span style={{...styles.collapsibleArrow, transform: isCaseStudiesOpen ? 'rotate(90deg)' : 'rotate(0deg)'}}>❯</span>
         </h2>
-        {isCaseStudiesOpen && (
-          <div style={styles.collapsibleContent}>
+        {/* Conditional styling for content animation */}
+        <div style={{
+          ...styles.collapsibleContent,
+          ...(isCaseStudiesOpen ? styles.collapsibleContentOpenState : styles.collapsibleContentClosedState)
+        }}>
             <p>Explore our collection of case studies showcasing how AI is being used in teaching and learning contexts.</p>
             
             <div style={{ 
@@ -1470,8 +1487,7 @@ reshaping educational practices.
                 )}
               </div>
             ))}
-          </div>
-        )}
+        </div>
       </div>
 
       {/* Resources Collapsible Section Box */}
@@ -1480,12 +1496,15 @@ reshaping educational practices.
           id="resources" 
           onClick={toggleResources} 
           style={styles.collapsibleHeading}
-          data-arrow={isResourcesOpen ? '▲' : '▼'} // Use data-arrow
         >
-           Resources {/* Remove explicit span for arrow */}
+           Resources 
+           <span style={{...styles.collapsibleArrow, transform: isResourcesOpen ? 'rotate(90deg)' : 'rotate(0deg)'}}>❯</span>
         </h2>
-        {isResourcesOpen && (
-          <div style={styles.collapsibleContent}>
+        {/* Conditional styling for content animation */}
+        <div style={{
+          ...styles.collapsibleContent,
+          ...(isResourcesOpen ? styles.collapsibleContentOpenState : styles.collapsibleContentClosedState)
+        }}>
             <div style={styles.resourcesGrid}> {/* Changed from inline style to styles.resourcesGrid */}
               {/* Left column - Tools for Teaching */}
               <div style={styles.resourceColumn}>
@@ -1539,8 +1558,7 @@ reshaping educational practices.
                 </ul>
               </div>
             </div>
-          </div>
-        )}
+        </div>
       </div>
     </main>
   );
