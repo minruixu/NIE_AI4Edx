@@ -866,6 +866,12 @@ const LiteratureReviewPage = () => {
           >
             Literature Review
           </a>
+          <a
+            href="references.html"
+            style={{ textDecoration: 'none', color: '#333' }}
+          >
+            References
+          </a>
         </nav>
       </header>
 
@@ -903,23 +909,38 @@ const LiteratureReviewPage = () => {
                       )}
                     </ul>
                   </div>
-                  <button
-                    onClick={() => {
-                      setSelectedReview(null);
-                      window.location.hash = '';
-                    }}
-                    style={{
-                      marginTop: '20px',
-                      padding: '10px 15px',
-                      backgroundColor: '#003d7c',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Back to Literature Reviews
-                  </button>
+                  <div style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
+                    <button
+                      onClick={() => {
+                        setSelectedReview(null);
+                        window.location.hash = '';
+                      }}
+                      style={{
+                        padding: '10px 15px',
+                        backgroundColor: '#003d7c',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Back to Literature Reviews
+                    </button>
+                    <a
+                      href="references.html"
+                      style={{
+                        padding: '10px 15px',
+                        backgroundColor: '#f0f0f0',
+                        color: '#333',
+                        border: '1px solid #ddd',
+                        borderRadius: '4px',
+                        textDecoration: 'none',
+                        display: 'inline-block',
+                      }}
+                    >
+                      View References
+                    </a>
+                  </div>
                 </div>
               </div>
             )

@@ -192,21 +192,43 @@ const styles = {
   },
   videoOverlayText: {
     position: 'absolute',
-    bottom: '30px',
-    left: '30px',
+    bottom: '40px',
+    left: '40px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
     color: 'white',
-    backgroundColor: 'rgba(0, 61, 124, 0.8)',
-    padding: '12px 24px',
-    borderRadius: '4px',
-    fontSize: '1.5rem',
-    fontWeight: '500',
+    backgroundColor: 'rgba(0, 61, 124, 0.92)',
+    padding: '24px 32px',
+    borderRadius: '10px',
+    fontSize: '1.7rem',
+    fontWeight: '600',
     letterSpacing: '1px',
-    textTransform: 'uppercase',
-    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.2)',
+    boxShadow: '0 4px 16px rgba(0, 0, 0, 0.25)',
     textShadow: '1px 1px 3px rgba(0, 0, 0, 0.3)',
+    zIndex: 6,
+    minWidth: '320px',
+    cursor: 'pointer',
     transition: 'transform 0.3s ease, background-color 0.3s ease',
-    cursor: 'default',
-    zIndex: 5,
+    gap: '12px',
+  },
+  videoOverlayButton: {
+    marginTop: '10px',
+    padding: '10px 22px',
+    backgroundColor: '#ffd700',
+    color: '#003d7c',
+    border: 'none',
+    borderRadius: '6px',
+    fontWeight: 'bold',
+    fontSize: '1.05rem',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+    cursor: 'pointer',
+    outline: 'none',
+    transition: 'transform 0.2s, box-shadow 0.2s, background 0.2s',
+    animation: 'pulse 1.5s infinite',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
   },
   // Styles for image slider navigation
   sliderNavigation: {
@@ -925,25 +947,37 @@ const MainContent = () => {
             document.getElementById('who-we-are').scrollIntoView({ behavior: 'smooth' });
             setIsWhoWeAreOpen(true);
           }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'scale(1.05)';
-            e.currentTarget.style.backgroundColor = 'rgba(0, 61, 124, 0.9)';
-            e.currentTarget.style.cursor = 'pointer';
+          onMouseEnter={e => {
+            e.currentTarget.style.transform = 'scale(1.03)';
+            e.currentTarget.style.backgroundColor = 'rgba(0, 61, 124, 1)';
           }}
-          onMouseLeave={(e) => {
+          onMouseLeave={e => {
             e.currentTarget.style.transform = 'scale(1)';
-            e.currentTarget.style.backgroundColor = 'rgba(0, 61, 124, 0.8)';
+            e.currentTarget.style.backgroundColor = 'rgba(0, 61, 124, 0.92)';
           }}
         >
-          About the project
-          <span style={{ 
-            display: 'block', 
-            fontSize: '0.8rem', 
-            fontWeight: 'normal',
-            marginTop: '5px',
-            textTransform: 'none',
-            opacity: 0.9 
-          }}>Click to learn more</span>
+          <span>About the project</span>
+          <button
+            style={styles.videoOverlayButton}
+            tabIndex={0}
+            onClick={e => {
+              e.stopPropagation();
+              document.getElementById('who-we-are').scrollIntoView({ behavior: 'smooth' });
+              setIsWhoWeAreOpen(true);
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = 'scale(1.08)';
+              e.currentTarget.style.background = 'linear-gradient(90deg,#ffd700 60%,#fffbe6 100%)';
+              e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.22)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.background = '#ffd700';
+              e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+            }}
+          >
+            Click to learn more <span style={{fontSize:'1.2em'}}>→</span>
+          </button>
         </div>
         {/* Add navigation dots */}
         <div style={styles.sliderNavigation}>
@@ -990,27 +1024,7 @@ const MainContent = () => {
         }}>
           {/* Content is always rendered for animation; visibility controlled by maxHeight/opacity */}
           <p>
-          We are a research team from the National Institute of
-
-Education at Nanyang Technological University, exploring
-
-the transformative potential of Generative Pre-trained
-
-Transformer (GPT) in higher education. Led by Associate
-
-Professor Quek Choon Lang Gwendoline with the
-
-collaboration of Associate Professor Wang Qiyun, our project
-
-"Investigating GPT for enhancing teaching and learning: User
-
-Readiness and Strategies" examines how AI technologies are
-
-reshaping educational practices.
-            <br></br>
-            <br></br>
-            Our research focuses on understanding instructor and student perceptions of GPT as a pedagogical tool in university teaching and learning. We survey their readiness, ethical concerns, and experiences across diverse disciplines including Humanities, Science, Mathematics, Engineering, Art and Music. By identifying current knowledge application gaps and ethical considerations, we aim to develop practical use cases that support faculty professional development and enhance curriculum resources in the evolving AI landscape.
-          </p>
+          We are a research team from the National Institute of Education, Nanyang Technological University, led by Associate Professor Quek Choon Lang Gwendoline in collaboration with Associate Professor Wang Qiyun. Our project, "Investigating GPT for enhancing teaching and learning: User Readiness and Strategies," explores how Generative Pre-trained Transformer (GPT) technologies are transforming university education. We examine instructors' and students' perceptions, readiness, ethical concerns, and experiences across disciplines such as Humanities, Science, Mathematics, Engineering, Art, and Music. The goal is to identify current application gaps and ethical considerations, and to develop practical strategies that support faculty development and curriculum enhancement in the age of AI.</p>
         </div>
       </div>
 
@@ -1243,7 +1257,7 @@ reshaping educational practices.
                   window.location.href = `${process.env.PUBLIC_URL}/findings.html`;
                 }}
               >
-                Explore Complete Findings
+                Explore Future/More Literature Review
               </a>
             </div>
         </div>
@@ -3900,6 +3914,11 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
           
           #chat-messages::-webkit-scrollbar-thumb:hover {
             background: #aaa;
+          }
+          @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255,215,0,0.5); }
+            70% { box-shadow: 0 0 0 10px rgba(255,215,0,0); }
+            100% { box-shadow: 0 0 0 0 rgba(255,215,0,0); }
           }
         `
       }} />
