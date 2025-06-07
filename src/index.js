@@ -541,6 +541,7 @@ const Header = () => {
   const [isResourcesDropdownOpen, setIsResourcesDropdownOpen] = useState(false);
   const [isCaseStudiesDropdownOpen, setIsCaseStudiesDropdownOpen] = useState(false);
   const [isAboutUsDropdownOpen, setIsAboutUsDropdownOpen] = useState(false);
+  const [isAIAssessmentDropdownOpen, setIsAIAssessmentDropdownOpen] = useState(false);
 
   return (
     <header style={{
@@ -741,6 +742,41 @@ const Header = () => {
           )}
         </div>
         
+        {/* AI Assessment Dropdown - New Item */}
+        <div
+          style={styles.dropdownContainer}
+          onMouseEnter={() => setIsAIAssessmentDropdownOpen(true)}
+          onMouseLeave={() => setIsAIAssessmentDropdownOpen(false)}
+        >
+          <a 
+            href="#" 
+            style={{
+              ...styles.navLink,
+              fontWeight: '600',
+              fontSize: '1.05em',
+              borderBottom: isAIAssessmentDropdownOpen ? '2px solid #003d7c' : '2px solid transparent',
+              transition: 'all 0.3s ease',
+            }}
+            onClick={(e) => {
+              e.preventDefault();
+              window.location.href = `${process.env.PUBLIC_URL}/ai-assessment.html`;
+            }}
+          >AI Assessment</a>
+          {isAIAssessmentDropdownOpen && (
+            <div style={{
+              ...styles.dropdownContent,
+              boxShadow: '0 10px 20px rgba(0,0,0,0.15)',
+              border: 'none',
+              borderRadius: '8px',
+              marginTop: '5px',
+            }}>
+              <a href="#" style={styles.dropdownLink} onClick={(e) => {e.preventDefault(); window.location.href = `${process.env.PUBLIC_URL}/ai-assessment.html`;}} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Assessment Scale (AIAS)</a>
+              <a href="#ai-level-guide" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Level Guidelines</a>
+              <a href="#implementation-guide" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Implementation Guide</a>
+            </div>
+          )}
+        </div>
+
         {/* Resources Dropdown (previously Gen AI Tools) */}
         <div
           style={styles.dropdownContainer}
@@ -769,7 +805,7 @@ const Header = () => {
               <div style={{ borderRight: '1px solid #eee', padding: '0 10px' }}>
                 <h4 style={{ margin: '5px 0 10px 0', color: '#003d7c', fontSize: '0.95em', textAlign: 'center' }}>Tools for Teaching</h4>
                 <a href="#instructor-tools" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Instructor Resources</a>
-                <a href="#ai-assessment" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>AI for Assessment</a>
+                <a href="#" style={styles.dropdownLink} onClick={(e) => {e.preventDefault(); window.location.href = `${process.env.PUBLIC_URL}/ai-assessment.html`;}} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>AI Assessment Scale</a>
                 <a href="#teaching-activities" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Teaching Activities</a>
               </div>
               <div style={{ padding: '0 10px' }}>
