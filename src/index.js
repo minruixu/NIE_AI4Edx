@@ -770,9 +770,7 @@ const Header = () => {
               borderRadius: '8px',
               marginTop: '5px',
             }}>
-              <a href="#" style={styles.dropdownLink} onClick={(e) => {e.preventDefault(); window.location.href = `${process.env.PUBLIC_URL}/ai-assessment.html`;}} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Assessment Scale (AIAS)</a>
-              <a href="#ai-level-guide" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Level Guidelines</a>
-              <a href="#implementation-guide" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Implementation Guide</a>
+              
             </div>
           )}
         </div>
