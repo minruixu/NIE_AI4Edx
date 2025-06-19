@@ -327,6 +327,41 @@
             background-color: #003d7c;
             color: white;
         }
+
+        .analysis-result {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(0, 61, 124, 0.1);
+            border-radius: 8px;
+        }
+
+        .apply-button {
+            background: #003d7c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            fontSize: 12px;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background-color 0.2s ease;
+        }
+
+        .apply-button:hover {
+            background: #0056b3;
+        }
+
+        .success-message {
+            background: #d4edda !important;
+            border-color: #c3e6cb !important;
+            color: #155724 !important;
+        }
+
+        .error-message {
+            background: #f8d7da !important;
+            border-color: #f5c6cb !important;
+            color: #721c24 !important;
+        }
     </style>
 </head>
 <body>
@@ -369,7 +404,7 @@
                         'Authorization': `Bearer ${apiKey}`
                     },
                     body: JSON.stringify({
-                        model: 'gpt-3.5-turbo',
+                        model: 'gpt-4.1-mini',
                         messages: [
                             {
                                 role: 'system',
@@ -377,8 +412,8 @@
                             },
                             { role: 'user', content: message }
                         ],
-                        max_tokens: 500,
-                        temperature: 0.7
+                        max_tokens: 1000,
+                        temperature: 1
                     })
                 });
 
@@ -394,6 +429,90 @@
             }
         };
 
+        // AI Usage Analysis function
+        const analyzeAIUsage = async (usageDescription, apiKey) => {
+            if (!apiKey) {
+                return {
+                    error: "Please provide an API key to use the AI analysis feature."
+                };
+            }
+
+            const systemPrompt = `You are an AI assistant specialized in analyzing student descriptions of AI tool usage for academic assignments. Your task is to analyze a student's description and categorize it based on a provided list of options. 
+
+Available Declaration Options:
+1. noGAI: "Not used GAI assistance in any way in the development or generation of this assignment."
+2. keyIdeas: "Used GAI as permitted to assist in generating key ideas only."
+3. firstText: "Used GAI as permitted to assist in generating a first text only."
+4. visual: "Used GAI to generate an accompanying visual for my written submission."
+5. translation: "Used GAI to translate my creative submission from another language to English."
+6. grammar: "Used GAI to refine syntax and grammar for correct language submission only."
+
+Your Instructions:
+1.  Carefully read the student's description of how they used AI.
+2.  Identify all parts of their description that match one or more of the \`Available Declaration Options\`. List the corresponding IDs in the \`matchedOptions\` array.
+3.  Identify any parts of the student's description that **do not** match any of the available options. Concatenate these specific, un-matched descriptions into a single string. This string should be a direct summary or quote of their non-standard usage. Place this in the \`additionalInfo\` field. If all described usage is covered, this field should be an empty string.
+4.  Set \`hasUnmatchedUsage\` to \`true\` if \`additionalInfo\` is not empty, otherwise \`false\`.
+5.  Provide a brief, user-friendly \`explanation\` of your analysis, summarizing what was matched and what needs to be detailed further.
+
+You MUST respond in a valid JSON format.
+
+Response Format (JSON):
+{
+  "matchedOptions": ["id1", "id2"],
+  "additionalInfo": "A summary of the student's described AI usage that was not covered by the options.",
+  "explanation": "A brief explanation of the analysis.",
+  "hasUnmatchedUsage": true
+}
+
+Example:
+Student description: "I used ChatGPT to brainstorm some topics for my paper and also used DALL-E to create a cover image. I also had it write the conclusion for me."
+Expected JSON output:
+{
+  "matchedOptions": ["keyIdeas", "visual"],
+  "additionalInfo": "Used AI to write the conclusion for the paper.",
+  "explanation": "I've identified that you used AI for brainstorming (key ideas) and creating a visual. Your usage of AI to write the conclusion is not covered by the standard options and should be detailed in the 'More about My GenAI Usage' section.",
+  "hasUnmatchedUsage": true
+}`;
+
+            try {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4.1-mini',
+                        messages: [
+                            { role: 'system', content: systemPrompt },
+                            { role: 'user', content: `Please analyze this AI usage description: "${usageDescription}"` }
+                        ],
+                        max_tokens: 5000,
+                        temperature: 0.3
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API call failed: ${response.status}`);
+                }
+
+                const data = await response.json();
+                try {
+                    return JSON.parse(data.choices[0].message.content);
+                } catch (parseError) {
+                    return {
+                        error: "Failed to parse AI response",
+                        rawResponse: data.choices[0].message.content
+                    };
+                }
+            } catch (error) {
+                console.error('AI Usage Analysis Error:', error);
+                return {
+                    error: `Analysis failed: ${error.message}`
+                };
+            }
+        };
+
         const FormAssistant = () => {
             const [formData, setFormData] = useState({});
             const [gaiSelections, setGaiSelections] = useState([]);
@@ -406,6 +525,7 @@
             const [currentMessage, setCurrentMessage] = useState('');
             const [isTyping, setIsTyping] = useState(false);
             const [apiKey, setApiKey] = useState('');
+            const [analysisResults, setAnalysisResults] = useState(null);
             const messagesEndRef = useRef(null);
 
             const scrollToBottom = () => {
@@ -439,6 +559,13 @@
                 const userMessage = currentMessage.trim();
                 setCurrentMessage('');
                 
+                // Check if this is in response to an analysis prompt
+                const lastMessage = messages[messages.length - 1];
+                if (lastMessage && lastMessage.type === 'prompt-analysis') {
+                    await handleAIUsageAnalysis(userMessage);
+                    return;
+                }
+                
                 setMessages(prev => [...prev, { sender: 'user', text: userMessage }]);
                 setIsTyping(true);
 
@@ -451,14 +578,84 @@
                 }, 1000);
             };
 
+            const handleAIUsageAnalysis = async (description) => {
+                setIsTyping(true);
+                setMessages(prev => [...prev, { sender: 'user', text: `Analyze my AI usage: ${description}` }]);
+                
+                const analysis = await analyzeAIUsage(description, apiKey);
+                
+                setTimeout(() => {
+                    setIsTyping(false);
+                    if (analysis.error) {
+                        setMessages(prev => [...prev, { 
+                            sender: 'bot', 
+                            text: `Analysis failed: ${analysis.error}`,
+                            type: 'error'
+                        }]);
+                    } else {
+                        setAnalysisResults(analysis);
+                        setMessages(prev => [...prev, { 
+                            sender: 'bot', 
+                            text: analysis.explanation,
+                            type: 'analysis',
+                            analysis: analysis
+                        }]);
+                    }
+                }, 1000);
+            };
+
+            const applyAnalysisResults = (analysis) => {
+                // Apply matched options
+                if (analysis.matchedOptions && analysis.matchedOptions.length > 0) {
+                    setGaiSelections(prev => {
+                        const newSelections = [...prev];
+                        analysis.matchedOptions.forEach(optionId => {
+                            if (!newSelections.includes(optionId)) {
+                                newSelections.push(optionId);
+                            }
+                        });
+                        return newSelections;
+                    });
+                }
+
+                // Apply additional info
+                if (analysis.additionalInfo) {
+                    setFormData(prev => ({
+                        ...prev,
+                        otherGAIUsage: prev.otherGAIUsage ? 
+                            `${prev.otherGAIUsage}\n\n${analysis.additionalInfo}` : 
+                            analysis.additionalInfo
+                    }));
+                }
+
+                // Show confirmation message
+                setMessages(prev => [...prev, { 
+                    sender: 'bot', 
+                    text: 'Analysis applied to your form! Please review the selected options and additional information.',
+                    type: 'success'
+                }]);
+
+                setAnalysisResults(null);
+            };
+
             const handleQuickAction = async (action) => {
                 const quickMessages = {
                     'explain-form': 'Can you explain what this Assignment Cover Sheet is for?',
                     'gai-help': 'What is the GAI Declaration and why do I need to fill it out?',
                     'academic-integrity': 'Can you explain the academic integrity requirements?',
                     'turnitin': 'What is Turnitin Similarity Index and what percentage is acceptable?',
-                    'citation': 'How should I cite GAI assistance in my work?'
+                    'citation': 'How should I cite GAI assistance in my work?',
+                    'analyze-usage': 'I want to analyze how I used AI in my assignment'
                 };
+
+                if (action === 'analyze-usage') {
+                    setMessages(prev => [...prev, { 
+                        sender: 'bot', 
+                        text: 'Please describe how you used AI tools in your assignment, and I\'ll help you identify which declaration options apply and what additional information you should provide.',
+                        type: 'prompt-analysis'
+                    }]);
+                    return;
+                }
 
                 const message = quickMessages[action];
                 if (message) {
@@ -623,8 +820,38 @@
 
                             <div className="chat-messages">
                                 {messages.map((message, index) => (
-                                    <div key={index} className={`message ${message.sender}-message`}>
+                                    <div key={index} className={`message ${message.sender}-message ${message.type === 'success' ? 'success-message' : ''} ${message.type === 'error' ? 'error-message' : ''}`}>
                                         {message.text}
+                                        {message.type === 'analysis' && message.analysis && (
+                                            <div className="analysis-result">
+                                                <div style={{fontSize: '12px', fontWeight: 'bold', marginBottom: '8px', color: '#003d7c'}}>
+                                                    Analysis Results:
+                                                </div>
+                                                {message.analysis.matchedOptions && message.analysis.matchedOptions.length > 0 && (
+                                                    <div style={{marginBottom: '8px'}}>
+                                                        <strong>Matched Options:</strong>
+                                                        <ul style={{margin: '4px 0', paddingLeft: '20px'}}>
+                                                            {message.analysis.matchedOptions.map(optionId => {
+                                                                const option = gaiDeclarationOptions.find(opt => opt.id === optionId);
+                                                                return option ? <li key={optionId} style={{fontSize: '12px'}}>{option.text}</li> : null;
+                                                            })}
+                                                        </ul>
+                                                    </div>
+                                                )}
+                                                                                {message.analysis.additionalInfo && (
+                                    <div style={{marginBottom: '8px'}}>
+                                        <strong>Un-categorized AI Usage:</strong>
+                                        <p style={{fontSize: '12px', margin: '4px 0', fontStyle: 'italic'}}>{message.analysis.additionalInfo}</p>
+                                    </div>
+                                )}
+                                                <button 
+                                                    onClick={() => applyAnalysisResults(message.analysis)}
+                                                    className="apply-button"
+                                                >
+                                                    Apply to Form
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                 ))}
                                 {isTyping && (
@@ -640,27 +867,50 @@
                                 <div ref={messagesEndRef} />
                             </div>
 
-                            {/* Quick Actions */}
-                            <div style={{padding: '15px 20px', borderBottom: '1px solid #eee'}}>
-                                <div style={{fontSize: '12px', fontWeight: 'bold', marginBottom: '8px', color: '#666'}}>Quick Help:</div>
-                                <div className="quick-actions">
-                                    <button className="quick-action-btn" onClick={() => handleQuickAction('explain-form')}>
-                                        What is this form?
-                                    </button>
-                                    <button className="quick-action-btn" onClick={() => handleQuickAction('gai-help')}>
-                                        GAI Declaration help
-                                    </button>
-                                    <button className="quick-action-btn" onClick={() => handleQuickAction('academic-integrity')}>
-                                        Academic integrity
-                                    </button>
-                                    <button className="quick-action-btn" onClick={() => handleQuickAction('turnitin')}>
-                                        Turnitin help
-                                    </button>
-                                    <button className="quick-action-btn" onClick={() => handleQuickAction('citation')}>
-                                        Citation guidelines
-                                    </button>
-                                </div>
-                            </div>
+                                        {/* Quick Actions */}
+            <div style={{padding: '15px 20px', borderBottom: '1px solid #eee', textAlign: 'center'}}>
+                <button 
+                    className="quick-action-btn" 
+                    onClick={() => handleQuickAction('analyze-usage')}
+                    style={{
+                        background: 'linear-gradient(120deg, #a8edea 0%, #fed6e3 100%)',
+                        color: '#4a5568',
+                        border: '2px solid #ffffff',
+                        borderRadius: '20px',
+                        padding: '10px 18px',
+                        fontSize: '13px',
+                        fontWeight: '500',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease',
+                        boxShadow: '0 2px 10px rgba(168, 237, 234, 0.3)',
+                        position: 'relative',
+                        minWidth: '140px',
+                        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+                    }}
+                    onMouseOver={(e) => {
+                        e.target.style.transform = 'translateY(-2px)';
+                        e.target.style.boxShadow = '0 6px 20px rgba(168, 237, 234, 0.4)';
+                        e.target.style.background = 'linear-gradient(120deg, #fed6e3 0%, #a8edea 100%)';
+                        e.target.style.borderColor = '#f7fafc';
+                    }}
+                    onMouseOut={(e) => {
+                        e.target.style.transform = 'translateY(0)';
+                        e.target.style.boxShadow = '0 2px 10px rgba(168, 237, 234, 0.3)';
+                        e.target.style.background = 'linear-gradient(120deg, #a8edea 0%, #fed6e3 100%)';
+                        e.target.style.borderColor = '#ffffff';
+                    }}
+                >
+                    <span style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        justifyContent: 'center'
+                    }}>
+                        <span style={{fontSize: '16px'}}>🌸</span>
+                        <span> AI Declaration</span>
+                    </span>
+                </button>
+            </div>
 
                             <div className="chat-input-container">
                                 <div style={{display: 'flex', alignItems: 'flex-end'}}>
