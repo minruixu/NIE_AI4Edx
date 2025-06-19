@@ -1979,6 +1979,33 @@
                                 ← Back to Main Portal
                             </a>
                         </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                            <a 
+                                href="form-assistant.html" 
+                                style={{
+                                    color: '#28a745',
+                                    textDecoration: 'none',
+                                    fontWeight: '600',
+                                    fontSize: '1em',
+                                    padding: '8px 16px',
+                                    border: '1px solid #28a745',
+                                    borderRadius: '4px',
+                                    transition: 'all 0.2s ease',
+                                    background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)',
+                                    color: 'white'
+                                }}
+                                onMouseOver={(e) => {
+                                    e.target.style.backgroundColor = '#20c997';
+                                    e.target.style.borderColor = '#20c997';
+                                }}
+                                onMouseOut={(e) => {
+                                    e.target.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+                                    e.target.style.borderColor = '#28a745';
+                                }}
+                            >
+                                📋 Interactive Form Assistant
+                            </a>
+                        </div>
                     </div>
                     
                     <div className="header">
@@ -2092,6 +2119,7 @@
                             marginBottom: '15px'
                         }}>
                             <a href="index.html" style={{ color: '#333', textDecoration: 'none' }}>Main Portal</a>
+                            <a href="form-assistant.html" style={{ color: '#28a745', textDecoration: 'none', fontWeight: 'bold' }}>📋 Form Assistant</a>
                             <a href="literature-review.html" style={{ color: '#333', textDecoration: 'none' }}>Literature Review</a>
                             <a href="findings.html" style={{ color: '#333', textDecoration: 'none' }}>Findings</a>
                             <a href="case-studies.html" style={{ color: '#333', textDecoration: 'none' }}>Case Studies</a>

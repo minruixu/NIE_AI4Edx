@@ -650,6 +650,7 @@ const Header = () => {
           onMouseEnter={() => setIsLiteratureReviewDropdownOpen(true)}
           onMouseLeave={() => setIsLiteratureReviewDropdownOpen(false)}
         >
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
           <a 
             href="#" 
             style={{
@@ -748,6 +749,7 @@ const Header = () => {
           onMouseEnter={() => setIsAIAssessmentDropdownOpen(true)}
           onMouseLeave={() => setIsAIAssessmentDropdownOpen(false)}
         >
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
           <a 
             href="#" 
             style={{
@@ -804,6 +806,7 @@ const Header = () => {
                 <h4 style={{ margin: '5px 0 10px 0', color: '#003d7c', fontSize: '0.95em', textAlign: 'center' }}>Tools for Teaching</h4>
                 <a href="#instructor-tools" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Instructor Resources</a>
                 <a href="#" style={styles.dropdownLink} onClick={(e) => {e.preventDefault(); window.location.href = `${process.env.PUBLIC_URL}/ai-assessment.html`;}} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>AI Assessment Scale</a>
+                <a href="#" style={{...styles.dropdownLink, color: '#28a745', fontWeight: 'bold'}} onClick={(e) => {e.preventDefault(); window.location.href = `${process.env.PUBLIC_URL}/form-assistant.html`;}} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>📋 Form Assistant</a>
                 <a href="#teaching-activities" style={styles.dropdownLink} onMouseOver={e => e.currentTarget.style.backgroundColor=styles.dropdownLinkHover.backgroundColor} onMouseOut={e => e.currentTarget.style.backgroundColor='transparent'}>Teaching Activities</a>
               </div>
               <div style={{ padding: '0 10px' }}>
@@ -965,7 +968,7 @@ const MainContent = () => {
           <img
             key={index}
             src={image}
-            alt={`Slideshow image ${index + 1}`}
+            alt={`AI research project visual ${index + 1}`}
             style={{ 
               width: '100%', 
               height: '450px', 
@@ -2626,7 +2629,7 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [ratingSubmitted, setRatingSubmitted] = useState(false);
   const [botTyping, setBotTyping] = useState(false);
-  const [userPurpose, setUserPurpose] = useState(null); // 'navigation', 'recommendations', or 'feedback'
+  // const [userPurpose, setUserPurpose] = useState(null); // 'navigation', 'recommendations', or 'feedback' - removed as unused
   const [userRole, setUserRole] = useState(null); // 'instructor' or 'student'
   const dialogRef = React.useRef(null); // Reference to the dialog element
   const [hasShownPostPageInteraction, setHasShownPostPageInteraction] = useState(false); // Track if post-page interaction occurred
@@ -2705,6 +2708,7 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
     return () => {
       window.removeEventListener('pageNavigated', handlePostPageInteraction);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasShownPostPageInteraction]);
   
   // Function to trigger post-page interaction based on section
@@ -2714,11 +2718,11 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
     let suggestions = [];
     
     // Handle section which can be either string or object
-    const section = typeof sectionData === 'object' && sectionData.section ? sectionData.section : sectionData;
-    const caseTitle = typeof sectionData === 'object' && sectionData.caseTitle ? sectionData.caseTitle : '';
+    // const section = typeof sectionData === 'object' && sectionData.section ? sectionData.section : sectionData; // unused variable
+    // const caseTitle = typeof sectionData === 'object' && sectionData.caseTitle ? sectionData.caseTitle : ''; // unused variable
     
-    // Ensure section is a string before using includes
-    const sectionStr = String(section || '');
+    // Ensure section is a string before using includes  
+    // const sectionStr = String(section || ''); // unused variable
     
     // Only add role-specific suggestions if role is known
     if (userRole === 'instructor') {
@@ -2913,7 +2917,7 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
       setMessages(prev => [...prev, { text: responseText, sender: 'bot' }]);
       
       // Reset userPurpose to ensure quick replies stay available
-      setUserPurpose(null);
+      // setUserPurpose(null); // commented out as userPurpose is unused
       
       // Add navigation button after a brief pause
       setTimeout(() => {
@@ -3039,17 +3043,17 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
       case 'instructor-tools':
         userText = 'Show me teaching tools';
         botResponse = 'Here are some recommended AI tools for instructors:\n\n• Copilot - For course material development\n• ChatGPT - For creating assessments and activities\n• TeacherGAIA - For personalized learning design\n\nWould you like to see the complete list of teaching tools?';
-        setUserPurpose('recommendations');
+        // setUserPurpose('recommendations'); // commented out as userPurpose is unused
         break;
       case 'student-tools':
         userText = 'Show me learning tools';
         botResponse = 'Here are some recommended AI tools for students:\n\n• Gemini - Great for brainstorming and research\n• Claude - Excellent for essay feedback\n• Perplexity.ai - For in-depth research with citations\n• Google NotebookLM - For organizing research notes\n\nWould you like to see the complete list of learning tools?';
-        setUserPurpose('recommendations');
+        // setUserPurpose('recommendations'); // commented out as userPurpose is unused
         break;
       case 'feedback':
         userText = 'I want to give feedback';
         botResponse = 'Thanks for wanting to share your feedback! Please let me know what you think about the research or this website.';
-        setUserPurpose('feedback');
+        // setUserPurpose('feedback'); // commented out as userPurpose is unused
         break;
       default:
         return;
@@ -3111,7 +3115,7 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
         }, 500);
       } else {
         // Reset userPurpose to ensure quick replies stay available
-        setUserPurpose(null);
+        // setUserPurpose(null); // commented out as userPurpose is unused
       }
     }, 1500);
   };
@@ -3375,7 +3379,7 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
       setShowRating(false);
       setRating(0);
       setRatingSubmitted(false);
-      setUserPurpose(null);
+      // setUserPurpose(null); // commented out as userPurpose is unused
       setUserRole(null);
       onClose();
     }
@@ -3664,7 +3668,7 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
                   setShowRating(false);
                   setRating(0);
                   setRatingSubmitted(false);
-                  setUserPurpose(null);
+                  // setUserPurpose(null); // commented out as userPurpose is unused
                   setUserRole(null);
                   onClose();
                 }}
@@ -4009,7 +4013,8 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-// Add text selection functionality
+// Add text selection functionality - commented out as unused
+/*
 const TextSelector = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
@@ -4257,13 +4262,14 @@ const TextSelector = () => {
     </>
   );
 };
+*/
 
 // Main App Component
 const App = () => {
   // Use simple state with default values, no reliance on browser APIs
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [currentSection, setCurrentSection] = useState('');
-  const [sessionId, setSessionId] = useState(`session_${Date.now()}`);
+  const [sessionId] = useState(`session_${Date.now()}`);
   const [userSessionData, setUserSessionData] = useState({
     startTime: new Date().toISOString(),
     sections: [],
@@ -4340,6 +4346,7 @@ const App = () => {
         interactions: userSessionData.interactions
       });
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionId, userSessionData.startTime, userSessionData.sections]);
 
   const handleOpenDialog = () => {
