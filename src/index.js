@@ -8,6 +8,7 @@ import TextCitationSelector from './data/TextCitationSelector.js';
 import img1 from './figs/IMG_20250220_145552_00_003-min.jpg';
 import img2 from './figs/IMG_20250220_150253_00_008-min.jpg';
 import img3 from './figs/IMG_20250220_150920_00_013-min.jpg';
+import methodsImg from './figs/methods.png';
 
 // Styles defined directly in the script
 const styles = {
@@ -1165,6 +1166,8 @@ const MainContent = () => {
           ...styles.collapsibleContent,
           ...(isMethodsOpen ? styles.collapsibleContentOpenState : styles.collapsibleContentClosedState)
         }}>
+            <p>Our research follows a structured four-phase methodology, as illustrated in the flowchart below. It begins with preparation and IRB approval, moves through data collection from students and instructors, proceeds to rigorous quantitative and qualitative data analysis, and culminates in the organization and reporting of key findings.</p>
+            <img src={methodsImg} alt="Research Methodology Flowchart" style={{ width: '100%', borderRadius: '8px', marginBottom: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }} />
             <h3 id="research-design" style={styles.collapsibleContentH3}>Research Design and Data Collection</h3>
             <ul>
               <li>A modified 31-item AI survey (five-point Likert Scale) administered to instructors and students</li>
