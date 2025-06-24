@@ -88,8 +88,8 @@ const CaseStudiesPage = () => {
     
     // Add a message when a case study is selected directly from the grid
     if (selectedCase) {
-      // Automatically show chatbot when a case is selected
-      setShowChatbot(true);
+      // Removed auto-show chatbot functionality
+      // Users can now only open the chatbot manually by clicking the floating button
       
       // Clear previous messages when a new case is selected to avoid message stacking
       const lastMessage = chatMessages[chatMessages.length - 1];
@@ -274,15 +274,13 @@ const CaseStudiesPage = () => {
     }
   }, [selectedCase]);
   
-  // Show chatbot after a delay - but only if no case is selected
+  // Removed auto-show chatbot functionality
   React.useEffect(() => {
-    // Only show initial welcome message if no case study is selected
+    // Users can now only open the chatbot manually by clicking the floating button
     if (!selectedCase) {
-      // Wait 5 seconds before showing the chatbot
-      const timer = setTimeout(() => {
-        setShowChatbot(true);
-        // Only add introduction message if no case study is selected AND no existing messages
-        if (chatMessages.length <= 1) {
+      // No longer auto-show the chatbot
+      // Only add introduction message if manually opened
+      if (showChatbot && chatMessages.length <= 1) {
           setChatMessages([
             { 
               sender: 'bot', 
@@ -352,11 +350,9 @@ const CaseStudiesPage = () => {
             }
           ]);
         }
-      }, 5000);
-      
-      return () => clearTimeout(timer);
+      }
     }
-  }, [selectedCase]);
+  }, [selectedCase, showChatbot, chatMessages.length]);
   
   // Add event listener for quoted text
   React.useEffect(() => {
@@ -364,7 +360,8 @@ const CaseStudiesPage = () => {
       const { quote } = event.detail;
       if (quote && quote.trim()) {
         setQuotedText(quote);
-        setShowChatbot(true); // Open chatbot when text is quoted
+        // Removed auto-show chatbot on text selection
+        // Users can now only open the chatbot manually by clicking the floating button
       }
     };
     

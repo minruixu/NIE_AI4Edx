@@ -4621,20 +4621,19 @@ const App = () => {
         sections: [...prev.sections, section]
       }));
       
-      // Wait some time for user to consume content, then show chatbot
-    setTimeout(() => {
-        setIsDialogOpen(true);
-        
-        // Dispatch an event to tell the chatbot to show post-page interaction
-        window.dispatchEvent(new CustomEvent('triggerPostPageInteraction', { 
-          detail: { section }
-        }));
-      }, 15000); // Show after 15 seconds of browsing
+      // Removed auto-show chatbot functionality
+      // Users can now only open the chatbot manually by clicking the floating button
+      
+      // Still dispatch the event for post-page interaction if chatbot is opened manually
+      window.dispatchEvent(new CustomEvent('triggerPostPageInteraction', { 
+        detail: { section }
+      }));
     };
     
     // Listen for text quote selected events
     const handleTextQuoteSelected = () => {
-      setIsDialogOpen(true);
+      // Removed auto-show chatbot on text selection
+      // Users can now only open the chatbot manually by clicking the floating button
     };
     
     window.addEventListener('pageNavigated', handlePageNavigation);

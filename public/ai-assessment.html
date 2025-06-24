@@ -2156,23 +2156,11 @@
                 
                 initUserSession();
                 
-                // Auto-show chatbot after user scrolls through some content
-                const handleScroll = () => {
-                    const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
-                    if (scrollPercent > 30) { // Show after 30% scroll
-                        setTimeout(() => {
-                            setIsDialogOpen(true);
-                        }, 3000);
-                        window.removeEventListener('scroll', handleScroll);
-                    }
-                };
-                
-                window.addEventListener('scroll', handleScroll);
+                // Removed auto-show chatbot functionality
+                // Users can now only open the chatbot manually by clicking the floating button
                 
                 // Clean up on unmount
                 return () => {
-                    window.removeEventListener('scroll', handleScroll);
-                    
                     // Store final session data
                     UserExperienceDB.storeSession({
                         sessionId,
