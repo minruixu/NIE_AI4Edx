@@ -33,16 +33,43 @@ const styles = {
     boxShadow: '0 2px 4px rgba(0,0,0,0.08)', // Lighter shadow
     position: 'sticky', // Make header sticky
     top: 0, // Stick to top
+    flexWrap: 'wrap', // Allow wrapping on small screens
+    gap: '10px', // Add gap for wrapped items
+  },
+  // Mobile header styles
+  '@media (max-width: 768px)': {
+    header: {
+      padding: '10px 15px',
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+    }
   },
   logo: {
     height: '45px', // Slightly larger logo
     width: 'auto',
     display: 'block',
   },
+  // Mobile logo styles  
+  '@media (max-width: 768px)': {
+    logo: {
+      height: '35px',
+      marginBottom: '10px',
+    }
+  },
   nav: {
     display: 'flex',
     alignItems: 'center',
     gap: '20px', // Increased spacing between nav items
+    flexWrap: 'wrap', // Allow navigation to wrap
+  },
+  // Mobile navigation styles
+  '@media (max-width: 768px)': {
+    nav: {
+      width: '100%',
+      gap: '10px',
+      justifyContent: 'space-between',
+      fontSize: '14px',
+    }
   },
   navLink: {
     color: '#333',
@@ -55,6 +82,13 @@ const styles = {
     transition: 'color 0.2s ease', // Smooth color transition
     '&:hover': {
       color: '#003d7c', // NTU blue on hover
+    }
+  },
+  // Mobile nav link styles
+  '@media (max-width: 768px)': {
+    navLink: {
+      fontSize: '0.9em',
+      padding: '6px 4px',
     }
   },
   // Styles for the dropdown menu
@@ -75,6 +109,13 @@ const styles = {
       overflow: 'hidden', // Ensure content respects border radius
       border: '1px solid #eee', // Subtle border
   },
+  // Mobile dropdown styles
+  '@media (max-width: 768px)': {
+    dropdownContent: {
+      minWidth: '180px',
+      fontSize: '14px',
+    }
+  },
   dropdownLink: {
       color: '#333',
       padding: '12px 16px',
@@ -82,6 +123,13 @@ const styles = {
       display: 'block',
       fontSize: '0.95em',
       transition: 'background-color 0.2s ease', // Smooth transition
+  },
+  // Mobile dropdown link styles
+  '@media (max-width: 768px)': {
+    dropdownLink: {
+      padding: '10px 12px',
+      fontSize: '0.9em',
+    }
   },
   dropdownLinkHover: {
      backgroundColor: '#f0f0f0', // Lighter hover color
@@ -94,6 +142,13 @@ const styles = {
     maxWidth: '1200px', // Max width for better readability
     margin: '0 auto', // Center content
   },
+  // Mobile main styles
+  '@media (max-width: 768px)': {
+    main: {
+      padding: '20px 15px',
+      maxWidth: '100%',
+    }
+  },
   pageTitle: {
     backgroundColor: '#003d7c',
     color: 'white',
@@ -102,6 +157,16 @@ const styles = {
     margin: '0 0 30px 0',
     borderRadius: '8px', // More rounded corners
     boxShadow: '0 4px 6px rgba(0,0,0,0.1)', // Subtle shadow for depth
+    fontSize: '1.8em',
+  },
+  // Mobile page title styles
+  '@media (max-width: 768px)': {
+    pageTitle: {
+      padding: '15px 10px',
+      margin: '0 0 20px 0',
+      fontSize: '1.4em',
+      borderRadius: '6px',
+    }
   },
   footer: {
     backgroundColor: '#f1f1f1',
@@ -111,11 +176,26 @@ const styles = {
     borderTop: '1px solid #ddd',
     zIndex: 10,
   },
+  // Mobile footer styles
+  '@media (max-width: 768px)': {
+    footer: {
+      padding: '20px 15px',
+      fontSize: '0.8em',
+    }
+  },
   footerLinks: {
      display: 'flex',
      justifyContent: 'center',
      gap: '25px', // Increased spacing
      marginBottom: '15px',
+     flexWrap: 'wrap', // Allow wrapping on small screens
+  },
+  // Mobile footer links styles
+  '@media (max-width: 768px)': {
+    footerLinks: {
+      gap: '15px',
+      marginBottom: '10px',
+    }
   },
    footerLink: {
       color: '#333',
@@ -148,6 +228,16 @@ const styles = {
         boxShadow: '0 6px 12px rgba(0,0,0,0.3)',
       }
    },
+   // Mobile fab styles
+   '@media (max-width: 768px)': {
+     fab: {
+       width: '55px',
+       height: '55px',
+       bottom: '20px',
+       right: '20px',
+       fontSize: '24px',
+     }
+   },
    dialogPopup: {
       position: 'fixed',
       bottom: '30px',
@@ -161,6 +251,16 @@ const styles = {
       display: 'flex',
       flexDirection: 'column',
       overflow: 'hidden',
+   },
+   // Mobile dialog styles
+   '@media (max-width: 768px)': {
+     dialogPopup: {
+       width: '90vw',
+       height: '80vh',
+       bottom: '10px',
+       right: '5vw',
+       borderRadius: '8px',
+     }
    },
    dialogCloseButton: {
       position: 'absolute',
@@ -182,6 +282,13 @@ const styles = {
       marginRight: '10px',
       outline: 'none',
    },
+   // Mobile dialog input styles
+   '@media (max-width: 768px)': {
+     dialogInput: {
+       padding: '12px',
+       fontSize: '16px', // Prevent zoom on iOS
+     }
+   },
   videoContainer: {
     position: 'relative',
     width: '100%',
@@ -190,6 +297,13 @@ const styles = {
     overflow: 'hidden', // Ensure video respects border radius
     boxShadow: '0 4px 8px rgba(0,0,0,0.1)', // Subtle shadow
     lineHeight: 0,
+  },
+  // Mobile video container styles
+  '@media (max-width: 768px)': {
+    videoContainer: {
+      marginBottom: '20px',
+      borderRadius: '6px',
+    }
   },
   videoOverlayText: {
     position: 'absolute',
@@ -213,6 +327,18 @@ const styles = {
     transition: 'transform 0.3s ease, background-color 0.3s ease',
     gap: '12px',
   },
+  // Mobile video overlay styles
+  '@media (max-width: 768px)': {
+    videoOverlayText: {
+      bottom: '20px',
+      left: '20px',
+      right: '20px',
+      padding: '16px 20px',
+      fontSize: '1.2rem',
+      minWidth: 'auto',
+      borderRadius: '8px',
+    }
+  },
   videoOverlayButton: {
     marginTop: '10px',
     padding: '10px 22px',
@@ -230,6 +356,14 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
+  },
+  // Mobile video overlay button styles
+  '@media (max-width: 768px)': {
+    videoOverlayButton: {
+      padding: '8px 16px',
+      fontSize: '0.95rem',
+      marginTop: '8px',
+    }
   },
   // Styles for image slider navigation
   sliderNavigation: {
@@ -289,11 +423,19 @@ const styles = {
     transition: 'background-color 0.3s ease, padding 0.3s ease',
     fontWeight: '600',
     borderBottom: '1px solid transparent',
+    fontSize: '1.3em',
     '&:hover': {
       backgroundColor: '#f5f5f5',
       paddingLeft: '30px',
       borderBottomColor: '#003d7c',
     },
+  },
+  // Mobile collapsible heading styles
+  '@media (max-width: 768px)': {
+    collapsibleHeading: {
+      padding: '15px 20px',
+      fontSize: '1.1em',
+    }
   },
   collapsibleArrow: { // New style for the arrow span
     fontSize: '1.2em',
@@ -313,6 +455,13 @@ const styles = {
     '&:hover': {
       boxShadow: '0 6px 12px rgba(0,0,0,0.12)', // Enhanced shadow on hover
       borderColor: '#003d7c', // Highlight border on hover
+    }
+  },
+  // Mobile collapsible section styles
+  '@media (max-width: 768px)': {
+    collapsibleSectionBox: {
+      marginBottom: '20px',
+      borderRadius: '8px',
     }
   },
   collapsibleContent: { // Base style, always applied
@@ -410,6 +559,16 @@ const styles = {
       boxShadow: '0 8px 16px rgba(0,0,0,0.12)',
     }
   },
+  // Mobile case study card styles
+  '@media (max-width: 768px)': {
+    caseStudyCard: {
+      width: '100%',
+      minWidth: 'auto',
+      padding: '15px',
+      borderRadius: '8px',
+      marginBottom: '15px',
+    }
+  },
   caseStudyCardCategory: {
     display: 'inline-block',
     padding: '4px 10px',
@@ -487,6 +646,13 @@ const styles = {
     gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', // Responsive grid
     gap: '25px',
   },
+  // Mobile resources grid styles
+  '@media (max-width: 768px)': {
+    resourcesGrid: {
+      gridTemplateColumns: '1fr',
+      gap: '20px',
+    }
+  },
   resourceColumn: {
     // Styles for each column if needed, for now, direct styling on h3 and ul
   },
@@ -543,6 +709,8 @@ const Header = () => {
   const [isCaseStudiesDropdownOpen, setIsCaseStudiesDropdownOpen] = useState(false);
   const [isAboutUsDropdownOpen, setIsAboutUsDropdownOpen] = useState(false);
   const [isAIAssessmentDropdownOpen, setIsAIAssessmentDropdownOpen] = useState(false);
+  // Mobile menu state
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <header style={{
@@ -556,10 +724,31 @@ const Header = () => {
         alt="Logo" 
         style={styles.logo} 
       />
+      
+      {/* Mobile menu button */}
+      <button
+        style={{
+          display: 'none',
+          background: 'none',
+          border: 'none',
+          fontSize: '24px',
+          cursor: 'pointer',
+          color: '#003d7c',
+          padding: '5px',
+          position: 'absolute',
+          top: '15px',
+          right: '20px',
+        }}
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        className="mobile-menu-button"
+      >
+        ☰
+      </button>
+      
       <nav style={{
         ...styles.nav,
         gap: '25px',
-      }}>
+      }} className="desktop-nav">
         {/* About Us Dropdown - New Item */}
         <div
           style={styles.dropdownContainer}
@@ -820,8 +1009,93 @@ const Header = () => {
           )}
         </div>
       </nav>
+      
+      {/* Mobile Navigation Menu */}
+      {isMobileMenuOpen && (
+        <div className="mobile-nav" style={{
+          position: 'absolute',
+          top: '100%',
+          left: 0,
+          right: 0,
+          backgroundColor: '#ffffff',
+          boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+          zIndex: 1000,
+          padding: '20px',
+          display: 'none',
+        }}>
+          <a href="#who-we-are" style={{ display: 'block', padding: '10px 0', borderBottom: '1px solid #eee', textDecoration: 'none', color: '#333' }}>About Us</a>
+          <a href="#research-focus" style={{ display: 'block', padding: '10px 0', borderBottom: '1px solid #eee', textDecoration: 'none', color: '#333' }}>Research Focus</a>
+          <a href="#methods" style={{ display: 'block', padding: '10px 0', borderBottom: '1px solid #eee', textDecoration: 'none', color: '#333' }}>Methods</a>
+          <a href="#" onClick={(e) => {e.preventDefault(); window.location.href = `${process.env.PUBLIC_URL}/literature-review.html`;}} style={{ display: 'block', padding: '10px 0', borderBottom: '1px solid #eee', textDecoration: 'none', color: '#333' }}>Literature Review</a>
+          <a href="#" onClick={(e) => {e.preventDefault(); window.location.href = `${process.env.PUBLIC_URL}/findings.html`;}} style={{ display: 'block', padding: '10px 0', borderBottom: '1px solid #eee', textDecoration: 'none', color: '#333' }}>Findings</a>
+          <a href="#" onClick={(e) => {e.preventDefault(); window.location.href = `${process.env.PUBLIC_URL}/case-studies.html`;}} style={{ display: 'block', padding: '10px 0', borderBottom: '1px solid #eee', textDecoration: 'none', color: '#333' }}>Case Studies</a>
+          <a href="#" onClick={(e) => {e.preventDefault(); window.location.href = `${process.env.PUBLIC_URL}/ai-assessment.html`;}} style={{ display: 'block', padding: '10px 0', borderBottom: '1px solid #eee', textDecoration: 'none', color: '#333' }}>AI Assessment</a>
+          <a href="#resources" style={{ display: 'block', padding: '10px 0', textDecoration: 'none', color: '#333' }}>Resources</a>
+        </div>
+      )}
+      
+      {/* Add CSS for mobile responsiveness */}
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          @media (max-width: 768px) {
+            .desktop-nav {
+              display: none !important;
+            }
+            .mobile-menu-button {
+              display: block !important;
+            }
+            .mobile-nav {
+              display: block !important;
+            }
+            header {
+              flex-direction: column !important;
+              align-items: flex-start !important;
+              position: relative !important;
+            }
+            header img {
+              margin-bottom: 10px;
+            }
+          }
+          
+          @media (min-width: 769px) {
+            .mobile-nav {
+              display: none !important;
+            }
+            .mobile-menu-button {
+              display: none !important;
+            }
+            header {
+              flex-direction: row !important;
+              align-items: center !important;
+              justify-content: space-between !important;
+            }
+          }
+        `
+      }} />
     </header>
   );
+};
+
+// Hook for responsive design
+const useWindowSize = () => {
+  const [windowSize, setWindowSize] = useState({
+    width: typeof window !== 'undefined' ? window.innerWidth : 1200,
+    height: typeof window !== 'undefined' ? window.innerHeight : 800,
+  });
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    }
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return windowSize;
 };
 
 // Main Content Component
@@ -838,6 +1112,10 @@ const MainContent = () => {
   // State for image slideshow
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const images = [img1, img2, img3];
+  
+  // Use responsive hook
+  const windowSize = useWindowSize();
+  const isMobile = windowSize.width <= 768;
 
   // Add useEffect to handle hash navigation
   useEffect(() => {
@@ -972,7 +1250,7 @@ const MainContent = () => {
             alt={`AI research project visual ${index + 1}`}
             style={{ 
               width: '100%', 
-              height: '450px', 
+              height: isMobile ? '250px' : '450px', 
               objectFit: 'cover',
               display: index === currentImageIndex ? 'block' : 'none',
               transition: 'opacity 0.5s ease-in-out'
@@ -1355,7 +1633,14 @@ const MainContent = () => {
             
             <div id="browse-cases">
               <h3 style={styles.collapsibleContentH3}>Featured Case Studies</h3>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginTop: '20px', justifyContent: 'center' }}> {/* Added justifyContent */}
+              <div style={{ 
+                display: 'flex', 
+                flexWrap: 'wrap', 
+                gap: '20px', 
+                marginTop: '20px', 
+                justifyContent: isMobile ? 'stretch' : 'center',
+                flexDirection: isMobile ? 'column' : 'row'
+              }}> {/* Added mobile responsiveness */}
                 {caseStudies.slice(0, 3).map(caseStudy => ( // Changed from 4 to 3
                   <div 
                     key={caseStudy.id} 
@@ -1564,17 +1849,17 @@ const MainContent = () => {
               <div style={styles.resourceColumn}>
                 <h3 id="instructor-tools" style={{ ...styles.collapsibleContentH3, borderBottomColor: '#0056b3' }}>Tools for Teaching</h3>
                 <ul style={styles.resourceList}>
-                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Copilot</strong> - For course material development</a></li>
-                  <li style={styles.resourceListItem}><a href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>ChatGPT</strong> - For creating assessments and activities</a></li>
-                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>School AI</strong> - For personalized instruction</a></li>
-                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>TeacherGAIA</strong> - For personalized learning design</a></li>
+                  <li style={styles.resourceListItem}><a href="https://copilot.microsoft.com/" target="_blank" rel="noopener noreferrer" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Microsoft Copilot</strong> - AI-powered assistant for course material development and educational content creation</a></li>
+                  <li style={styles.resourceListItem}><a href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>ChatGPT</strong> - For creating assessments, activities, lesson plans, and educational content</a></li>
+                  <li style={styles.resourceListItem}><a href="https://schoolai.com/" target="_blank" rel="noopener noreferrer" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>School AI</strong> - Personalized AI platform for customized instruction and learning pathways</a></li>
+                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>TeacherGAIA</strong> - AI-powered personalized learning design platform for educators</a></li>
                 </ul>
                 
                 <h3 id="ai-assessment" style={{ ...styles.collapsibleContentH3, borderBottomColor: '#0056b3', fontSize: '1.1em', marginTop: '25px' }}>AI for Assessment</h3>
                 <ul style={styles.resourceList}>
-                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Gradescope</strong> - Automated grading assistant</a></li>
-                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Turnitin</strong> - AI writing detection</a></li>
-                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Feedback Studio</strong> - Assessment feedback generation</a></li>
+                  <li style={styles.resourceListItem}><a href="https://www.gradescope.com/" target="_blank" rel="noopener noreferrer" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Gradescope</strong> - AI-powered automated grading assistant with flexible assessment tools</a></li>
+                  <li style={styles.resourceListItem}><a href="https://www.turnitin.com/" target="_blank" rel="noopener noreferrer" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Turnitin</strong> - AI writing detection and plagiarism prevention for academic integrity</a></li>
+                  <li style={styles.resourceListItem}><a href="https://www.turnitin.com/products/feedback-studio/" target="_blank" rel="noopener noreferrer" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Feedback Studio</strong> - Comprehensive assessment feedback generation and grading platform</a></li>
                 </ul>
                 
                 <h3 id="teaching-activities" style={{ ...styles.collapsibleContentH3, borderBottomColor: '#0056b3', fontSize: '1.1em', marginTop: '25px' }}>Teaching Activities</h3>
@@ -1589,12 +1874,12 @@ const MainContent = () => {
               <div style={styles.resourceColumn}>
                 <h3 id="student-tools" style={{ ...styles.collapsibleContentH3, borderBottomColor: '#c0392b', color: '#e74c3c' }}>Tools for Learning</h3>
                 <ul style={styles.resourceList}>
-                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Gemini</strong> - For brainstorming and research</a></li>
-                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Claude</strong> - For essay feedback and refinement</a></li>
-                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Perplexity.ai</strong> - For in-depth research with citations</a></li>
-                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Grammarly</strong> - For writing improvement</a></li>
-                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Edpuzzle</strong> - For interactive video learning</a></li>
-                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Google NotebookLM</strong> - For organizing research notes</a></li>
+                  <li style={styles.resourceListItem}><a href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Google Gemini</strong> - AI assistant for brainstorming, research, and creative problem-solving</a></li>
+                  <li style={styles.resourceListItem}><a href="https://claude.ai/" target="_blank" rel="noopener noreferrer" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Claude</strong> - AI assistant for essay feedback, refinement, and analytical writing support</a></li>
+                  <li style={styles.resourceListItem}><a href="https://www.perplexity.ai/" target="_blank" rel="noopener noreferrer" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Perplexity.ai</strong> - AI-powered search engine for in-depth research with accurate citations</a></li>
+                  <li style={styles.resourceListItem}><a href="https://www.grammarly.com/" target="_blank" rel="noopener noreferrer" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Grammarly</strong> - AI writing assistant for grammar, style, and clarity improvement</a></li>
+                  <li style={styles.resourceListItem}><a href="https://edpuzzle.com/" target="_blank" rel="noopener noreferrer" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Edpuzzle</strong> - Interactive video learning platform with embedded questions and analytics</a></li>
+                  <li style={styles.resourceListItem}><a href="https://notebooklm.google.com/" target="_blank" rel="noopener noreferrer" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Google NotebookLM</strong> - AI research assistant for organizing notes and generating insights from sources</a></li>
                 </ul>
                 
                 <h3 id="learning-ai" style={{ ...styles.collapsibleContentH3, borderBottomColor: '#c0392b', color: '#e74c3c', fontSize: '1.1em', marginTop: '25px' }}>Learning with AI</h3>
@@ -2638,6 +2923,10 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
   const [hasShownPostPageInteraction, setHasShownPostPageInteraction] = useState(false); // Track if post-page interaction occurred
   const [visible, setVisible] = useState(false);
   const [quotedText, setQuotedText] = useState(null); // Add state for quoted text
+  
+  // Use responsive hook for dialog
+  const windowSize = useWindowSize();
+  const isMobile = windowSize.width <= 768;
 
   // Animate dialog open
   useEffect(() => {
@@ -3394,19 +3683,22 @@ const Dialog = ({ isOpen, onClose, currentSection, sessionId, updateUserSessionD
   const dialogStyles = {
     dialogPopup: {
       position: 'fixed',
-      bottom: '30px',
-      right: '30px',
-      width: '380px', // Matched lit review
-      height: '520px', // Matched lit review
+      bottom: isMobile ? '10px' : '30px',
+      right: isMobile ? '5vw' : '30px',
+      width: isMobile ? '90vw' : '380px', // Responsive width
+      height: isMobile ? '80vh' : '520px', // Responsive height
       backgroundColor: 'white',
       boxShadow: '0 5px 20px rgba(0,0,0,0.15)', // Matched lit review
-      borderRadius: '16px', // Matched lit review
+      borderRadius: isMobile ? '12px' : '16px', // Matched lit review
       zIndex: 1000,
       display: 'flex',
       flexDirection: 'column',
       overflow: 'hidden',
       transition: 'all 0.3s ease',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
+      ...(isMobile && {
+        left: '5vw',
+      }),
     },
     dialogHeader: {
       backgroundColor: '#003d7c',
@@ -4280,6 +4572,18 @@ const App = () => {
   });
   const [llmApiKey, setLlmApiKey] = useState(''); // Added for persistent API Key
 
+  // Add viewport meta tag for mobile responsiveness
+  useEffect(() => {
+    // Check if viewport meta tag already exists
+    const existingViewport = document.querySelector('meta[name="viewport"]');
+    if (!existingViewport) {
+      const viewport = document.createElement('meta');
+      viewport.name = 'viewport';
+      viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+      document.head.appendChild(viewport);
+    }
+  }, []);
+
   useEffect(() => {
     // Initialize user session 
     const initUserSession = async () => {
@@ -4363,6 +4667,55 @@ const App = () => {
   // Simple render without useEffect
   return (
     <ErrorBoundary>
+      {/* Global mobile styles */}
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          /* Global mobile responsive styles */
+          * {
+            box-sizing: border-box;
+          }
+          
+          @media (max-width: 768px) {
+            body {
+              font-size: 14px;
+              line-height: 1.5;
+            }
+            
+            h1, h2, h3, h4, h5, h6 {
+              line-height: 1.3;
+            }
+            
+            img {
+              max-width: 100%;
+              height: auto;
+            }
+            
+            /* Ensure text is readable on mobile */
+            p, li, div {
+              word-wrap: break-word;
+              overflow-wrap: break-word;
+            }
+            
+            /* Improve touch targets */
+            button, a, input {
+              min-height: 44px;
+              min-width: 44px;
+            }
+            
+            /* Prevent horizontal scrolling */
+            body {
+              overflow-x: hidden;
+            }
+          }
+          
+          @media (max-width: 480px) {
+            body {
+              font-size: 13px;
+            }
+          }
+        `
+      }} />
+      
       <Header />
       <MainContent />
       <Footer />
