@@ -1852,7 +1852,7 @@ const MainContent = () => {
                   <li style={styles.resourceListItem}><a href="https://copilot.microsoft.com/" target="_blank" rel="noopener noreferrer" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Microsoft Copilot</strong> - AI-powered assistant for course material development and educational content creation</a></li>
                   <li style={styles.resourceListItem}><a href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>ChatGPT</strong> - For creating assessments, activities, lesson plans, and educational content</a></li>
                   <li style={styles.resourceListItem}><a href="https://schoolai.com/" target="_blank" rel="noopener noreferrer" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>School AI</strong> - Personalized AI platform for customized instruction and learning pathways</a></li>
-                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>TeacherGAIA</strong> - AI-powered personalized learning design platform for educators</a></li>
+                  <li style={styles.resourceListItem}><a href="https://teachergaia.org/" target="_blank" rel="noopener noreferrer" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>TeacherGAIA</strong> - AI-powered personalized learning design platform for educators and adaptive curriculum development</a></li>
                 </ul>
                 
                 <h3 id="ai-assessment" style={{ ...styles.collapsibleContentH3, borderBottomColor: '#0056b3', fontSize: '1.1em', marginTop: '25px' }}>AI for Assessment</h3>
@@ -1864,9 +1864,9 @@ const MainContent = () => {
                 
                 <h3 id="teaching-activities" style={{ ...styles.collapsibleContentH3, borderBottomColor: '#0056b3', fontSize: '1.1em', marginTop: '25px' }}>Teaching Activities</h3>
                 <ul style={styles.resourceList}>
-                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Prompt engineering exercises</strong></a></li>
-                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Collaborative AI projects</strong></a></li>
-                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>AI-enhanced lesson plans</strong></a></li>
+                  <li style={styles.resourceListItem}><a href="https://www.eduaide.ai/" target="_blank" rel="noopener noreferrer" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Eduaide.AI</strong> - Teacher-created AI workspace for lesson planning, resource creation, and classroom activities</a></li>
+                  <li style={styles.resourceListItem}><a href="https://to-teach.ai/" target="_blank" rel="noopener noreferrer" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>To-Teach.AI</strong> - AI-powered platform for creating personalized teaching materials and exercises</a></li>
+                  <li style={styles.resourceListItem}><a href="https://teachermatic.com/" target="_blank" rel="noopener noreferrer" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>TeacherMatic</strong> - AI-powered generators for lesson plans, rubrics, and educational content creation</a></li>
                 </ul>
               </div>
               
@@ -1884,16 +1884,16 @@ const MainContent = () => {
                 
                 <h3 id="learning-ai" style={{ ...styles.collapsibleContentH3, borderBottomColor: '#c0392b', color: '#e74c3c', fontSize: '1.1em', marginTop: '25px' }}>Learning with AI</h3>
                 <ul style={styles.resourceList}>
-                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Study companions</strong> - AI tutors for personalized learning</a></li>
-                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Explanation tools</strong> - For breaking down complex concepts</a></li>
-                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Practice generators</strong> - For creating custom exercises</a></li>
+                  <li style={styles.resourceListItem}><a href="https://www.khanacademy.org/khan-labs" target="_blank" rel="noopener noreferrer" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Khan Academy Khanmigo</strong> - AI tutor for personalized learning and academic support across subjects</a></li>
+                  <li style={styles.resourceListItem}><a href="https://explanations-9a4b7.web.app/" target="_blank" rel="noopener noreferrer" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>AI Explanation Tools</strong> - For breaking down and simplifying complex concepts with interactive demonstrations</a></li>
+                  <li style={styles.resourceListItem}><a href="https://www.teachertoolsai.com/" target="_blank" rel="noopener noreferrer" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Teacher Tools AI</strong> - AI-powered practice generators for creating custom exercises and academic assessments</a></li>
                 </ul>
                 
                 <h3 id="student-research" style={{ ...styles.collapsibleContentH3, borderBottomColor: '#c0392b', color: '#e74c3c', fontSize: '1.1em', marginTop: '25px' }}>Research Materials</h3>
                 <ul style={styles.resourceList}>
-                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Citation generators</strong> - For academic references</a></li>
-                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Literature summarizers</strong> - For research papers</a></li>
-                  <li style={styles.resourceListItem}><a href="#" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Data visualization tools</strong> - For presenting findings</a></li>
+                  <li style={styles.resourceListItem}><a href="https://www.sourcely.net/" target="_blank" rel="noopener noreferrer" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Sourcely AI Citation</strong> - AI-powered citation generator with automated metadata extraction and multiple formats</a></li>
+                  <li style={styles.resourceListItem}><a href="https://www.semanticscholar.org/" target="_blank" rel="noopener noreferrer" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>Semantic Scholar</strong> - AI-powered academic search engine with literature summarization and paper insights</a></li>
+                  <li style={styles.resourceListItem}><a href="https://www.researchrabbit.ai/" target="_blank" rel="noopener noreferrer" style={styles.resourceLink}><strong style={styles.resourceLinkStrong}>ResearchRabbit</strong> - AI research discovery tool for finding relevant papers and visualizing research networks</a></li>
                 </ul>
               </div>
             </div>
