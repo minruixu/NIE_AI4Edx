@@ -807,7 +807,7 @@ Expected JSON output:
             ]);
             const [currentMessage, setCurrentMessage] = useState('');
             const [isTyping, setIsTyping] = useState(false);
-            const [apiKey, setApiKey] = useState('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');
+            const [apiKey, setApiKey] = useState('');
             const [analysisResults, setAnalysisResults] = useState(null);
             const [currentStep, setCurrentStep] = useState(1);
             const [showGuide, setShowGuide] = useState(true);
@@ -830,7 +830,7 @@ Expected JSON output:
                 // Date
                 doc.setFontSize(10);
                 doc.setTextColor(100, 100, 100);
-                doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 45);
+                doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 150, 30);
                 
                 let yPosition = 50;
                 
@@ -838,7 +838,7 @@ Expected JSON output:
                 doc.setFontSize(14);
                 doc.setTextColor(0, 61, 124);
                 doc.text('Assignment Information', 20, yPosition);
-                yPosition += 15;
+                yPosition += 10;
                 
                 doc.setFontSize(10);
                 doc.setTextColor(0, 0, 0);
@@ -846,17 +846,17 @@ Expected JSON output:
                 formFields.forEach(field => {
                     if (formData[field.id]) {
                         doc.text(`${field.label}: ${formData[field.id]}`, 20, yPosition);
-                        yPosition += 12;
+                        yPosition += 8;
                     }
                 });
                 
-                yPosition += 15;
+                yPosition += 10;
                 
                 // GAI Declaration
                 doc.setFontSize(14);
                 doc.setTextColor(0, 61, 124);
                 doc.text('GAI Declaration', 20, yPosition);
-                yPosition += 15;
+                yPosition += 10;
                 
                 doc.setFontSize(10);
                 doc.setTextColor(0, 0, 0);
@@ -867,20 +867,20 @@ Expected JSON output:
                         if (option) {
                             const lines = doc.splitTextToSize(`✓ ${option.text}`, 170);
                             doc.text(lines, 20, yPosition);
-                            yPosition += lines.length * 7 + 5;
+                            yPosition += lines.length * 5 + 3;
                         }
                     });
                 } else {
                     doc.text('No GAI assistance declared', 20, yPosition);
-                    yPosition += 12;
+                    yPosition += 8;
                 }
                 
                 if (formData.otherGAIUsage) {
-                    yPosition += 10;
+                    yPosition += 5;
                     doc.setFontSize(12);
                     doc.setTextColor(0, 61, 124);
                     doc.text('Additional GAI Usage Details:', 20, yPosition);
-                    yPosition += 12;
+                    yPosition += 8;
                     
                     doc.setFontSize(10);
                     doc.setTextColor(0, 0, 0);
@@ -1395,10 +1395,9 @@ Expected JSON output:
                                 <input
                                     type="password"
                                     className="api-key-input"
-                                    placeholder="API key is pre-configured"
-                                    value=""
+                                    placeholder="sk-proj-..."
+                                    value={apiKey}
                                     onChange={(e) => setApiKey(e.target.value)}
-                                    style={{color: '#666', fontStyle: 'italic'}}
                                 />
                                 <small style={{display: 'block', marginTop: '5px', color: '#666'}}>
                                     Get your API key from <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" style={{color: '#003d7c'}}>OpenAI Dashboard</a>. Your key is processed locally and not stored.
