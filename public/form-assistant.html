@@ -822,71 +822,126 @@ Expected JSON output:
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF();
                 
-                // Header
-                doc.setFontSize(20);
-                doc.setTextColor(0, 61, 124);
-                doc.text('NIE Assignment Cover Sheet & GAI Declaration', 20, 30);
+                // Page dimensions and margins
+                const pageHeight = doc.internal.pageSize.height;
+                const pageWidth = doc.internal.pageSize.width;
+                const leftMargin = 20;
+                const rightMargin = 20;
+                const maxWidth = pageWidth - leftMargin - rightMargin;
+                const lineHeight = 6;
+                const sectionSpacing = 15;
                 
-                // Date
+                let yPosition = 30;
+                
+                // Function to check if we need a new page
+                const checkPageBreak = (requiredSpace) => {
+                    if (yPosition + requiredSpace > pageHeight - 20) {
+                        doc.addPage();
+                        yPosition = 30;
+                    }
+                };
+                
+                // Function to add text with proper spacing
+                const addTextBlock = (text, fontSize, color, isBold = false) => {
+                    doc.setFontSize(fontSize);
+                    doc.setTextColor(color[0], color[1], color[2]);
+                    
+                    if (typeof text === 'string') {
+                        const lines = doc.splitTextToSize(text, maxWidth);
+                        const requiredSpace = lines.length * lineHeight + 5;
+                        checkPageBreak(requiredSpace);
+                        
+                        doc.text(lines, leftMargin, yPosition);
+                        yPosition += lines.length * lineHeight + 5;
+                    }
+                };
+                
+                // Header
+                addTextBlock('NIE Assignment Cover Sheet & GAI Declaration', 14, [0, 61, 124]);
+                
+                // Date (on same line as header, right aligned)
                 doc.setFontSize(10);
                 doc.setTextColor(100, 100, 100);
-                doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 150, 30);
+                doc.text(`Generated: ${new Date().toLocaleDateString()}`, pageWidth - rightMargin - 40, 30);
                 
-                let yPosition = 50;
+                yPosition += sectionSpacing;
                 
-                // Form Data
-                doc.setFontSize(14);
-                doc.setTextColor(0, 61, 124);
-                doc.text('Assignment Information', 20, yPosition);
-                yPosition += 10;
-                
-                doc.setFontSize(10);
-                doc.setTextColor(0, 0, 0);
+                // Assignment Information Section
+                addTextBlock('Assignment Information', 10, [0, 61, 124]);
+                yPosition += 5;
                 
                 formFields.forEach(field => {
                     if (formData[field.id]) {
-                        doc.text(`${field.label}: ${formData[field.id]}`, 20, yPosition);
-                        yPosition += 8;
+                        const fieldText = `${field.label}: ${formData[field.id]}`;
+                        addTextBlock(fieldText, 10, [0, 0, 0]);
                     }
                 });
                 
-                yPosition += 10;
+                yPosition += sectionSpacing;
                 
-                // GAI Declaration
-                doc.setFontSize(14);
-                doc.setTextColor(0, 61, 124);
-                doc.text('GAI Declaration', 20, yPosition);
-                yPosition += 10;
+                // Academic Integrity Declaration
+                addTextBlock('Academic Integrity Declaration', 10, [0, 61, 124]);
+                yPosition += 5;
                 
-                doc.setFontSize(10);
-                doc.setTextColor(0, 0, 0);
+                const integrityText = 'I/We have read and understood the NTU Student Academic Integrity (NIE Student version) document and declare that this assignment is my/our own work and does not violate Academic Integrity.';
+                addTextBlock(integrityText, 10, [0, 0, 0]);
+                
+                const integrityPoints = [
+                    'The sources of other people\'s work and/or work produced by generative AI tool/s have been appropriately referenced or acknowledged',
+                    'Quotation marks are used around materials written verbatim from other sources',
+                    'I/We have not submitted any part of this assignment for another course'
+                ];
+                
+                integrityPoints.forEach(point => {
+                    addTextBlock(`• ${point}`, 9, [0, 0, 0]);
+                });
+                
+                yPosition += sectionSpacing;
+                
+                // GAI Declaration Section
+                addTextBlock('Declaration on Use of GAI (Generative Artificial Intelligence) Assistance', 10, [0, 61, 124]);
+                yPosition += 5;
                 
                 if (gaiSelections.length > 0) {
                     gaiSelections.forEach(selectionId => {
                         const option = gaiDeclarationOptions.find(opt => opt.id === selectionId);
                         if (option) {
-                            const lines = doc.splitTextToSize(`✓ ${option.text}`, 170);
-                            doc.text(lines, 20, yPosition);
-                            yPosition += lines.length * 5 + 3;
+                            addTextBlock(`[X] ${option.text}`, 9, [0, 0, 0]);
                         }
                     });
                 } else {
-                    doc.text('No GAI assistance declared', 20, yPosition);
-                    yPosition += 8;
+                    addTextBlock('[ ] No GAI assistance declared', 9, [0, 0, 0]);
                 }
                 
-                if (formData.otherGAIUsage) {
+                // Additional GAI Usage Details
+                if (formData.otherGAIUsage && formData.otherGAIUsage.trim()) {
+                    yPosition += sectionSpacing;
+                    addTextBlock('Additional GAI Usage Details:', 10, [0, 61, 124]);
                     yPosition += 5;
-                    doc.setFontSize(12);
-                    doc.setTextColor(0, 61, 124);
-                    doc.text('Additional GAI Usage Details:', 20, yPosition);
-                    yPosition += 8;
-                    
-                    doc.setFontSize(10);
-                    doc.setTextColor(0, 0, 0);
-                    const usageLines = doc.splitTextToSize(formData.otherGAIUsage, 170);
-                    doc.text(usageLines, 20, yPosition);
+                    addTextBlock(formData.otherGAIUsage, 10, [0, 0, 0]);
                 }
+                
+                // Signature Section
+                yPosition += sectionSpacing;
+                addTextBlock('Student Declaration and Signature', 10, [0, 61, 124]);
+                yPosition += 10;
+                
+                // Add signature lines
+                doc.setDrawColor(0, 0, 0);
+                doc.line(leftMargin, yPosition, leftMargin + 80, yPosition);
+                yPosition += 5;
+                addTextBlock('Student Signature', 9, [100, 100, 100]);
+                
+                yPosition += 15;
+                doc.line(leftMargin, yPosition, leftMargin + 80, yPosition);
+                yPosition += 5;
+                addTextBlock('Date', 9, [100, 100, 100]);
+                
+                // Footer
+                yPosition = pageHeight - 15;
+                doc.setFontSize(8);
+                doc.setTextColor(150, 150, 150);
+                doc.text('This document was generated by the NIE Interactive Form Assistant', leftMargin, yPosition);
                 
                 // Save PDF
                 const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
