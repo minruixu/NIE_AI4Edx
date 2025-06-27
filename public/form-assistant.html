@@ -838,7 +838,7 @@ Expected JSON output:
                 doc.setFontSize(14);
                 doc.setTextColor(0, 61, 124);
                 doc.text('Assignment Information', 20, yPosition);
-                yPosition += 10;
+                yPosition += 15;
                 
                 doc.setFontSize(10);
                 doc.setTextColor(0, 0, 0);
@@ -846,17 +846,17 @@ Expected JSON output:
                 formFields.forEach(field => {
                     if (formData[field.id]) {
                         doc.text(`${field.label}: ${formData[field.id]}`, 20, yPosition);
-                        yPosition += 8;
+                        yPosition += 12;
                     }
                 });
                 
-                yPosition += 10;
+                yPosition += 15;
                 
                 // GAI Declaration
                 doc.setFontSize(14);
                 doc.setTextColor(0, 61, 124);
                 doc.text('GAI Declaration', 20, yPosition);
-                yPosition += 10;
+                yPosition += 15;
                 
                 doc.setFontSize(10);
                 doc.setTextColor(0, 0, 0);
@@ -867,20 +867,20 @@ Expected JSON output:
                         if (option) {
                             const lines = doc.splitTextToSize(`✓ ${option.text}`, 170);
                             doc.text(lines, 20, yPosition);
-                            yPosition += lines.length * 5 + 3;
+                            yPosition += lines.length * 7 + 5;
                         }
                     });
                 } else {
                     doc.text('No GAI assistance declared', 20, yPosition);
-                    yPosition += 8;
+                    yPosition += 12;
                 }
                 
                 if (formData.otherGAIUsage) {
-                    yPosition += 5;
+                    yPosition += 10;
                     doc.setFontSize(12);
                     doc.setTextColor(0, 61, 124);
                     doc.text('Additional GAI Usage Details:', 20, yPosition);
-                    yPosition += 8;
+                    yPosition += 12;
                     
                     doc.setFontSize(10);
                     doc.setTextColor(0, 0, 0);
@@ -1395,9 +1395,10 @@ Expected JSON output:
                                 <input
                                     type="password"
                                     className="api-key-input"
-                                    placeholder="sk-proj-..."
-                                    value={apiKey}
+                                    placeholder="API key is pre-configured"
+                                    value=""
                                     onChange={(e) => setApiKey(e.target.value)}
+                                    style={{color: '#666', fontStyle: 'italic'}}
                                 />
                                 <small style={{display: 'block', marginTop: '5px', color: '#666'}}>
                                     Get your API key from <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" style={{color: '#003d7c'}}>OpenAI Dashboard</a>. Your key is processed locally and not stored.
