@@ -1,0 +1,402 @@
+[
+  {
+    "text": "students",
+    "value": 11
+  },
+  {
+    "text": "instructors",
+    "value": 8
+  },
+  {
+    "text": "student",
+    "value": 4
+  },
+  {
+    "text": "must",
+    "value": 4
+  },
+  {
+    "text": "science",
+    "value": 3
+  },
+  {
+    "text": "aigenerated",
+    "value": 3
+  },
+  {
+    "text": "content",
+    "value": 3
+  },
+  {
+    "text": "age",
+    "value": 3
+  },
+  {
+    "text": "siti",
+    "value": 3
+  },
+  {
+    "text": "menon",
+    "value": 3
+  },
+  {
+    "text": "voice",
+    "value": 3
+  },
+  {
+    "text": "critical",
+    "value": 3
+  },
+  {
+    "text": "tan",
+    "value": 2
+  },
+  {
+    "text": "lecturer",
+    "value": 2
+  },
+  {
+    "text": "without",
+    "value": 2
+  },
+  {
+    "text": "data",
+    "value": 2
+  },
+  {
+    "text": "one",
+    "value": 2
+  },
+  {
+    "text": "chatgpt",
+    "value": 2
+  },
+  {
+    "text": "realizes",
+    "value": 2
+  },
+  {
+    "text": "outputs",
+    "value": 2
+  },
+  {
+    "text": "introduces",
+    "value": 2
+  },
+  {
+    "text": "academic",
+    "value": 2
+  },
+  {
+    "text": "explicitly",
+    "value": 2
+  },
+  {
+    "text": "teach",
+    "value": 2
+  },
+  {
+    "text": "finds",
+    "value": 2
+  },
+  {
+    "text": "several",
+    "value": 2
+  },
+  {
+    "text": "code",
+    "value": 2
+  },
+  {
+    "text": "genai",
+    "value": 2
+  },
+  {
+    "text": "also",
+    "value": 2
+  },
+  {
+    "text": "workshop",
+    "value": 2
+  },
+  {
+    "text": "preserve",
+    "value": 2
+  },
+  {
+    "text": "write",
+    "value": 2
+  },
+  {
+    "text": "fluency",
+    "value": 2
+  },
+  {
+    "text": "thinking",
+    "value": 2
+  },
+  {
+    "text": "wei",
+    "value": 1
+  },
+  {
+    "text": "ling",
+    "value": 1
+  },
+  {
+    "text": "chinese",
+    "value": 1
+  },
+  {
+    "text": "nus",
+    "value": 1
+  },
+  {
+    "text": "mirage",
+    "value": 1
+  },
+  {
+    "text": "accuracy",
+    "value": 1
+  },
+  {
+    "text": "notices",
+    "value": 1
+  },
+  {
+    "text": "firstyear",
+    "value": 1
+  },
+  {
+    "text": "biology",
+    "value": 1
+  },
+  {
+    "text": "citing",
+    "value": 1
+  },
+  {
+    "text": "climate",
+    "value": 1
+  },
+  {
+    "text": "statistics",
+    "value": 1
+  },
+  {
+    "text": "lab",
+    "value": 1
+  },
+  {
+    "text": "reports",
+    "value": 1
+  },
+  {
+    "text": "referencing",
+    "value": 1
+  },
+  {
+    "text": "actual",
+    "value": 1
+  },
+  {
+    "text": "field",
+    "value": 1
+  },
+  {
+    "text": "claimed",
+    "value": 1
+  },
+  {
+    "text": "already",
+    "value": 1
+  },
+  {
+    "text": "summarized",
+    "value": 1
+  },
+  {
+    "text": "findings",
+    "value": 1
+  },
+  {
+    "text": "overlooking",
+    "value": 1
+  },
+  {
+    "text": "need",
+    "value": 1
+  },
+  {
+    "text": "peerreviewed",
+    "value": 1
+  },
+  {
+    "text": "validation",
+    "value": 1
+  },
+  {
+    "text": "concerned",
+    "value": 1
+  },
+  {
+    "text": "assume",
+    "value": 1
+  },
+  {
+    "text": "equal",
+    "value": 1
+  },
+  {
+    "text": "truth",
+    "value": 1
+  },
+  {
+    "text": "mandates",
+    "value": 1
+  },
+  {
+    "text": "attach",
+    "value": 1
+  },
+  {
+    "text": "source",
+    "value": 1
+  },
+  {
+    "text": "verification",
+    "value": 1
+  },
+  {
+    "text": "module",
+    "value": 1
+  },
+  {
+    "text": "scientific",
+    "value": 1
+  },
+  {
+    "text": "misinformation",
+    "value": 1
+  },
+  {
+    "text": "crosscheck",
+    "value": 1
+  },
+  {
+    "text": "responses",
+    "value": 1
+  },
+  {
+    "text": "government",
+    "value": 1
+  },
+  {
+    "text": "databases",
+    "value": 1
+  },
+  {
+    "text": "eg",
+    "value": 1
+  },
+  {
+    "text": "nea",
+    "value": 1
+  },
+  {
+    "text": "pub",
+    "value": 1
+  },
+  {
+    "text": "scopus",
+    "value": 1
+  },
+  {
+    "text": "worries",
+    "value": 1
+  },
+  {
+    "text": "skepticism",
+    "value": 1
+  },
+  {
+    "text": "believes",
+    "value": 1
+  },
+  {
+    "text": "discernment",
+    "value": 1
+  },
+  {
+    "text": "literacy",
+    "value": 1
+  },
+  {
+    "text": "alongside",
+    "value": 1
+  },
+  {
+    "text": "knowledge",
+    "value": 1
+  },
+  {
+    "text": "rahmah",
+    "value": 1
+  },
+  {
+    "text": "malay",
+    "value": 1
+  },
+  {
+    "text": "engineering",
+    "value": 1
+  },
+  {
+    "text": "senior",
+    "value": 1
+  },
+  {
+    "text": "sit",
+    "value": 1
+  },
+  {
+    "text": "push",
+    "value": 1
+  },
+  {
+    "text": "button",
+    "value": 1
+  },
+  {
+    "text": "robotics",
+    "value": 1
+  },
+  {
+    "text": "assignment",
+    "value": 1
+  },
+  {
+    "text": "submissions",
+    "value": 1
+  },
+  {
+    "text": "identicalclean",
+    "value": 1
+  },
+  {
+    "text": "efficient",
+    "value": 1
+  },
+  {
+    "text": "python",
+    "value": 1
+  },
+  {
+    "text": "clearly",
+    "value": 1
+  },
+  {
+    "text": "generated",
+    "value": 1
+  }
+]
