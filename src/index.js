@@ -1457,7 +1457,7 @@ const MainContent = () => {
               <li>Initial invitation: 500 students and 500 instructors</li>
               <li>Final participation after screening: 
                 <ul>
-                  <li>480 students</li>
+                  <li>496 students</li>
                   <li>128 instructors</li>
                 </ul>
               </li>
