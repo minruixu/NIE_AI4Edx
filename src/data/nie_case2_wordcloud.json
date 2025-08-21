@@ -1,0 +1,402 @@
+[
+  {
+    "text": "students",
+    "value": 18
+  },
+  {
+    "text": "feedback",
+    "value": 6
+  },
+  {
+    "text": "chatgpt",
+    "value": 5
+  },
+  {
+    "text": "lab",
+    "value": 4
+  },
+  {
+    "text": "data",
+    "value": 4
+  },
+  {
+    "text": "reasoning",
+    "value": 4
+  },
+  {
+    "text": "design",
+    "value": 4
+  },
+  {
+    "text": "case",
+    "value": 3
+  },
+  {
+    "text": "scenario",
+    "value": 3
+  },
+  {
+    "text": "context",
+    "value": 3
+  },
+  {
+    "text": "tan",
+    "value": 3
+  },
+  {
+    "text": "teaches",
+    "value": 3
+  },
+  {
+    "text": "struggle",
+    "value": 3
+  },
+  {
+    "text": "implementation",
+    "value": 3
+  },
+  {
+    "text": "outcome",
+    "value": 3
+  },
+  {
+    "text": "engineering",
+    "value": 3
+  },
+  {
+    "text": "technical",
+    "value": 3
+  },
+  {
+    "text": "logic",
+    "value": 3
+  },
+  {
+    "text": "argument",
+    "value": 3
+  },
+  {
+    "text": "tools",
+    "value": 3
+  },
+  {
+    "text": "research",
+    "value": 3
+  },
+  {
+    "text": "guided",
+    "value": 2
+  },
+  {
+    "text": "environmental",
+    "value": 2
+  },
+  {
+    "text": "chemistry",
+    "value": 2
+  },
+  {
+    "text": "many",
+    "value": 2
+  },
+  {
+    "text": "prelab",
+    "value": 2
+  },
+  {
+    "text": "activities",
+    "value": 2
+  },
+  {
+    "text": "prompts",
+    "value": 2
+  },
+  {
+    "text": "like",
+    "value": 2
+  },
+  {
+    "text": "might",
+    "value": 2
+  },
+  {
+    "text": "critique",
+    "value": 2
+  },
+  {
+    "text": "analysis",
+    "value": 2
+  },
+  {
+    "text": "improved",
+    "value": 2
+  },
+  {
+    "text": "revise",
+    "value": 2
+  },
+  {
+    "text": "civil",
+    "value": 2
+  },
+  {
+    "text": "submit",
+    "value": 2
+  },
+  {
+    "text": "designs",
+    "value": 2
+  },
+  {
+    "text": "clarity",
+    "value": 2
+  },
+  {
+    "text": "input",
+    "value": 2
+  },
+  {
+    "text": "reflection",
+    "value": 2
+  },
+  {
+    "text": "suggestions",
+    "value": 2
+  },
+  {
+    "text": "flaws",
+    "value": 2
+  },
+  {
+    "text": "process",
+    "value": 2
+  },
+  {
+    "text": "improve",
+    "value": 2
+  },
+  {
+    "text": "evaluation",
+    "value": 2
+  },
+  {
+    "text": "philosophy",
+    "value": 2
+  },
+  {
+    "text": "wong",
+    "value": 2
+  },
+  {
+    "text": "arguments",
+    "value": 2
+  },
+  {
+    "text": "essay",
+    "value": 2
+  },
+  {
+    "text": "outlines",
+    "value": 2
+  },
+  {
+    "text": "eg",
+    "value": 2
+  },
+  {
+    "text": "gaps",
+    "value": 2
+  },
+  {
+    "text": "literature",
+    "value": 2
+  },
+  {
+    "text": "sources",
+    "value": 2
+  },
+  {
+    "text": "critical",
+    "value": 2
+  },
+  {
+    "text": "validate",
+    "value": 2
+  },
+  {
+    "text": "themes",
+    "value": 2
+  },
+  {
+    "text": "identifying",
+    "value": 2
+  },
+  {
+    "text": "science",
+    "value": 1
+  },
+  {
+    "text": "inquiry",
+    "value": 1
+  },
+  {
+    "text": "large",
+    "value": 1
+  },
+  {
+    "text": "university",
+    "value": 1
+  },
+  {
+    "text": "visualizing",
+    "value": 1
+  },
+  {
+    "text": "reaction",
+    "value": 1
+  },
+  {
+    "text": "pathways",
+    "value": 1
+  },
+  {
+    "text": "interpreting",
+    "value": 1
+  },
+  {
+    "text": "address",
+    "value": 1
+  },
+  {
+    "text": "integrates",
+    "value": 1
+  },
+  {
+    "text": "chemdraw",
+    "value": 1
+  },
+  {
+    "text": "plugins",
+    "value": 1
+  },
+  {
+    "text": "helping",
+    "value": 1
+  },
+  {
+    "text": "simulate",
+    "value": 1
+  },
+  {
+    "text": "analyze",
+    "value": 1
+  },
+  {
+    "text": "chemical",
+    "value": 1
+  },
+  {
+    "text": "reactions",
+    "value": 1
+  },
+  {
+    "text": "handson",
+    "value": 1
+  },
+  {
+    "text": "sessions",
+    "value": 1
+  },
+  {
+    "text": "enter",
+    "value": 1
+  },
+  {
+    "text": "scenarios",
+    "value": 1
+  },
+  {
+    "text": "raw",
+    "value": 1
+  },
+  {
+    "text": "explain",
+    "value": 1
+  },
+  {
+    "text": "titration",
+    "value": 1
+  },
+  {
+    "text": "result",
+    "value": 1
+  },
+  {
+    "text": "suggest",
+    "value": 1
+  },
+  {
+    "text": "gone",
+    "value": 1
+  },
+  {
+    "text": "wrong",
+    "value": 1
+  },
+  {
+    "text": "provides",
+    "value": 1
+  },
+  {
+    "text": "structured",
+    "value": 1
+  },
+  {
+    "text": "visual",
+    "value": 1
+  },
+  {
+    "text": "molecule",
+    "value": 1
+  },
+  {
+    "text": "diagrams",
+    "value": 1
+  },
+  {
+    "text": "adds",
+    "value": 1
+  },
+  {
+    "text": "task",
+    "value": 1
+  },
+  {
+    "text": "requiring",
+    "value": 1
+  },
+  {
+    "text": "ais",
+    "value": 1
+  },
+  {
+    "text": "understanding",
+    "value": 1
+  },
+  {
+    "text": "performance",
+    "value": 1
+  },
+  {
+    "text": "especially",
+    "value": 1
+  },
+  {
+    "text": "among",
+    "value": 1
+  },
+  {
+    "text": "lower",
+    "value": 1
+  }
+]

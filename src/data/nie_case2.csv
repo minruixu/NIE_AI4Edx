@@ -1,0 +1,75 @@
+﻿[1] Science Case Scenario – Guided Inquiry in Environmental Chemistry
+
+Context:
+"Dr. Tan teaches Environmental Chemistry at a large university. Many students struggle with visualizing reaction pathways and interpreting lab data. To address this, Dr. Tan integrates ChatGPT and ChemDraw plugins into pre-lab activities, helping students simulate and analyze chemical reactions before hands-on sessions."
+
+Implementation:
+Students enter lab scenarios and raw data into ChatGPT with prompts like “Explain this titration result and suggest what might have gone wrong.” The AI provides structured reasoning and visual molecule diagrams. Dr. Tan adds a task requiring students to critique the AI’s analysis using their own understanding.
+
+Outcome:
+
+"Lab performance improved, especially among students with lower prior knowledge."
+
+Students reported higher confidence in pre-lab preparation.
+
+The instructor used student-AI interaction data to revise unclear instructions in the lab manual.
+
+
+
+[2] Engineering Case Scenario – Design Review Feedback in Civil Engineering
+
+Context:
+"Prof. Ramesh teaches a capstone module in Civil Engineering, where students design small-scale sustainable infrastructure. While students submit technical designs, many struggle with clarity in their technical communication and documentation."
+
+Implementation:
+"He introduces ChatGPT as a design reviewer, asking students to input sections of their reports and request feedback on logic, clarity, and assumptions. Students revise their designs and submit a reflection comparing AI suggestions with peer feedback."
+
+Outcome:
+
+Students recognized flaws in design logic earlier in the process.
+
+Reflection tasks improved metacognitive skills.
+
+AI-enabled feedback helped international students improve technical writing in English.
+
+
+
+[3] Humanities Case Scenario – Argument Evaluation in Philosophy
+
+Context:
+Dr. Wong teaches an introductory Philosophy course focused on argument construction and ethical reasoning. She finds that students struggle to distinguish strong arguments from logical fallacies in essay drafts.
+
+Implementation:
+"Using ChatGPT, students input their essay outlines and prompt the AI to critique or counter their thesis. They then rewrite their arguments incorporating AI-identified counterarguments and defend why they accepted or rejected the suggestions in a post-reflection."
+
+Outcome:
+
+Essays showed more balanced reasoning and better structure.
+
+"Students developed stronger awareness of argument flaws (e.g., strawman, slippery slope)."
+
+Dr. Wong used common AI-flagged logic gaps to build a targeted lecture on reasoning errors.
+
+Learning Process Analysis Points:
+
+1. Literature Search & Selection
+"Students use AI tools (e.g., ChatGPT, Elicit) to identify relevant academic sources quickly, initiating critical engagement with topic-specific literature."
+
+2. Critical Evaluation of Sources
+"AI tools provide summaries and counterpoints, but students must validate claims, compare viewpoints, and assess source credibility through guided activities."
+
+3. Synthesizing Research Insights
+"AI helps group related ideas, but learners refine synthesis by constructing outlines, peer-discussing themes, and identifying contradictions."
+
+4. Identifying Research Gaps
+"Using prompts like “What is missing in the current research on X?”, students guide AI tools to spotlight overlooked themes, then validate findings via peer-reviewed databases."
+
+
+
+Three Key Discussion Questions:
+
+1. How can educators ensure that AI-generated feedback aligns with pedagogical goals and assessment criteria?
+
+"2. What are the potential risks of over-relying on AI for formative feedback, and how can they be mitigated?"
+
+3. How might data from AI-student interactions be ethically used to improve teaching without infringing on privacy?

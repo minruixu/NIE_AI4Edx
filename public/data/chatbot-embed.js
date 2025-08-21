@@ -1,0 +1,1058 @@
+// Chatbot Embed Script
+
+// Function to dispatch navigation events
+const navigateFindingsPage = (tab, section) => {
+  console.log(`Chatbot: Dispatching navigateFindings event - Tab: ${tab}, Section: ${section}`);
+  document.dispatchEvent(new CustomEvent('navigateFindings', { 
+    detail: { tab, section }
+  }));
+};
+
+// Dialog Component with unified components and LLM integration
+class Dialog extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      inputValue: '',
+      messages: [
+        { 
+          text: 'Hello! I can help you navigate the Findings page or answer questions about the research. What would you like to do?', 
+          sender: 'bot', 
+          buttons: [
+            { 
+              text: 'Quantitative Findings', 
+              type: 'primary',
+              action: () => this.handleNavigationChoice('quantitative') 
+            },
+            { 
+              text: 'Qualitative Findings', 
+              type: 'primary',
+              action: () => this.handleNavigationChoice('qualitative') 
+            },
+            { 
+              text: 'Recommendations', 
+              type: 'primary',
+              action: () => this.handleNavigationChoice('recommendations') 
+            },
+          ]
+        }
+      ],
+      typingIndicator: false,
+      llmApiKey: localStorage.getItem('nie_llm_api_key') || '',
+      messagesEndRef: React.createRef(),
+      quotedText: null // Add state for quoted text
+    };
+  }
+
+  componentDidUpdate() {
+    // Scroll to bottom when messages update
+    if (this.state.messagesEndRef.current) {
+      this.state.messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+  
+  componentDidMount() {
+    // Add listener for text quote events
+    window.addEventListener('textQuoteSelected', this.handleTextQuoteSelected);
+    
+    // Make the component visible when text is quoted
+    if (this.props.onOpen && typeof this.props.onOpen === 'function') {
+      window.addEventListener('textQuoteSelected', this.props.onOpen);
+    }
+  }
+  
+  componentWillUnmount() {
+    // Clean up event listeners
+    window.removeEventListener('textQuoteSelected', this.handleTextQuoteSelected);
+    
+    if (this.props.onOpen && typeof this.props.onOpen === 'function') {
+      window.removeEventListener('textQuoteSelected', this.props.onOpen);
+    }
+  }
+  
+  // Handle text quote selection event
+  handleTextQuoteSelected = (event) => {
+    if (event.detail && event.detail.quote) {
+      this.setState({ quotedText: event.detail.quote });
+    }
+  }
+  
+  // Clear quoted text
+  handleClearQuote = () => {
+    this.setState({ quotedText: null });
+  }
+
+  addMessage = (message) => {
+    this.setState(prevState => ({
+      messages: [...prevState.messages, message]
+    }));
+  }
+
+  handleNavigationChoice = (choice, subChoice = null) => {
+    let userText = '';
+    let botResponse = { sender: 'bot', text: 'Navigating...', buttons: [] };
+
+    if (choice === 'quantitative') {
+      userText = subChoice ? `Quantitative: ${subChoice}` : 'Quantitative Findings';
+      if (!subChoice) {
+        botResponse.text = 'Navigating to Quantitative Findings. Which section?';
+        botResponse.buttons = [
+          { 
+            text: 'Instructor Data', 
+            type: 'secondary',
+            action: () => this.handleNavigationChoice('quantitative', 'instructors') 
+          },
+          { 
+            text: 'Student Data', 
+            type: 'secondary',
+            action: () => this.handleNavigationChoice('quantitative', 'students') 
+          },
+          { 
+            text: 'Survey Appendix', 
+            type: 'secondary',
+            action: () => this.handleNavigationChoice('quantitative', 'appendix') 
+          },
+        ];
+        this.addMessage({ text: userText, sender: 'user' });
+        this.addMessage(botResponse);
+        return;
+      } else {
+        navigateFindingsPage('quantitative', subChoice);
+        botResponse.text = `Navigating to Quantitative Findings: ${subChoice}.`;
+      }
+    } else if (choice === 'qualitative') {
+      userText = subChoice ? `Qualitative: ${subChoice}` : 'Qualitative Findings';
+      if (!subChoice) {
+        botResponse.text = 'Navigating to Qualitative Findings. Which section?';
+        botResponse.buttons = [
+          { 
+            text: 'Instructor Analysis', 
+            type: 'secondary',
+            action: () => this.handleNavigationChoice('qualitative', 'instructors') 
+          },
+          { 
+            text: 'Student Analysis', 
+            type: 'secondary',
+            action: () => this.handleNavigationChoice('qualitative', 'students') 
+          },
+        ];
+        this.addMessage({ text: userText, sender: 'user' });
+        this.addMessage(botResponse);
+        return;
+      } else {
+        navigateFindingsPage('qualitative', subChoice);
+        botResponse.text = `Navigating to Qualitative Findings: ${subChoice}.`;
+      }
+    } else if (choice === 'recommendations') {
+      userText = 'Recommendations';
+      navigateFindingsPage('recommendations', null);
+      botResponse.text = 'Navigating to Recommendations.';
+    }
+    this.addMessage({ text: userText, sender: 'user' });
+    this.addMessage(botResponse);
+  }
+
+  handleInputChange = (e) => {
+    this.setState({ inputValue: e.target.value });
+  }
+
+  handleApiKeyChange = (e) => {
+    const apiKey = e.target.value;
+    this.setState({ llmApiKey: apiKey });
+    localStorage.setItem('nie_llm_api_key', apiKey);
+  }
+
+  getOpenAIResponse = async (userInput, chatHistory) => {
+    const apiKey = this.state.llmApiKey;
+    if (!apiKey) {
+      throw new Error("OpenAI API Key is not set.");
+    }
+
+    const apiUrl = 'https://api.openai.com/v1/chat/completions';
+
+    const systemMessage = {
+      role: "system",
+      content: "You are a helpful research assistant for the NIE AI4Edx research project findings page. You assist users in navigating the findings and answering questions about the research. Be concise and factual. The research surveyed 128 instructors and 496 students about AI readiness, ethics, and practices in higher education. Key findings include: instructors showed moderate AI readiness (mean scores ranging from 3.06 to 3.72 across dimensions), with high ethics awareness (M=3.72) but lower confidence in ability to use AI (M=3.06); students showed higher AI readiness compared to instructors, with better ability to use AI (M=3.47) and greater perception of AI-enhanced innovation (M=3.69)."
+    };
+    
+    const formattedMessages = [
+      systemMessage,
+      ...chatHistory.map(msg => ({
+        role: msg.sender === 'user' ? 'user' : 'assistant',
+        content: msg.text
+      })),
+      { role: 'user', content: userInput }
+    ];
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: formattedMessages,
+          max_tokens: 500,
+          temperature: 0.7
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || `API request failed with status ${response.status}`);
+      }
+
+      const data = await response.json();
+      const choice = data.choices && data.choices[0];
+      return choice?.message?.content || "Sorry, I couldn't retrieve a valid response.";
+    } catch (error) {
+      console.error("Error in OpenAI API call:", error);
+      throw error;
+    }
+  }
+
+  handleSendMessage = async (e) => {
+    e.preventDefault();
+    if (this.state.inputValue.trim() === '' && !this.state.quotedText) return;
+    
+    // Create message text - if there's a quote, include it with the user's input
+    const userText = this.state.inputValue;
+    const messageText = this.state.quotedText 
+      ? `Regarding this text: "${this.state.quotedText}"\n\n${userText || "What are your thoughts on this?"}`
+      : userText;
+    
+    this.addMessage({ text: messageText, sender: 'user' });
+    this.setState({ inputValue: '', quotedText: null, typingIndicator: true }); // Clear quoted text
+    
+    // Check for API key first
+    if (!this.state.llmApiKey) {
+      setTimeout(() => {
+        this.setState({ typingIndicator: false });
+        this.addMessage({ 
+          text: 'Please enter your OpenAI API Key in the field below to enable AI responses.', 
+          sender: 'bot' 
+        });
+      }, 500);
+      return;
+    }
+    
+    // Check for direct navigation commands first
+    const lowerUserText = userText.toLowerCase();
+    let handled = false;
+
+    if (lowerUserText.includes('quantitative') && !lowerUserText.includes('what') && !lowerUserText.includes('explain')) {
+      if (lowerUserText.includes('instructor')) { 
+        this.handleNavigationChoice('quantitative', 'instructors'); 
+        handled = true; 
+      } else if (lowerUserText.includes('student')) { 
+        this.handleNavigationChoice('quantitative', 'students'); 
+        handled = true; 
+      } else if (lowerUserText.includes('appendix')) { 
+        this.handleNavigationChoice('quantitative', 'appendix'); 
+        handled = true; 
+      } else { 
+        this.handleNavigationChoice('quantitative'); 
+        handled = true; 
+      }
+    } else if (lowerUserText.includes('qualitative') && !lowerUserText.includes('what') && !lowerUserText.includes('explain')) {
+      if (lowerUserText.includes('instructor')) { 
+        this.handleNavigationChoice('qualitative', 'instructors'); 
+        handled = true; 
+      } else if (lowerUserText.includes('student')) { 
+        this.handleNavigationChoice('qualitative', 'students'); 
+        handled = true; 
+      } else { 
+        this.handleNavigationChoice('qualitative'); 
+        handled = true; 
+      }
+    } else if (lowerUserText.includes('recommendation') && !lowerUserText.includes('what') && !lowerUserText.includes('explain')) {
+      this.handleNavigationChoice('recommendations'); 
+      handled = true;
+    }
+    
+    // If not handled as navigation, use LLM
+    if (!handled) {
+      try {
+        // Filter out messages with buttons for better context
+        const chatHistory = this.state.messages.filter(msg => !msg.buttons || msg.buttons.length === 0);
+        const aiResponse = await this.getOpenAIResponse(userText, chatHistory);
+        
+        this.setState({ typingIndicator: false });
+        this.addMessage({ text: aiResponse, sender: 'bot' });
+      } catch (error) {
+        console.error("Error getting AI response:", error);
+        this.setState({ typingIndicator: false });
+        this.addMessage({ 
+          text: `Error: ${error.message}. Please check your API key and network connection.`, 
+          sender: 'bot' 
+        });
+      }
+    }
+  }
+
+  render() {
+    if (!this.props.isOpen) return null;
+    
+    // Dialog container styles based on literature-review-page.js
+    const styles = {
+      dialogContainer: {
+        position: 'fixed',
+        bottom: '30px', 
+        right: '30px', 
+        width: '380px', // Matched lit review
+        height: '520px', // Matched lit review
+        backgroundColor: 'white',
+        boxShadow: '0 5px 20px rgba(0,0,0,0.15)', // Matched lit review
+        borderRadius: '16px', // Matched lit review
+        zIndex: 1000,
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+        transition: 'all 0.3s ease', 
+        animation: 'dialogFadeIn 0.3s ease',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
+      },
+      header: {
+        backgroundColor: '#003d7c',
+        backgroundImage: 'linear-gradient(135deg, #003d7c 0%, #0056b3 100%)', // Matched lit review
+        color: '#fff', 
+        padding: '15px 20px', // Matched lit review
+        borderTopLeftRadius: '16px', // Matched lit review
+        borderTopRightRadius: '16px', // Matched lit review
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        boxShadow: '0 2px 5px rgba(0,0,0,0.1)', // Matched lit review
+      },
+      headerTitle: { 
+        margin: 0,
+        fontSize: '1.1rem', 
+        fontWeight: '500', 
+      },
+      closeButton: {
+        background: 'none',
+        border: 'none',
+        color: 'white',
+        fontSize: '18px', // Matched lit review
+        cursor: 'pointer',
+        padding: '5px', 
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '28px',
+        height: '28px',
+        borderRadius: '50%',
+        transition: 'background-color 0.2s',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', 
+      },
+      messagesContainer: {
+        flex: 1,
+        padding: '20px', // Matched lit review
+        paddingBottom: '10px',
+        marginBottom: '5px',
+        overflowY: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '8px', // Matched lit review
+        backgroundColor: '#f8f9fa', // Matched lit review
+      },
+      inputContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        padding: '10px 15px', // Matched lit review
+        borderTop: '1px solid #eaeaea', // Matched lit review
+        backgroundColor: 'white', // Matched lit review
+      },
+      messageInputContainer: { // Contains input and send button
+        display: 'flex',
+        alignItems: 'flex-start', 
+      },
+      messageInput: {
+        flex: 1,
+        padding: '12px 15px', // Matched lit review input padding
+        border: '1px solid #ddd',
+        borderRadius: '24px', // Matched lit review input radius
+        marginRight: '10px',
+        marginBottom: '15px', // Matched lit review input margin
+        outline: 'none',
+        fontSize: '14px', // Matched lit review input font size
+        backgroundColor: 'white',
+        boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)',
+        transition: 'all 0.2s ease',
+        height: 'auto', // Allow height to adjust
+        minHeight: '45px', // Maintain minimum height
+        boxSizing: 'border-box',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
+      },
+      sendButton: {
+        backgroundColor: '#0056b3', // Matched lit review send button
+        backgroundImage: 'none', // Removed gradient
+        color: 'white',
+        border: 'none',
+        borderRadius: '24px', // Matched lit review send button radius
+        padding: '10px 18px', // Matched lit review send button padding
+        cursor: 'pointer',
+        fontWeight: 'bold', // Matched lit review send button weight
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+        transition: 'all 0.2s ease',
+        alignSelf: 'flex-start',
+        height: '45px', // Adjust if needed
+        marginBottom: '15px', // Match input margin
+        fontSize: '14px', // Match input font size
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', 
+      },
+      apiKeyContainer: {
+        display: 'flex',
+        alignItems: 'center',
+        marginBottom: '5px', 
+      },
+      apiKeyLabel: {
+        marginRight: '10px',
+        fontSize: '13px', 
+        color: '#555',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
+      },
+      apiKeyInput: {
+        flex: 1,
+        padding: '8px 12px',
+        border: '1px solid #ddd',
+        borderRadius: '5px',
+        fontSize: '13px', 
+        backgroundColor: '#f8f9fa',
+        boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)',
+        transition: 'all 0.2s ease',
+        height: '40px',
+        boxSizing: 'border-box',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
+      },
+      userMessage: {
+        margin: '5px 0',
+        padding: '12px 16px', // Matched lit review
+        borderRadius: '18px', // Matched lit review
+        backgroundColor: '#0056b3', // Matched lit review
+        color: 'white',
+        alignSelf: 'flex-end',
+        marginLeft: 'auto',
+        borderBottomRightRadius: '4px', // Matched lit review
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)', // Matched lit review
+        maxWidth: '80%',
+        wordWrap: 'break-word',
+        fontWeight: '400', // Matched lit review
+        fontSize: '14px', 
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
+      },
+      botMessage: {
+        margin: '5px 0',
+        padding: '12px 16px', // Matched lit review
+        borderRadius: '18px', // Matched lit review
+        backgroundColor: 'white', // Matched lit review
+        color: '#333',
+        alignSelf: 'flex-start',
+        marginRight: 'auto',
+        borderBottomLeftRadius: '4px', // Matched lit review
+        boxShadow: '0 2px 4px rgba(0,0,0,0.08)', // Matched lit review
+        maxWidth: '80%',
+        wordWrap: 'break-word',
+        fontWeight: '400', // Matched lit review
+        fontSize: '14px', 
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
+      },
+      buttonsContainer: {
+        display: 'flex',
+        flexWrap: 'wrap', 
+        gap: '8px', // Matched lit review
+        marginTop: '8px',
+      },
+      primaryButton: {
+        padding: '10px 14px', // Matched lit review primary button
+        backgroundColor: '#0056b3', // Matched lit review primary button
+        color: 'white',
+        border: 'none',
+        borderRadius: '6px', // Matched lit review primary button
+        cursor: 'pointer',
+        fontSize: '13px', // Matched lit review primary button
+        fontWeight: 'bold', // Matched lit review primary button
+        transition: 'background-color 0.2s, transform 0.2s, box-shadow 0.2s',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', 
+      },
+      primaryButtonHover: { 
+        backgroundColor: '#003d7c',
+        transform: 'translateY(-2px)',
+        boxShadow: '0 4px 8px rgba(0,60,124,0.2)',
+      },
+      secondaryButton: {
+        padding: '9px 13px', // Matched lit review secondary button
+        backgroundColor: '#f0f0f0', // Matched lit review secondary button
+        color: '#444', // Matched lit review secondary button
+        border: '1px solid #ddd',
+        borderRadius: '6px', // Matched lit review secondary button
+        cursor: 'pointer',
+        fontSize: '13px', // Matched lit review secondary button
+        transition: 'background-color 0.2s, transform 0.2s, box-shadow 0.2s',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', 
+      },
+      secondaryButtonHover: { 
+        backgroundColor: '#e0e0e0',
+        transform: 'translateY(-2px)',
+        boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+      },
+      typingIndicator: {
+        display: 'flex',
+        alignItems: 'center',
+        padding: '12px 16px', // Matched lit review
+        backgroundColor: 'white', // Matched lit review
+        borderRadius: '18px', // Matched lit review
+        alignSelf: 'flex-start',
+        marginRight: 'auto',
+        width: 'fit-content',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.08)', // Matched lit review
+      },
+      typingDot: {
+        width: '8px', // Matched lit review
+        height: '8px', // Matched lit review
+        backgroundColor: '#666', // Matched lit review
+        borderRadius: '50%',
+        margin: '0 2px',
+        animation: 'bounce 1.4s infinite',
+      },
+      quotedTextContainer: {
+        backgroundColor: '#f0f7ff',
+        padding: '10px 15px',
+        borderRadius: '8px',
+        marginBottom: '10px',
+        border: '1px solid #d0e3ff',
+        position: 'relative',
+        fontSize: '14px'
+      },
+      quotedTextHeader: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '5px'
+      },
+      quotedTextTitle: {
+        fontWeight: 'bold',
+        color: '#003d7c',
+        fontSize: '13px'
+      },
+      quotedTextContent: {
+        maxHeight: '80px',
+        overflowY: 'auto',
+        lineHeight: '1.4'
+      },
+    };
+    
+    // Create a CSS animation for typing indicator and scrollbar
+    const keyframesStyle = `
+      @keyframes bounce {
+        0%, 80%, 100% { transform: translateY(0); }
+        40% { transform: translateY(-5px); }
+      }
+      
+      @keyframes dialogFadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      /* Scrollbar styles from literature review */
+      /* Apply to a class or ID if possible, otherwise direct styling to messagesContainer */
+      .chat-messages-container::-webkit-scrollbar {
+        width: 6px;
+      }
+      .chat-messages-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+      }
+      .chat-messages-container::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 10px;
+      }
+      .chat-messages-container::-webkit-scrollbar-thumb:hover {
+        background: #aaa;
+      }
+    `;
+    
+    return React.createElement(
+      'div',
+      { style: styles.dialogContainer },
+      [
+        // Header
+        React.createElement(
+          'div',
+          { key: 'header', style: styles.header },
+          [
+            React.createElement('h3', { key: 'title', style: styles.headerTitle }, 'Findings Assistant'),
+            React.createElement(
+              'button',
+              {
+                key: 'close',
+                style: styles.closeButton,
+                onClick: this.props.onClose,
+                onMouseOver: (e) => { e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.2)'; },
+                onMouseOut: (e) => { e.currentTarget.style.backgroundColor = 'transparent'; },
+                'aria-label': 'Close dialog',
+                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
+              },
+              '×'
+            )
+          ]
+        ),
+        
+        // Messages Container
+        React.createElement(
+          'div',
+          { key: 'messages', style: styles.messagesContainer, className: 'chat-messages-container' }, // Added className for scrollbar
+          [
+            // Map through messages
+            ...this.state.messages.map((msg, index) => 
+              React.createElement(
+                'div',
+                { key: `msg-${index}` },
+                [
+                  // Message text
+                  React.createElement(
+                    'div',
+                    { style: msg.sender === 'user' ? styles.userMessage : styles.botMessage },
+                    msg.text.split('\n').map((line, i) => 
+                      React.createElement(
+                        React.Fragment,
+                        { key: i },
+                        [
+                          line,
+                          i < msg.text.split('\n').length - 1 ? React.createElement('br', { key: `br-${i}` }) : null
+                        ]
+                      )
+                    )
+                  ),
+                  
+                  // Message buttons (if any)
+                  msg.buttons && msg.buttons.length > 0 ?
+                    React.createElement(
+                      'div',
+                      { style: styles.buttonsContainer },
+                      msg.buttons.map((btn, btnIndex) => 
+                        React.createElement(
+                          'button',
+                          {
+                            key: `btn-${btnIndex}`,
+                            style: btn.type === 'primary' ? styles.primaryButton : styles.secondaryButton,
+                            onClick: btn.action,
+                            onMouseOver: e => {
+                              if (btn.type === 'primary') {
+                                e.currentTarget.style.backgroundColor = styles.primaryButtonHover.backgroundColor;
+                                e.currentTarget.style.transform = styles.primaryButtonHover.transform;
+                                e.currentTarget.style.boxShadow = styles.primaryButtonHover.boxShadow;
+                              } else {
+                                e.currentTarget.style.backgroundColor = styles.secondaryButtonHover.backgroundColor;
+                                e.currentTarget.style.transform = styles.secondaryButtonHover.transform;
+                                e.currentTarget.style.boxShadow = styles.secondaryButtonHover.boxShadow;
+                              }
+                            },
+                            onMouseOut: e => {
+                              if (btn.type === 'primary') {
+                                e.currentTarget.style.backgroundColor = styles.primaryButton.backgroundColor;
+                                e.currentTarget.style.transform = 'translateY(0)';
+                                e.currentTarget.style.boxShadow = 'none';
+                              } else {
+                                e.currentTarget.style.backgroundColor = styles.secondaryButton.backgroundColor;
+                                e.currentTarget.style.transform = 'translateY(0)';
+                                e.currentTarget.style.boxShadow = 'none';
+                              }
+                            }
+                          },
+                          btn.text
+                        )
+                      )
+                    ) : null
+                ]
+              )
+            ),
+            
+            // Typing Indicator
+            this.state.typingIndicator ?
+              React.createElement(
+                'div',
+                { style: styles.typingIndicator },
+                [
+                  React.createElement('div', { key: 'dot1', style: {...styles.typingDot, animationDelay: '0s'} }),
+                  React.createElement('div', { key: 'dot2', style: {...styles.typingDot, animationDelay: '0.2s'} }),
+                  React.createElement('div', { key: 'dot3', style: {...styles.typingDot, animationDelay: '0.4s'} })
+                ]
+              ) : null,
+            
+            // Reference for scrolling
+            React.createElement('div', { key: 'end', ref: this.state.messagesEndRef })
+          ]
+        ),
+        
+        // Input Container
+        React.createElement(
+          'div',
+          { key: 'input', style: styles.inputContainer },
+          [
+            // Display quoted text above input if available
+            this.state.quotedText && React.createElement(
+              'div',
+              { key: 'quoted-text', style: styles.quotedTextContainer },
+              [
+                React.createElement(
+                  'div',
+                  { key: 'quoted-header', style: styles.quotedTextHeader },
+                  [
+                    React.createElement('span', { key: 'title', style: styles.quotedTextTitle }, 'Quoted Text:'),
+                    React.createElement(
+                      'button',
+                      {
+                        key: 'clear',
+                        onClick: this.handleClearQuote,
+                        style: {
+                          background: 'none',
+                          border: 'none',
+                          cursor: 'pointer',
+                          color: '#666',
+                          fontSize: '16px',
+                          padding: '0 5px'
+                        }
+                      },
+                      '×'
+                    )
+                  ]
+                ),
+                React.createElement(
+                  'div',
+                  { key: 'quoted-content', style: styles.quotedTextContent },
+                  this.state.quotedText
+                )
+              ]
+            ),
+            
+            // Message Input
+            React.createElement(
+              'div',
+              { key: 'message-input', style: styles.messageInputContainer },
+              [
+                React.createElement(
+                  'input',
+                  {
+                    key: 'text',
+                    type: 'text',
+                    value: this.state.inputValue,
+                    onChange: this.handleInputChange,
+                    onKeyPress: (e) => e.key === 'Enter' && this.handleSendMessage(e),
+                    placeholder: this.state.quotedText 
+                      ? 'Ask about the quoted text...' 
+                      : 'Type your message...',
+                    'aria-label': 'Chat message input',
+                    style: styles.messageInput, // Applied
+                    onFocus: (e) => { // Added focus style
+                        e.currentTarget.style.borderColor = '#0056b3';
+                        e.currentTarget.style.boxShadow = 'inset 0 1px 3px rgba(0,0,0,0.05), 0 0 0 3px rgba(0,86,179,0.1)';
+                    },
+                    onBlur: (e) => { // Added blur style
+                        e.currentTarget.style.borderColor = '#ddd';
+                        e.currentTarget.style.boxShadow = 'inset 0 1px 3px rgba(0,0,0,0.05)';
+                    }
+                  }
+                ),
+                React.createElement(
+                  'button',
+                  {
+                    key: 'send',
+                    onClick: this.handleSendMessage,
+                    'aria-label': 'Send message',
+                    title: 'Send message',
+                    style: styles.sendButton, // Applied
+                    onMouseOver: (e) => { // Added hover style
+                        e.currentTarget.style.backgroundColor = '#003d7c';
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                        e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+                    },
+                    onMouseOut: (e) => { // Added mouseout style
+                        e.currentTarget.style.backgroundColor = styles.sendButton.backgroundColor; // Revert to original color
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = styles.sendButton.boxShadow;
+                    }
+                  },
+                  'Send'
+                )
+              ]
+            ),
+            
+            // API Key Input
+            React.createElement(
+              'div',
+              { key: 'api-key', style: styles.apiKeyContainer },
+              [
+                React.createElement('label', { key: 'label', style: styles.apiKeyLabel }, 'API Key:'),
+                React.createElement(
+                  'input',
+                  {
+                    key: 'key-input',
+                    type: 'password',
+                    value: this.state.llmApiKey,
+                    onChange: this.handleApiKeyChange,
+                    placeholder: 'Enter OpenAI API Key',
+                    'aria-label': 'OpenAI API Key',
+                    style: styles.apiKeyInput, // Applied
+                    onFocus: (e) => { // Added focus style
+                        e.currentTarget.style.borderColor = '#0056b3';
+                        e.currentTarget.style.boxShadow = 'inset 0 1px 3px rgba(0,0,0,0.05), 0 0 0 3px rgba(0,86,179,0.1)';
+                    },
+                    onBlur: (e) => { // Added blur style
+                        e.currentTarget.style.borderColor = '#ddd';
+                        e.currentTarget.style.boxShadow = styles.apiKeyInput.boxShadow;
+                    }
+                  }
+                )
+              ]
+            )
+          ]
+        ),
+        
+        // Style Element for Animations
+        React.createElement(
+          'style',
+          { key: 'style', dangerouslySetInnerHTML: { __html: keyframesStyle } }
+        )
+      ]
+    );
+  }
+}
+
+// Main ChatbotApp Component
+class ChatbotApp extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isDialogOpen: false
+    };
+  }
+
+  openDialog = () => {
+    this.setState({ isDialogOpen: true });
+  }
+
+  closeDialog = () => {
+    this.setState({ isDialogOpen: false });
+  }
+
+  render() {
+    // Floating button styles from literature-review-page.js
+    const floatingButtonStyle = {
+      position: 'fixed',
+      bottom: '30px',
+      right: '30px',
+      width: '65px', 
+      height: '65px',
+      backgroundColor: '#0056b3',
+      backgroundImage: 'linear-gradient(135deg, #003d7c 0%, #0056b3 100%)',
+      color: 'white',
+      borderRadius: '50%',
+      border: 'none',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      fontSize: '28px',
+      cursor: 'pointer',
+      boxShadow: '0 4px 10px rgba(0,0,0,0.25)',
+      zIndex: 100,
+      transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
+    };
+    
+    if (!window.unifiedChatbot || !window.unifiedChatbot.FloatingButton) {
+      console.error('Unified chatbot components not available');
+      return React.createElement(
+        'button',
+        { 
+          onClick: this.openDialog,
+          style: floatingButtonStyle,
+          onMouseOver: (e) => {
+            e.currentTarget.style.transform = 'scale(1.08) translateY(-3px)';
+            e.currentTarget.style.boxShadow = '0 6px 15px rgba(0,0,0,0.3)';
+          },
+          onMouseOut: (e) => {
+            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.boxShadow = '0 4px 10px rgba(0,0,0,0.25)';
+          }
+        },
+        '💬'
+      );
+    }
+    
+    return React.createElement(
+      'div',
+      null,
+      [
+        React.createElement(
+          'button',
+          { 
+            key: 'button',
+            onClick: this.openDialog,
+            style: floatingButtonStyle,
+            onMouseOver: (e) => {
+              e.currentTarget.style.transform = 'scale(1.08) translateY(-3px)';
+              e.currentTarget.style.boxShadow = '0 6px 15px rgba(0,0,0,0.3)';
+            },
+            onMouseOut: (e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.boxShadow = '0 4px 10px rgba(0,0,0,0.25)';
+            }
+          },
+          '💬'
+        ),
+        React.createElement(
+          Dialog,
+          {
+            key: 'dialog',
+            isOpen: this.state.isDialogOpen,
+            onClose: this.closeDialog,
+            onOpen: this.openDialog
+          }
+        )
+      ]
+    );
+  }
+}
+
+// Function to render the chatbot app
+const renderChatbotApp = () => {
+  const container = document.getElementById('chatbot-container');
+  if (container) {
+    console.log('Rendering chatbot in existing container');
+    // Check if the container is already populated to avoid re-rendering
+    if (container.childNodes.length === 0 || 
+        (container.childNodes.length === 1 && container.querySelector('#chatbot-fallback-btn'))) {
+      // If there's only the fallback button, we can replace it
+      ReactDOM.render(React.createElement(ChatbotApp), container);
+    }
+  } else {
+    console.log('Creating container for chatbot');
+    const newContainer = document.createElement('div');
+    newContainer.id = 'chatbot-container';
+    document.body.appendChild(newContainer);
+    ReactDOM.render(React.createElement(ChatbotApp), newContainer);
+  }
+};
+
+// Setup a global handler for the fallback button
+window.chatbotFallbackClick = function() {
+  console.log('Fallback button clicked');
+  // Create a simple dialog or try to re-render the chatbot
+  const chatbotApp = window.chatbotAppInstance;
+  if (chatbotApp && chatbotApp.openDialog) {
+    chatbotApp.openDialog();
+  } else {
+    // Try to initialize the chatbot again
+    loadUnifiedChatbot();
+    // Create a simple alert if all else fails
+    setTimeout(() => {
+      const chatbotApp = window.chatbotAppInstance;
+      if (!chatbotApp || !chatbotApp.openDialog) {
+        alert('The chatbot is currently unavailable. Please try refreshing the page.');
+      }
+    }, 1000);
+  }
+};
+
+// Load unified chatbot script if needed, then render
+const loadUnifiedChatbot = () => {
+  // Add event listener for visibility changes
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      // Re-render the chatbot when the page becomes visible again
+      setTimeout(renderChatbotApp, 500);
+    }
+  });
+
+  // Store the instance globally for the fallback button
+  const originalRender = ReactDOM.render;
+  ReactDOM.render = function(element, container, callback) {
+    const result = originalRender(element, container, callback);
+    if (element.type === ChatbotApp) {
+      window.chatbotAppInstance = element._owner.stateNode;
+    }
+    return result;
+  };
+
+  if (window.unifiedChatbot) {
+    console.log('Unified chatbot already loaded, rendering app');
+    renderChatbotApp();
+    return;
+  }
+
+  console.log('Loading unified chatbot script');
+  const script = document.createElement('script');
+  
+  // Try to determine the correct path to the script
+  const scriptPath = (() => {
+    // Get the path of the current script
+    const scripts = document.getElementsByTagName('script');
+    const currentScript = scripts[scripts.length - 1];
+    const currentPath = currentScript.src;
+    const basePath = currentPath.substring(0, currentPath.lastIndexOf('/'));
+    return `${basePath}/unified-chatbot.js`;
+  })();
+  
+  console.log('Attempting to load unified chatbot from:', scriptPath);
+  script.src = scriptPath;
+  
+  script.onload = () => {
+    console.log('Unified chatbot script loaded successfully');
+    renderChatbotApp();
+  };
+  script.onerror = (error) => {
+    console.error('Error loading unified chatbot script:', error);
+    // Create a simple fallback if the script fails to load
+    window.unifiedChatbot = {
+      FloatingButton: ({ onClick }) => React.createElement(
+        'button',
+        {
+          onClick,
+          style: { // Apply FAB styling from literature review
+            position: 'fixed',
+            bottom: '30px',
+            right: '30px',
+            width: '65px',
+            height: '65px',
+            backgroundColor: '#0056b3',
+            backgroundImage: 'linear-gradient(135deg, #003d7c 0%, #0056b3 100%)',
+            color: 'white',
+            borderRadius: '50%',
+            border: 'none',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            fontSize: '28px',
+            cursor: 'pointer',
+            boxShadow: '0 4px 10px rgba(0,0,0,0.25)',
+            zIndex: 100,
+            transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', // Added font family
+          },
+          onMouseOver: (e) => {
+            e.currentTarget.style.transform = 'scale(1.08) translateY(-3px)';
+            e.currentTarget.style.boxShadow = '0 6px 15px rgba(0,0,0,0.3)';
+          },
+          onMouseOut: (e) => {
+            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.boxShadow = '0 4px 10px rgba(0,0,0,0.25)';
+          }
+        },
+        '💬'
+      )
+    };
+    renderChatbotApp();
+  };
+  document.head.appendChild(script);
+};
+
+// Execute when the document is loaded
+document.addEventListener('DOMContentLoaded', loadUnifiedChatbot);
+
+// Try to initialize immediately if document is already loaded
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  loadUnifiedChatbot();
+} 
