@@ -142,9 +142,9 @@ window.createInstructorCorrelationHeatmap = function(containerId) {
   
   // Empty correlation matrix data template
   const correlationData = [
-    {"dimension": "Dimension 1", "Dimension 1": 1.0, "Dimension 2": 0, "Dimension 3": 0},
-    {"dimension": "Dimension 2", "Dimension 1": 0, "Dimension 2": 1.0, "Dimension 3": 0},
-    {"dimension": "Dimension 3", "Dimension 1": 0, "Dimension 2": 0, "Dimension 3": 1.0}
+    {"dimension": "Dimension 1", "Dimension 1": null, "Dimension 2": 0, "Dimension 3": 0},
+    {"dimension": "Dimension 2", "Dimension 1": 0, "Dimension 2": null, "Dimension 3": 0},
+    {"dimension": "Dimension 3", "Dimension 1": 0, "Dimension 2": 0, "Dimension 3": null}
   ];
 
   // Clear any existing SVG to prevent duplicates on re-render
@@ -177,12 +177,12 @@ window.createStudentCorrelationHeatmap = function(containerId) {
   
   // Student correlation matrix data template
   const correlationData = [
-    {"dimension": "Cognition", "Cognition": 1.000, "Ability": 0.702, "Vision": 0.653, "Ethics": 0.611, "Perceived Threats": 0.197, "AI-enhanced Innovation": 0.480},
-    {"dimension": "Ability", "Cognition": 0.702, "Ability": 1.000, "Vision": 0.623, "Ethics": 0.556, "Perceived Threats": 0.184, "AI-enhanced Innovation": 0.621},
-    {"dimension": "Vision", "Cognition": 0.653, "Ability": 0.623, "Vision": 1.000, "Ethics": 0.599, "Perceived Threats": 0.220, "AI-enhanced Innovation": 0.492},
-    {"dimension": "Ethics", "Cognition": 0.611, "Ability": 0.556, "Vision": 0.599, "Ethics": 1.000, "Perceived Threats": 0.198, "AI-enhanced Innovation": 0.462},
-    {"dimension": "Perceived Threats", "Cognition": 0.197, "Ability": 0.184, "Vision": 0.220, "Ethics": 0.198, "Perceived Threats": 1.000, "AI-enhanced Innovation": 0.190},
-    {"dimension": "AI-enhanced Innovation", "Cognition": 0.480, "Ability": 0.621, "Vision": 0.492, "Ethics": 0.462, "Perceived Threats": 0.190, "AI-enhanced Innovation": 1.000}
+    {"dimension": "Cognition", "Cognition": null, "Ability": 0.702, "Vision": 0.653, "Ethics": 0.611, "Perceived Threats": 0.197, "AI-enhanced Innovation": 0.480},
+    {"dimension": "Ability", "Cognition": 0.702, "Ability": null, "Vision": 0.623, "Ethics": 0.556, "Perceived Threats": 0.184, "AI-enhanced Innovation": 0.621},
+    {"dimension": "Vision", "Cognition": 0.653, "Ability": 0.623, "Vision": null, "Ethics": 0.599, "Perceived Threats": 0.220, "AI-enhanced Innovation": 0.492},
+    {"dimension": "Ethics", "Cognition": 0.611, "Ability": 0.556, "Vision": 0.599, "Ethics": null, "Perceived Threats": 0.198, "AI-enhanced Innovation": 0.462},
+    {"dimension": "Perceived Threats", "Cognition": 0.197, "Ability": 0.184, "Vision": 0.220, "Ethics": 0.198, "Perceived Threats": null, "AI-enhanced Innovation": 0.190},
+    {"dimension": "AI-enhanced Innovation", "Cognition": 0.480, "Ability": 0.621, "Vision": 0.492, "Ethics": 0.462, "Perceived Threats": 0.190, "AI-enhanced Innovation": null}
   ];
 
   // Clear any existing SVG to prevent duplicates on re-render
